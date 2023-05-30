@@ -14,9 +14,7 @@ export const databaseProviders = [
       });
       sequelize.addModels([]);
       await sequelize.sync({ force: true });
-      await sequelize.sync();
       return sequelize;
     },
   },
 ];
-
