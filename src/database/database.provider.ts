@@ -10,7 +10,7 @@ export const databaseProviders = [
         port: parseInt(process.env.DB_PORT),
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
-        database: 'miniredsocial',
+        database: process.env.DB_DATABASE,
       });
       sequelize.addModels([]);
       await sequelize.sync({ force: true });
