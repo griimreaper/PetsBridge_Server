@@ -1,0 +1,39 @@
+import {
+  AutoIncrement,
+  Column,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+
+@Table
+export class Users extends Model {
+  @AutoIncrement
+  @PrimaryKey
+  @Column
+  id: string;
+
+  @Column
+  password: string;
+
+  @Column
+  email: string;
+
+  @Column
+  first_Name: string;
+
+  @Column
+  last_Name: string;
+
+  @Column
+  imgProf: string;
+
+  @Column
+  status: boolean;
+
+  @Column
+  phone: number;
+
+  @Column
+  rol: string;
+}
