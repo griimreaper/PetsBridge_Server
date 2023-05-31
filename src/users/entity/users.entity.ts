@@ -11,7 +11,7 @@ export class Users extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: string;
+  id: number;
 
   @Column
   password: string;

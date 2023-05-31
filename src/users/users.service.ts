@@ -35,7 +35,7 @@ export class UsersService {
 
   async findById(id: string): Promise<Users> {
     try {
-      const user = await this.serviceUsers.findByPk(parseInt(id));
+      const user = await this.serviceUsers.findByPk(id);
 
       if (!user) {
         throw new Error('No hay con ese id');
