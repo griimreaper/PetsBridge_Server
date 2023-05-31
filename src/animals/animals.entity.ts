@@ -1,4 +1,5 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, HasOne } from 'sequelize-typescript';
+import { Adoption } from 'src/adoptions/adoptions.entity';
 
 @Table({
   timestamps:false,
@@ -49,4 +50,7 @@ export class Animal extends Model<Animal> {
     allowNull:false,
   })
     description;
+  
+  @HasOne(()=>Adoption)
+    adoption:Adoption;
 }
