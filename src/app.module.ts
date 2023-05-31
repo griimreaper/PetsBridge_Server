@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AsociacionesModule } from './asociaciones/asociaciones.module';
+import { AnimalsModule } from './animals/animals.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AsociacionesModule } from './asociaciones/asociaciones.module';
       isGlobal: true,
     }),
     AsociacionesModule,
+    AnimalsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

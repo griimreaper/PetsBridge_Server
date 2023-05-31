@@ -1,5 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Animal } from '../animals/animals.entity';
+
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
@@ -11,8 +13,10 @@ export const databaseProviders = [
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE,
+        logging: false,
+        native: false,
       });
-      sequelize.addModels([Asociaciones]);
+      sequelize.addModels([Asociaciones, Animal]);
       await sequelize.sync({ force: true });
       return sequelize;
     },
