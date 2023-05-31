@@ -1,5 +1,4 @@
-import { Table, Column, Model, DataType, BeforeCreate } from 'sequelize-typescript';
-import { v4 as uuidv4 } from 'uuid';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table
 export class Asociaciones extends Model {
