@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { Animal } from '../animals/animals.entity';
 
 export const databaseProviders = [

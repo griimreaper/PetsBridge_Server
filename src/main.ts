@@ -8,7 +8,6 @@ async function bootstrap() {
     .setTitle('PetsBridge')
     .setDescription('Peticiones')
     .setVersion('1.0')
-    .addTag('Asociaciones')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
