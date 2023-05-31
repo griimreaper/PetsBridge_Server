@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
@@ -12,7 +12,7 @@ export const databaseProviders = [
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE,
       });
-      sequelize.addModels([]);
+      sequelize.addModels([Asociaciones]);
       await sequelize.sync({ force: true });
       return sequelize;
     },
