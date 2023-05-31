@@ -2,7 +2,9 @@ import { Body, Controller, Get, Param, Post, Delete } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Asociaciones')
 @Controller('asociaciones')
 export class AsociacionesController {
   constructor(private readonly asociacionesService: AsociacionesService) { }
