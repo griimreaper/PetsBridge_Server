@@ -9,6 +9,8 @@ export class CreateAsociacionDto {
 
   image: string;
 
+  description: string;
+  
   status: boolean;
 
   country: string;

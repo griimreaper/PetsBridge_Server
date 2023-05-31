@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Param, Post, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Put } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
-import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -27,5 +26,10 @@ export class AsociacionesController {
   @Delete('delete/:id')
   async deleteById(@Param('id') idAsociacion: string) {
     return this.asociacionesService.delete(idAsociacion);
+  }
+
+  @Put('update/:id')
+  async updateAsociation(@Param('id') idAsociacion: string, @Body() body: CreateAsociacionDto) {
+    return this.asociacionesService.update(idAsociacion, body);
   }
 }

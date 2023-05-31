@@ -1,5 +1,4 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
-import { Col } from 'sequelize/types/utils';
 import { Animal } from 'src/animals/animals.entity';
 
 @Table
@@ -25,6 +24,9 @@ export class Asociaciones extends Model {
   @Column
     image: string;
 
+  @Column
+    description: string;
+    
   @Column
     status: boolean;
 
