@@ -8,8 +8,8 @@ import {
 
 @Table
 export class Users extends Model {
-  @AutoIncrement
   @PrimaryKey
+  @AutoIncrement
   @Column
   id: string;
 
