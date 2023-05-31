@@ -1,4 +1,6 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Col } from 'sequelize/types/utils';
+import { Animal } from 'src/animals/animals.entity';
 
 @Table
 export class Asociaciones extends Model {
@@ -9,7 +11,9 @@ export class Asociaciones extends Model {
   })
     id: string;
 
-  @Column
+  @Column({
+    unique: true,
+  })
     email: string;
 
   @Column
@@ -19,10 +23,16 @@ export class Asociaciones extends Model {
     name: string;
 
   @Column
+    image: string;
+
+  @Column
     status: boolean;
 
   @Column
     country: string;
+
+  @HasMany(()=> Animal)
+    pets: Animal[];
 
   @Column
     members: string;
