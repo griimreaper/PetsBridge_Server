@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AnimalsModule } from './animals/animals.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AnimalsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
