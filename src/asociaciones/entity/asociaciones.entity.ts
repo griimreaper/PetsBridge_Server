@@ -25,6 +25,9 @@ export class Asociaciones extends Model {
     image: string;
 
   @Column
+    description: string;
+    
+  @Column
     status: boolean;
 
   @Column

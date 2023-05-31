@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
+import { Association } from 'sequelize';
 
 
 @Injectable()
@@ -30,5 +31,20 @@ export class AsociacionesService {
     }
     await asociacion.save();
     return 'Asociacion eliminada correctamente';
+  }
+
+  async update(id:string, { name, country, description, password }): Promise<string> {
+    if (!name && !country && !description && !password) return 'Nada que actualizar';
+    const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
+    if (asociacion) {
+      if (name) asociacion.name = name;
+      if (country) asociacion.country = country;
+      if (description) asociacion.description = description;
+      if (password) asociacion.password = password;
+      await asociacion.save();
+      return 'Datos actualizados';
+    } else {
+      return 'La asociacion no existe';
+    }
   }
 }
