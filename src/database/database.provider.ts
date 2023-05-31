@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Animal } from '../animals/animals.entity';
+import { Adoption } from '../adoptions/adoptions.entity';
 
 export const databaseProviders = [
   {
@@ -15,7 +16,7 @@ export const databaseProviders = [
         logging: false,
         native: false,
       });
-      sequelize.addModels([Animal]);
+      sequelize.addModels([Animal, Adoption]);
       await sequelize.sync({ force: true });
       return sequelize;
     },
