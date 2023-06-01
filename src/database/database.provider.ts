@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { Animal } from '../animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
+import { Adoption } from 'src/adoptions/adoptions.entity';
 
 export const databaseProviders = [
   {
@@ -17,7 +18,7 @@ export const databaseProviders = [
         logging: false,
         native: false,
       });
-      sequelize.addModels([Asociaciones, Animal, Users]);
+      sequelize.addModels([Asociaciones, Animal, Users, Adoption]);
       await sequelize.sync({ force: true });
       return sequelize;
     },
