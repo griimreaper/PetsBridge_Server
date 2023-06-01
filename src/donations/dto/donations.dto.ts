@@ -1,6 +1,6 @@
 import { UUID } from 'crypto';
 
-export class CreatePublicationsDto {
+export class CreateDonationsDto {
   id: number;
   id_Asociations?: UUID;
   id_Users?: UUID;

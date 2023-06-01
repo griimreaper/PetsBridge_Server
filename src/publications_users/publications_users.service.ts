@@ -5,7 +5,7 @@ import { CreatePublicationsDto } from './dto/publications_users.dto';
 @Injectable()
 export class PublicationsUsersService {
   constructor(
-    @Inject('PUBLICACIONES_REPOSITORY') // Inyectamos los providers de publicaciones
+    @Inject('PUBLICATIONS_REPOSITORY') // Inyectamos los providers de publicaciones
     private servicePublications: typeof Publications,
   ) {}
 
