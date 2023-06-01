@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 import { config as dotenvConfig } from 'dotenv';
 import { unlink } from 'fs';
+import { Imagen } from './Entity/Imagen.entity';
 dotenvConfig();
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -10,6 +11,12 @@ cloudinary.config({
 });
 @Injectable()
 export class FileService {
+
+  constructor(
+    @Inject('IMAGENES_REPOSITORY')
+    private imagenesProviders: typeof Imagen,
+  ) {}
+
   async createFiles(files: Express.Multer.File[]) {
     // console.log(files);
     // const uploadPromises = files.map((file) => cloudinary.uploader.upload(file.path));
@@ -27,6 +34,13 @@ export class FileService {
           }
         });
       }
+      const URLS = results.map( (e) => e.secure_url);
+      console.log(URLS);
+      URLS.forEach(async element => {
+        await this.imagenesProviders.create({
+          urls: URLS,
+        });       
+      });
       return results;
     } catch (error) {
       console.error('Error al subir el archivo a Cloudinary:', error);
