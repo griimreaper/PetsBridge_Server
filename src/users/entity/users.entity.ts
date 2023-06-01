@@ -26,14 +26,17 @@ export class Users extends Model {
   last_Name: string;
 
   @Column
-  imgProf: string;
-
-  @Column
-  status: boolean;
-
-  @Column
   phone: number;
 
   @Column
-  rol: string;
+  imgProf: string;
+
+  @Column
+  country: string;
+
+  @Column
+  isGoogle: boolean;
+
+  @Column
+  status: boolean;
 }

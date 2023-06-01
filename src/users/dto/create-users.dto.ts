@@ -11,9 +11,11 @@ export class CreateUserDto {
 
   imgProf: string;
 
+  country: string;
+
   status: boolean;
 
   phone: number;
 
-  rol: string;
+  isGoogle: boolean;
 }

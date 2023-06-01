@@ -63,7 +63,17 @@ export class UsersService {
 
   async update(
     id: string,
-    { first_Name, last_Name, email, phone, password, imgProf, rol, status },
+    {
+      first_Name,
+      last_Name,
+      email,
+      phone,
+      password,
+      imgProf,
+      country,
+      isGoogle,
+      status,
+    },
   ): Promise<string> {
     try {
       if (
@@ -73,7 +83,8 @@ export class UsersService {
         !phone &&
         !password &&
         !imgProf &&
-        !rol &&
+        !country &&
+        !isGoogle &&
         !status
       )
         return 'Nada que actualizar';
@@ -85,7 +96,8 @@ export class UsersService {
         if (phone) user.phone = phone;
         if (password) user.password = password;
         if (imgProf) user.imgProf = imgProf;
-        if (rol) user.rol = rol;
+        if (country) user.country = country;
+        if (isGoogle) user.isGoogle = isGoogle;
         if (status) user.status = status;
         await user.save();
         return 'Actualizado';
