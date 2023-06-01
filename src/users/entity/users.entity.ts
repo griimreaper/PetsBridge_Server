@@ -1,10 +1,13 @@
 import {
   AutoIncrement,
+  BelongsToMany,
   Column,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
 
 @Table
 export class Users extends Model {
@@ -36,4 +39,7 @@ export class Users extends Model {
 
   @Column
     rol: string;
+
+  @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
+    fundations: Asociaciones[];
 }
