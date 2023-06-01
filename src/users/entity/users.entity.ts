@@ -14,25 +14,25 @@ export class Users extends Model {
   id: number;
 
   @Column
-  password: string;
-
-  @Column
-  email: string;
-
-  @Column
   first_Name: string;
 
   @Column
   last_Name: string;
 
   @Column
-  phone: number;
+  email: string;
+
+  @Column
+  password: string;
 
   @Column
   imgProf: string;
 
   @Column
   country: string;
+
+  @Column
+  phone: number;
 
   @Column
   isGoogle: boolean;
