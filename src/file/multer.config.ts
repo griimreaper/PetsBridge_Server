@@ -9,4 +9,18 @@ export const multerConfig = {
       callback(null, `${randomName}${extname(file.originalname)}`);
     },
   }),
+  fileFilter: (req, file, callback) => {
+    // Aquí puedes realizar la validación para permitir solo ciertos tipos de archivos
+    const allowedFormats = ['.jpg', '.png', '.jpeg', '.pdf'];
+    const ext = extname(file.originalname).toLowerCase();
+    if (allowedFormats.includes(ext)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Invalid file format'));
+    }
+  },
+  limits: {
+    fileSize: 1024 * 1024 * 5, // 5MB
+  },
+  cleanup: true,
 };
