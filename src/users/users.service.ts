@@ -60,4 +60,40 @@ export class UsersService {
       throw new Error(`Error al intentar remover el usuario: ${error.message}`);
     }
   }
+
+  async update(
+    id: string,
+    { first_Name, last_Name, email, phone, password, imgProf, rol, status },
+  ): Promise<string> {
+    try {
+      if (
+        !first_Name &&
+        !last_Name &&
+        !email &&
+        !phone &&
+        !password &&
+        !imgProf &&
+        !rol &&
+        !status
+      )
+        return 'Nada que actualizar';
+      const user = await this.serviceUsers.findByPk(parseInt(id));
+      if (user) {
+        if (first_Name) user.first_Name = first_Name;
+        if (last_Name) user.last_Name = last_Name;
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+        if (password) user.password = password;
+        if (imgProf) user.imgProf = imgProf;
+        if (rol) user.rol = rol;
+        if (status) user.status = status;
+        await user.save();
+        return 'Actualizado';
+      } else {
+        return 'No existe el Usuario';
+      }
+    } catch (error) {
+      throw new Error(`Error al intentar editar el usuario: ${error.message}`);
+    }
+  }
 }
