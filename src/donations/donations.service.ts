@@ -26,4 +26,17 @@ export class DonationsService {
       );
     }
   }
+
+  async update(id: string, { mount, message }): Promise<string> {
+    if (!message && !mount) return 'Nada que actualizar';
+    const publicacion = await this.donationsService.findByPk(parseInt(id));
+    if (publicacion) {
+      if (mount) publicacion.mount = mount;
+      if (message) publicacion.message = message;
+      await publicacion.save();
+      return 'Actualizado';
+    } else {
+      return 'No existe la donacion';
+    }
+  }
 }
