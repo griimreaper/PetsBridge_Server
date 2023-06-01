@@ -1,5 +1,6 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Adoption } from 'src/adoptions/adoptions.entity';
 
 @Table({
   timestamps:false,
@@ -58,5 +59,5 @@ export class Animal extends Model<Animal> {
     type:DataType.STRING,
     allowNull:false,
   })
-    description: string;
+    description;
 }
