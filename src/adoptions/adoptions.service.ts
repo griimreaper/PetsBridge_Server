@@ -15,4 +15,9 @@ export class AdoptionsService {
       console.log(error.message);
     }
   }
+
+  async getAdoptions():Promise<Adoption[]> {
+    const adoptions = await this.adoptionsRepository.findAll();
+    return adoptions;
+  }
 }
