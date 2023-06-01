@@ -39,4 +39,20 @@ export class DonationsService {
       return 'No existe la donacion';
     }
   }
+
+  async delete(id: string): Promise<string> {
+    try {
+      const user = await this.donationsService.findByPk(parseInt(id));
+
+      if (!user) {
+        throw new Error(`La donacion con el ID '${id}' no se encuentra`);
+      }
+      await this.donationsService.destroy({ where: { id: parseInt(id) } });
+      return 'Eliminado';
+    } catch (error) {
+      throw new Error(
+        `Error al intentar remover la donacion: ${error.message}`,
+      );
+    }
+  }
 }
