@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalDto } from './dto/animals.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -11,5 +11,15 @@ export class AnimalsController {
   @Post()
   createPet(@Body() pet:AnimalDto):Promise<string> {
     return this.animalsService.postPet(pet);
+  }
+
+  @Get()
+  getAllPets() {
+    return this.animalsService.getAllPets();
+  }
+
+  @Get(':id')
+  getPet(@Param('id') id:string) {
+    return this.animalsService.getPet(id);
   }
 }
