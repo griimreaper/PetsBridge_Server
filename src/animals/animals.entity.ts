@@ -1,4 +1,6 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Adoption } from 'src/adoptions/adoptions.entity';
 
 @Table({
   timestamps:false,
