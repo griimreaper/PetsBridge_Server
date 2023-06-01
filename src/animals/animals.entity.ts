@@ -1,6 +1,7 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Users } from 'src/users/entity/users.entity';
 
 @Table({
   timestamps:false,
@@ -13,11 +14,21 @@ export class Animal extends Model<Animal> {
   })
     id: string;
 
+  @ForeignKey(() => Users)
+  @Column({
+    type:DataType.INTEGER,
+    allowNull:true,
+  })
+    us_Id:number;
+
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
   })
     as_Id: string;
+
+  @BelongsTo(() => Users)
+    user: Users;
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
