@@ -10,7 +10,17 @@ export class AdoptionsService {
   async adopt(IDS:AdoptionDto):Promise<string> {
     try {
       const AdoptedAt = await this.adoptionsRepository.create<Adoption>(IDS);
+      console.log(AdoptedAt);
       return 'Adopted successfully';
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async findAdoptions():Promise<Adoption[]> {
+    try {
+      const adoptions = await this.adoptionsRepository.findAll();
+      return adoptions;
     } catch (error) {
       console.log(error.message);
     }
