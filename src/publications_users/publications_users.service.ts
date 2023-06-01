@@ -27,4 +27,17 @@ export class PublicationsUsersService {
       );
     }
   }
+
+  async update(id: string, { title, description }): Promise<string> {
+    if (!description && !title) return 'Nada que actualizar';
+    const publicacion = await this.servicePublications.findByPk(parseInt(id));
+    if (publicacion) {
+      if (title) publicacion.title = title;
+      if (description) publicacion.description = description;
+      await publicacion.save();
+      return 'Actualizado';
+    } else {
+      return 'No existe la publicacion';
+    }
+  }
 }

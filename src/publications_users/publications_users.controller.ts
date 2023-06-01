@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Patch } from '@nestjs/common';
 import { PublicationsUsersService } from './publications_users.service';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
 
@@ -14,5 +14,13 @@ export class PublicationsUsersController {
   @Post()
   async createUser(@Body() newUser: CreatePublicationsDto) {
     return this.publicatiosService.createUser(newUser);
+  }
+
+  @Patch('update/:id') // actualizar publicacion (recibe un id y body)
+  async updatePost(
+    @Param('id') id: string,
+    @Body() body: CreatePublicationsDto,
+  ) {
+    return this.publicatiosService.update(id, body);
   }
 }
