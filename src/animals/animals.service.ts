@@ -16,4 +16,22 @@ export class AnimalsService {
       console.log(error.message);
     }
   }
+
+  async getAllPets():Promise<Animal[]> {
+    try {
+      const animals = await this.animalsRepository.findAll();
+      return animals;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async getPet(id:string):Promise<Animal> {
+    try {
+      const animal = await this.animalsRepository.findByPk(id);
+      return animal;
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 }
