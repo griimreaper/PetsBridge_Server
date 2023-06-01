@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Users } from 'src/users/entity/users.entity';
 
 export const databaseProviders = [
@@ -13,8 +14,8 @@ export const databaseProviders = [
         password: process.env.DB_PASSWORD,
         database: 'petsbridge',
       });
-      sequelize.addModels([Users]);
-      await sequelize.sync();
+      sequelize.addModels([Users, Publications]);
+      await sequelize.sync({ force: true });
       return sequelize;
     },
   },
