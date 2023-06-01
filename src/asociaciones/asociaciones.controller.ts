@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post, Delete, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Put, Res, HttpStatus } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
+import { Response } from 'express';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { ApiTags } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 
 @ApiTags('Asociaciones')
 @Controller('asociaciones')
@@ -18,9 +20,29 @@ export class AsociacionesController {
     return this.asociacionesService.findOne(idAsociacion);
   }
 
+  @Get('email/:email')
+  async getByEmail(@Param() email:string, @Res() response: Response ) {
+    const resp = this.asociacionesService.findOne(email);
+    response.status(HttpStatus.OK).json({ resp: resp });
+  }
+
   @Post()
-  async post(@Body() body: CreateAsociacionDto) {
-    return this.asociacionesService.create(body);
+  async post(@Body() body: CreateAsociacionDto, @Res() response: Response) {
+    try {
+      const hashedPassword = await bcrypt.hash(body.password, 10);
+      const resp = await this.asociacionesService.create({ ...body, password: hashedPassword });
+      switch (resp.status) {
+        case HttpStatus.CREATED:
+          response.status(HttpStatus.CREATED).send(resp.send);
+          break;
+        case HttpStatus.BAD_REQUEST:
+          response.status(HttpStatus.BAD_REQUEST).send(resp.send);
+          break;
+      }
+    } catch (error) {
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+
   }
 
   @Delete('delete/:id')

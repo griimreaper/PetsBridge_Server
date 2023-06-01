@@ -1,5 +1,8 @@
-import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
+import { Users } from 'src/users/entity/users.entity';
+import { UsersAssociated } from './usersAssociated.entity';
+import * as bcrypt from 'bcrypt';
 
 @Table
 export class Asociaciones extends Model {
@@ -17,6 +20,11 @@ export class Asociaciones extends Model {
 
   @Column
     password: string;
+
+  async comparePassword(password:string): Promise<boolean> {
+    const result = await bcrypt.compare(password, this.password);
+    return Promise.resolve(result);
+  }
 
   @Column
     name: string;
@@ -36,6 +44,7 @@ export class Asociaciones extends Model {
   @HasMany(()=> Animal)
     pets: Animal[];
 
-  @Column
-    members: string;
+  @BelongsToMany(()=> Users, ()=> UsersAssociated)
+    members: Users[];
+
 }

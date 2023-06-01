@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
+import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class AsociacionesService {
@@ -13,13 +14,15 @@ export class AsociacionesService {
     return this.asociacionesProviders.findAll({});
   }
 
-  async findOne(id:string): Promise<Asociaciones> { // funcion que retorna una asociacion
+  async findOne(id: string): Promise<Asociaciones> { // funcion que retorna una asociacion
     return this.asociacionesProviders.findOne({ where: { id } });
   }
 
-  async create(body: CreateAsociacionDto) { // funcion para crear asociacion
-    await this.asociacionesProviders.create({ ...body }); 
-    return 'Asociacion creada correctamente';
+  async create(body: CreateAsociacionDto): Promise<{ send: string; status: number }> { // funcion para crear asociacion
+    const { email } = body;
+    const [asociacion, created] = await this.asociacionesProviders.findOrCreate({ where: { email }, defaults: { ...body } });
+    if (!created) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
+    return { send:'La asociacion se creo exitosamente.', status:HttpStatus.CREATED };
   }
 
   async delete(id: string): Promise<string> { // funcion de borrado logico de asociaciones
@@ -31,7 +34,7 @@ export class AsociacionesService {
     return 'Asociacion eliminada correctamente';
   }
 
-  async update(id:string, { name, country, description, password }): Promise<string> {
+  async update(id: string, { name, country, description, password }): Promise<string> {
     if (!name && !country && !description && !password) return 'Nada que actualizar';
     const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
     if (asociacion) {
