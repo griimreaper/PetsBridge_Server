@@ -1,8 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
-import { Association } from 'sequelize';
-
 
 @Injectable()
 export class AsociacionesService {
