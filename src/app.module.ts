@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AsociacionesModule } from './asociaciones/asociaciones.module';
 import { AnimalsModule } from './animals/animals.module';
-import { AdoptionsModule } from './adoptions/adoptions.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -12,8 +13,9 @@ import { AdoptionsModule } from './adoptions/adoptions.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AsociacionesModule,
     AnimalsModule,
-    AdoptionsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

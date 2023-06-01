@@ -1,5 +1,4 @@
-import { Column, Model, Table, DataType, HasOne } from 'sequelize-typescript';
-import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Column, Model, Table, DataType } from 'sequelize-typescript';
 
 @Table({
   timestamps:false,
@@ -10,20 +9,29 @@ export class Animal extends Model<Animal> {
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
   })
-    id;
+    id: string;
+
+  @ForeignKey(() => Asociaciones)
+  @Column({
+    type:DataType.UUID,
+  })
+    as_Id: string;
+
+  @BelongsTo(() => Asociaciones)
+    asociacion: Asociaciones;
 
   @Column({
     type:DataType.STRING,
     unique: true,
     allowNull:false,
   })
-    name;
+    name: string;
 
   @Column({
     type:DataType.STRING,
     allowNull:false,
   })
-    specie;
+    specie: string;
 
   @Column({
     type:DataType.ENUM,
@@ -36,21 +44,18 @@ export class Animal extends Model<Animal> {
     type:DataType.STRING,
     allowNull:false,
   })
-    breed;
+    breed: string;
 
   @Column({
     type:DataType.ENUM,
     values:['adopted', 'pending', 'homeless'],
     allowNull:false,
   })
-    status;
+    status: string;
 
   @Column({
     type:DataType.STRING,
     allowNull:false,
   })
     description;
-  
-  @HasOne(()=>Adoption)
-    adoption:Adoption;
 }
