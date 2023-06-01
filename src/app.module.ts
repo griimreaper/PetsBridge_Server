@@ -6,6 +6,7 @@ import { AnimalsModule } from './animals/animals.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
+import { AdoptionsModule } from './adoptions/adoptions.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DatabaseModule } from './database/database.module';
     AsociacionesModule,
     AnimalsModule,
     UsersModule,
+    AdoptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
