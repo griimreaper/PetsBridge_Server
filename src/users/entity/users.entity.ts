@@ -11,29 +11,29 @@ export class Users extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+    id: number;
 
   @Column
-  password: string;
+    password: string;
 
   @Column
-  email: string;
+    email: string;
 
   @Column
-  first_Name: string;
+    first_Name: string;
 
   @Column
-  last_Name: string;
+    last_Name: string;
 
   @Column
-  imgProf: string;
+    imgProf: string;
 
   @Column
-  status: boolean;
+    status: boolean;
 
   @Column
-  phone: number;
+    phone: number;
 
   @Column
-  rol: string;
+    rol: string;
 }
