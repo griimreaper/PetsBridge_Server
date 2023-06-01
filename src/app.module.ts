@@ -7,7 +7,6 @@ import { FileController } from './file/file.controller';
 import { FileModule } from './file/file.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerConfig } from './file/multer.config';
-import { v2 as cloudinary } from 'cloudinary';
 import { FileService } from './file/file.service';
 @Module({
   imports: [

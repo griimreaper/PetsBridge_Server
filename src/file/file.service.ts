@@ -9,9 +9,14 @@ cloudinary.config({
 });
 @Injectable()
 export class FileService {
-  async createFile(file) {
-    console.log(file);
-    const result = await cloudinary.uploader.upload(file.path);
-    return result;
+  async createFiles(files: Express.Multer.File | Express.Multer.File[]) {
+    if (Array.isArray(files) ) {
+      const uploadPromises = files.map((file) => cloudinary.uploader.upload(file.path));
+      const results = await Promise.all(uploadPromises);
+      return results;
+    } else {
+      const results = await cloudinary.uploader.upload(files.path);
+      return results;
+    }
   }
 }
