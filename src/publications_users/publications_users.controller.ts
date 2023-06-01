@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { PublicationsUsersService } from './publications_users.service';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
 
@@ -22,5 +30,10 @@ export class PublicationsUsersController {
     @Body() body: CreatePublicationsDto,
   ) {
     return this.publicatiosService.update(id, body);
+  }
+
+  @Delete(':id')
+  async deleteById(@Param('id') id: string) {
+    return this.publicatiosService.delete(id);
   }
 }

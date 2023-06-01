@@ -40,4 +40,18 @@ export class PublicationsUsersService {
       return 'No existe la publicacion';
     }
   }
+
+  async delete(id: string): Promise<string> {
+    try {
+      const user = await this.servicePublications.findByPk(parseInt(id));
+
+      if (!user) {
+        throw new Error(`El usuarios con el ID '${id}' no se encuentra`);
+      }
+      await this.servicePublications.destroy({ where: { id: parseInt(id) } });
+      return 'Eliminado';
+    } catch (error) {
+      throw new Error(`Error al intentar remover el usuario: ${error.message}`);
+    }
+  }
 }
