@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { AdoptionsService } from './adoptions.service';
 import { AdoptionDto } from './dto/adoptions.dto';
 
@@ -9,5 +9,10 @@ export class AdoptionsController {
   @Post()
   adoptPet(@Body() IDS:AdoptionDto) {
     return this.adoptionsService.adopt(IDS);
+  }
+
+  @Get()
+  findAdoptions() {
+    return this.adoptionsService.findAdoptions();
   }
 }
