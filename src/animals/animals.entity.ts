@@ -1,4 +1,4 @@
-import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 
@@ -21,6 +21,9 @@ export class Animal extends Model<Animal> {
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
+  
+  @HasOne(() => Adoption)
+    adoption: Adoption;
 
   @Column({
     type:DataType.STRING,
