@@ -34,4 +34,14 @@ export class AnimalsService {
       console.log(error.message);
     }
   }
+
+  async deletePet(id:string):Promise<string> {
+    try {
+      const animal = await this.animalsRepository.findByPk(id);
+      return 'Deleted succesfully';
+    } catch (error) {
+      console.log(error.message);
+    }
+   
+  }
 }
