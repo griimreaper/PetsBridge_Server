@@ -1,42 +1,49 @@
 import {
-  AutoIncrement,
   Column,
+  HasMany,
   Model,
-  PrimaryKey,
   Table,
+  DataType,
 } from 'sequelize-typescript';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
 
 @Table
 export class Users extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
-  id: number;
+  
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    primaryKey: true,
+  })
+    id: string;
 
   @Column
-  first_Name: string;
+    first_Name: string;
 
   @Column
-  last_Name: string;
+    last_Name: string;
 
   @Column
-  email: string;
+    email: string;
 
   @Column
-  password: string;
+    password: string;
 
   @Column
-  imgProf: string;
+    imgProf: string;
 
   @Column
-  country: string;
+    country: string;
 
   @Column
-  phone: number;
+    phone: number;
 
   @Column
-  isGoogle: boolean;
+    isGoogle: boolean;
 
   @Column
-  status: boolean;
+    status: boolean;
+  
+  @HasMany(() => Publications)
+    public: Publications[];
 }

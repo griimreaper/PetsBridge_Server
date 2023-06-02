@@ -1,7 +1,7 @@
 export class CreatePublicationsDto {
-  id?: number;
+  id?: string;
 
-  userId: number;
+  userId?: string;
 
   title: string;
 
@@ -9,7 +9,7 @@ export class CreatePublicationsDto {
 
   isActive?: boolean;
 
-  //   image?: string[];
+  imagen?: string[];
 
-  datePublication: Date;
+  datePublication?: Date;
 }
