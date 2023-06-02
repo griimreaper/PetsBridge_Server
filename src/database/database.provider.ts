@@ -3,6 +3,8 @@ import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { Animal } from '../animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
+import { SocialReds } from 'src/asociaciones/entity/socialreds.entity';
+
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
@@ -17,10 +19,9 @@ export const databaseProviders = [
         logging: false,
         native: false,
       });
-      sequelize.addModels([Asociaciones, Animal, Users, UsersAssociated]);
+      sequelize.addModels([Asociaciones, Animal, Users, UsersAssociated, SocialReds]);
       await sequelize.sync({ force: true });
       return sequelize;
     },
   },
 ];
-console.log(process.env.DB_USERNAME);

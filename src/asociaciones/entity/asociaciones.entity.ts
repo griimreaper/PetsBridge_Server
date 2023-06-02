@@ -2,7 +2,7 @@ import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequeliz
 import { Animal } from 'src/animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { UsersAssociated } from './usersAssociated.entity';
-import * as bcrypt from 'bcrypt';
+import { SocialReds } from './socialreds.entity';
 
 @Table
 export class Asociaciones extends Model {
@@ -21,30 +21,34 @@ export class Asociaciones extends Model {
   @Column
     password: string;
 
-  async comparePassword(password:string): Promise<boolean> {
-    const result = await bcrypt.compare(password, this.password);
-    return Promise.resolve(result);
-  }
-
   @Column
     name: string;
 
   @Column
-    image: string;
+    img_profile: string;
+
+  @Column
+    date_created: Date;
 
   @Column
     description: string;
-    
-  @Column
-    status: boolean;
 
   @Column
     country: string;
+
+  @Column
+    address: string;
+
+  @Column
+    status: boolean;
 
   @HasMany(()=> Animal)
     pets: Animal[];
 
   @BelongsToMany(()=> Users, ()=> UsersAssociated)
     members: Users[];
+
+  @HasMany(() => SocialReds)
+    reds: SocialReds[];
 
 }
