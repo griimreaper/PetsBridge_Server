@@ -16,6 +16,15 @@ export class AsPublicationsService {
     }  
   }
 
+  async getAllPosts():Promise<AsPublication[]> {
+    try {
+      const publications = await this.asPublicationRepository.findAll();
+      return publications;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getPostsByAso(idAsociation:string):Promise<string | AsPublication[]> {
     try {
       const publications = await this.asPublicationRepository.findAll({
@@ -41,7 +50,7 @@ export class AsPublicationsService {
     }
   }
 
-  async findPostByPK(idPost:string):Promise<AsPublication> {
+  async findPostByPK(idPost:number):Promise<AsPublication> {
     try {
       const publication = await this.asPublicationRepository.findByPk(idPost);
       return publication;
