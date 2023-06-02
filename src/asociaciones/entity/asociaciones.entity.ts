@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, BelongsToMany, AllowNull } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { UsersAssociated } from './usersAssociated.entity';
@@ -15,13 +15,18 @@ export class Asociaciones extends Model {
 
   @Column({
     unique: true,
+    allowNull: false,
   })
     email: string;
 
-  @Column
+  @Column({
+    allowNull: false,
+  })
     password: string;
 
-  @Column
+  @Column({
+    allowNull: false,
+  })
     name: string;
 
   @Column
