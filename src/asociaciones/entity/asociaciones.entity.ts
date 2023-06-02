@@ -1,5 +1,8 @@
-import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, BelongsToMany, AllowNull } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
+import { Users } from 'src/users/entity/users.entity';
+import { UsersAssociated } from './usersAssociated.entity';
+import { SocialReds } from './socialreds.entity';
 
 @Table
 export class Asociaciones extends Model {
@@ -12,30 +15,45 @@ export class Asociaciones extends Model {
 
   @Column({
     unique: true,
+    allowNull: false,
   })
     email: string;
 
-  @Column
+  @Column({
+    allowNull: false,
+  })
     password: string;
 
-  @Column
+  @Column({
+    allowNull: false,
+  })
     name: string;
 
   @Column
-    image: string;
+    img_profile: string;
+
+  @Column
+    date_created: Date;
 
   @Column
     description: string;
-    
-  @Column
-    status: boolean;
 
   @Column
     country: string;
 
+  @Column
+    address: string;
+
+  @Column
+    status: boolean;
+
   @HasMany(()=> Animal)
     pets: Animal[];
 
-  @Column
-    members: string;
+  @BelongsToMany(()=> Users, ()=> UsersAssociated)
+    members: Users[];
+
+  @HasMany(() => SocialReds)
+    reds: SocialReds[];
+
 }

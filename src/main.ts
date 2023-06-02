@@ -7,6 +7,7 @@ import { CORS } from './constants';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const options = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('PetsBridge')
     .setDescription('Peticiones')
     .setVersion('1.0')

@@ -1,4 +1,5 @@
 import {
+  BelongsToMany,
   Column,
   HasMany,
   Model,
@@ -6,6 +7,8 @@ import {
   DataType,
 } from 'sequelize-typescript';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
 
 @Table
 export class Users extends Model {
@@ -46,4 +49,7 @@ export class Users extends Model {
   
   @HasMany(() => Publications)
     public: Publications[];
+
+  @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
+    fundations: Asociaciones[];
 }

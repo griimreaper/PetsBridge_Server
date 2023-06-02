@@ -1,3 +1,5 @@
+import { UserRole } from 'src/auth/dto/login.dto';
+
 export class CreateAsociacionDto {
   id?: string;
 
@@ -7,13 +9,17 @@ export class CreateAsociacionDto {
 
   name: string;
 
-  image: string;
+  img_profile: string;
+
+  date_created: Date;
 
   description: string;
-  
-  status: boolean;
 
   country: string;
 
-  members: string;
+  address:string;
+
+  status: boolean;
+
+  rol?: UserRole;
 }

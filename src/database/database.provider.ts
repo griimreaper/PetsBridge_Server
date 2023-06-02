@@ -4,6 +4,9 @@ import { Publications } from 'src/publications_users/entity/publications_users.e
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
+import { SocialReds } from 'src/asociaciones/entity/socialreds.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
 
 
 export const databaseProviders = [
@@ -20,7 +23,16 @@ export const databaseProviders = [
         logging: false,
         native: false,
       });
-      sequelize.addModels([ Animal, Asociaciones, Adoption, Users, Publications]);
+      sequelize.addModels([
+        Users,
+        Publications,
+        Donations,
+        Adoption,
+        Asociaciones,
+        Animal,
+        UsersAssociated,
+        SocialReds,
+      ]);
       await sequelize.sync({ force: true });
       return sequelize;
     },
