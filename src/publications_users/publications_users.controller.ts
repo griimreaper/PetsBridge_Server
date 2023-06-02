@@ -28,7 +28,7 @@ export class PublicationsUsersController {
 
   @Patch('update/:id') // actualizar publicacion (recibe un id y body)
   async updatePost(
-    @Param('id') id: string,
+  @Param('id') id: string,
     @Body() body: CreatePublicationsDto,
   ) {
     return this.publicatiosService.update(id, body);

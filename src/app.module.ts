@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { PublicationsUsersModule } from './publications_users/publications_users.module';
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
+import { AdoptionsModule } from './adoptions/adoptions.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     PublicationsUsersModule,
     DonationsModule,
+    AdoptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
