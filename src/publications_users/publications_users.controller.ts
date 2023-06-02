@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { PublicationsUsersService } from './publications_users.service';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Publications')
 @Controller('publications')
 export class PublicationsUsersController {
   constructor(private readonly publicatiosService: PublicationsUsersService) {}
