@@ -5,6 +5,8 @@ import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { Animal } from '../animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
+import { SocialReds } from 'src/asociaciones/entity/socialreds.entity';
 
 export const databaseProviders = [
   {
@@ -27,6 +29,8 @@ export const databaseProviders = [
         Adoption,
         Asociaciones,
         Animal,
+        UsersAssociated,
+        SocialReds,
       ]);
       await sequelize.sync({ force: true });
       return sequelize;

@@ -7,13 +7,15 @@ export class CreateAsociacionDto {
 
   name: string;
 
-  image: string;
+  img_profile: string;
+
+  date_created: Date;
 
   description: string;
-  
-  status: boolean;
 
   country: string;
 
-  members: string;
+  address:string;
+
+  status: boolean;
 }

@@ -8,14 +8,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { PublicationsUsersModule } from './publications_users/publications_users.module';
 import { DonationsModule } from './donations/donations.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    DatabaseModule,
     ConfigModule.forRoot({
+      envFilePath: '.env',
       isGlobal: true,
     }),
     AsociacionesModule,
+    DatabaseModule,
+    AuthModule,
     AnimalsModule,
     UsersModule,
     PublicationsUsersModule,

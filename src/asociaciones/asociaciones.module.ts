@@ -8,5 +8,6 @@ import { asociacionesProviders } from './providers/asociaciones.provider';
   providers: [
     AsociacionesService, 
     ...asociacionesProviders],
+  exports: [AsociacionesService],
 })
 export class AsociacionesModule {}

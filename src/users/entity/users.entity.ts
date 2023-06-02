@@ -1,42 +1,48 @@
 import {
   AutoIncrement,
+  BelongsToMany,
   Column,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
 
 @Table
 export class Users extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+    id: number;
 
   @Column
-  first_Name: string;
+    first_Name: string;
 
   @Column
-  last_Name: string;
+    last_Name: string;
 
   @Column
-  email: string;
+    email: string;
 
   @Column
-  password: string;
+    password: string;
 
   @Column
-  imgProf: string;
+    imgProf: string;
 
   @Column
-  country: string;
+    country: string;
 
   @Column
-  phone: number;
+    phone: number;
 
   @Column
-  isGoogle: boolean;
+    isGoogle: boolean;
 
   @Column
-  status: boolean;
+    status: boolean;
+
+  @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
+    fundations: Asociaciones[];
 }
