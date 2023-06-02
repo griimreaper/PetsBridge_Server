@@ -1,22 +1,26 @@
 import {
-  AutoIncrement,
   BelongsToMany,
   Column,
+  HasMany,
   Model,
-  PrimaryKey,
   Table,
+  DataType,
 } from 'sequelize-typescript';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Animal } from 'src/animals/animals.entity';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
 
 @Table
 export class Users extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @Column
-    id: number;
+  
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    primaryKey: true,
+  })
+    id: string;
 
   @Column
     first_Name: string;
@@ -44,6 +48,9 @@ export class Users extends Model {
 
   @Column
     status: boolean;
+  
+  @HasMany(() => Publications)
+    public: Publications[];
 
   @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
     fundations: Asociaciones[];
