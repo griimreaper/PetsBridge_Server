@@ -1,12 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Publications } from './entity/publications_users.entity';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class PublicationsUsersService {
   constructor(
     @Inject('PUBLICATIONS_REPOSITORY') // Inyectamos los providers de publicaciones
     private servicePublications: typeof Publications,
+    private readonly fileService: FileService,
   ) {}
 
   async findAll(): Promise<Publications[]> {
@@ -15,8 +17,12 @@ export class PublicationsUsersService {
     return publications;
   }
 
-  async createUser(createUserDto: CreatePublicationsDto) {
+  async createUser(createUserDto: CreatePublicationsDto, file: Express.Multer.File[]) {
     try {
+      if ( file.length ) {
+        const URLS = await this.fileService.createFiles(file);
+        createUserDto.imagen = URLS;
+      }
       const newUser = await this.servicePublications.create({
         ...createUserDto,
       });
