@@ -2,7 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { HttpStatus } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { hash } from 'bcrypt';
+import { Users } from 'src/users/entity/users.entity';
 
 @Injectable()
 export class AsociacionesService {
@@ -19,11 +20,12 @@ export class AsociacionesService {
     return this.asociacionesProviders.findOne({ where: { id } });
   }
 
-  async create(body: CreateAsociacionDto): Promise<{ send: string; status: number }> { // funcion para crear asociacion
+  async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
     const { email } = body;
+    if (await Users.findOne({ where: { email } })) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
     const [asociacion, created] = await this.asociacionesProviders.findOrCreate({ where: { email }, defaults: { ...body } });
     if (!created) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
-    return { send:'La asociacion se creo exitosamente.', status:HttpStatus.CREATED };
+    return { send:'La asociacion se creo exitosamente.', status: HttpStatus.CREATED };
   }
 
   async delete(id: string): Promise<string> { // funcion de borrado logico de asociaciones
@@ -44,7 +46,7 @@ export class AsociacionesService {
       if (description) asociacion.description = description;
       if (address) asociacion.address = address;
       if (password) {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await hash(password, 10);
         asociacion.password = hashedPassword;
       }
       await asociacion.save();

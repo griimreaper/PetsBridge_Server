@@ -1,3 +1,5 @@
+import { UserRole } from 'src/auth/dto/login.dto';
+
 export class CreateAsociacionDto {
   id?: string;
 
@@ -18,4 +20,6 @@ export class CreateAsociacionDto {
   address:string;
 
   status: boolean;
+
+  rol?: UserRole;
 }

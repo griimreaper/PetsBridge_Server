@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
-
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { hash } from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(
@@ -22,16 +23,29 @@ export class UsersService {
     }
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    try {
-      const newUser = await this.serviceUsers.create({ ...createUserDto });
-      return newUser;
-    } catch (error) {
-      throw new Error(
-        `Error al intentar crear un nuevo usuarios: ${error.message}`,
-      );
-    }
+  async createUser(body:CreateUserDto): Promise<{ send: string; status: number }> { // funcion para crear usuario
+    const { email } = body;
+    //verificamos que ese email no exista en la tabla asociaciones
+    if (await Asociaciones.findOne({ where: { email } })) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; 
+    //findOrCreate para que no se duplique el email
+    const [users, created] = await this.serviceUsers.findOrCreate({ where: { email }, defaults: { ...body } }); 
+    //condicion por si se encontro un email en uso
+    if (!created) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
+    //status 201
+    return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED };
   }
+
+  // async createUser(createUserDto: CreateUserDto) {
+  //   try {
+
+  //     const newUser = await this.serviceUsers.create({ ...createUserDto });
+  //     return newUser;
+  //   } catch (error) {
+  //     throw new Error(
+  //       `Error al intentar crear un nuevo usuarios: ${error.message}`,
+  //     );
+  //   }
+  // }
 
   async findById(id: string): Promise<Users> {
     try {
@@ -94,7 +108,10 @@ export class UsersService {
         if (last_Name) user.last_Name = last_Name;
         if (email) user.email = email;
         if (phone) user.phone = phone;
-        if (password) user.password = password;
+        if (password) {
+          const hashedPassword = await hash(password, 10);
+          user.password = hashedPassword;
+        }
         if (imgProf) user.imgProf = imgProf;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;

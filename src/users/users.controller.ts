@@ -19,10 +19,10 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Post()
-  async createUser(@Body() newUser: CreateUserDto) {
-    return this.usersService.createUser(newUser);
-  }
+  // @Post()
+  // async createUser(@Body() newUser: CreateUserDto) {
+  //   return this.usersService.createUser(newUser);
+  // }
 
   @Get(':id')
   async findById(@Param('id') id: string) {
