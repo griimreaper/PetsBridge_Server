@@ -14,7 +14,7 @@ import { CreatePublicationsDto } from './dto/publications_users.dto';
 import { multerConfig } from 'src/file/multer.config';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
-@Controller('publications')
+@Controller('publications_user')
 export class PublicationsUsersController {
   constructor(private readonly publicatiosService: PublicationsUsersService) {}
 
