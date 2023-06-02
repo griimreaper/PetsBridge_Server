@@ -10,7 +10,7 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
+  @Post('registerFundation')
   async registerAsoc(@Body() body :CreateAsociacionDto, @Res() response: Response) {
     try {
       const resp = await this.authService.register(body);
@@ -28,7 +28,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
+  async loginAc(@Body() loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.authService.validateAsoc(email, password);
     const token = await this.authService.login(user);
