@@ -11,13 +11,19 @@ export class Users extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+    id: number;
 
   @Column
-  first_Name: string;
+  password: string;
 
   @Column
-  last_Name: string;
+  email: string;
+
+  @Column
+    first_Name: string;
+
+  @Column
+    last_Name: string;
 
   @Column
   email: string;
@@ -26,17 +32,14 @@ export class Users extends Model {
   password: string;
 
   @Column
-  imgProf: string;
-
-  @Column
-  country: string;
-
-  @Column
-  phone: number;
-
-  @Column
-  isGoogle: boolean;
+    imgProf: string;
 
   @Column
   status: boolean;
+
+  @Column
+    phone: number;
+
+  @Column
+  rol: string;
 }
