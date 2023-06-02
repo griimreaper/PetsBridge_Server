@@ -1,5 +1,12 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Imagen } from '../file/Entity/Imagen.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
+import { Animal } from '../animals/animals.entity';
+import { Users } from 'src/users/entity/users.entity';
+import { Adoption } from 'src/adoptions/adoptions.entity';
+
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
@@ -11,6 +18,8 @@ export const databaseProviders = [
         username: process.env.DB_USERNAME,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_DATABASE,
+        logging: false,
+        native: false,
       });
       sequelize.addModels([Imagen]);
       await sequelize.sync({ force: true });

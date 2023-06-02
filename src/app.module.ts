@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
+import { AsociacionesModule } from './asociaciones/asociaciones.module';
+import { AnimalsModule } from './animals/animals.module';
+import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { FileModule } from './file/file.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerConfig } from './file/multer.config';
+import { DatabaseModule } from './database/database.module';
+import { PublicationsUsersModule } from './publications_users/publications_users.module';
+import { DonationsModule } from './donations/donations.module';
+
 @Module({
   imports: [
     DatabaseModule,
@@ -14,6 +20,11 @@ import { multerConfig } from './file/multer.config';
     }),
     FileModule,
     MulterModule.register(multerConfig),
+    AsociacionesModule,
+    AnimalsModule,
+    UsersModule,
+    PublicationsUsersModule,
+    DonationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
