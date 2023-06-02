@@ -17,5 +17,5 @@ export class Imagen extends Model<Imagen> {
       isUrl: true,
     },
   })
-    urls: Array<string>;
+    urls: Array<string>; 
 }

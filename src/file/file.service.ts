@@ -24,7 +24,13 @@ export class FileService {
     // return results;
 
     try {
-      const uploadPromises = files.map((file) => cloudinary.uploader.upload(file.path));
+      const uploadPromises = files.map((file) => cloudinary.uploader.upload(file.path, { folder: 'Upload' }, (error, result) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log(result);
+        }
+      }));
       const results = await Promise.all(uploadPromises);
       // Eliminar el archivo de la carpeta local
       for (const file of files) {
