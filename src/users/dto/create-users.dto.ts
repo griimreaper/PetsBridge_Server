@@ -1,3 +1,4 @@
+import { UserRole } from 'src/auth/dto/login.dto';
 export class CreateUserDto {
   id: number;
 
@@ -15,5 +16,7 @@ export class CreateUserDto {
 
   phone: number;
 
-  rol: string;
+  isGoogle: boolean;
+  
+  rol?: UserRole;
 }

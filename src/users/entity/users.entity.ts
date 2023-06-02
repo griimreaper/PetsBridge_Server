@@ -35,10 +35,13 @@ export class Users extends Model {
     status: boolean;
 
   @Column
-    phone: number;
+    isGoogle: boolean;
 
   @Column
-    rol: string;
+    country: string;
+    
+  @Column
+    phone: number;
 
   @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
     fundations: Asociaciones[];
