@@ -1,28 +1,19 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { jwtConstanst } from '../../constants/jwt.constants';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(
-    private readonly asociacionesService: AsociacionesService,
-  ) {
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET_KEY,
+      ignoreExpiration: false,
+      secretOrKey: jwtConstanst.secret,
     });
   }
 
-  async validate(payload: JwtPayload): Promise<Asociaciones> {
-    const asociacion = await this.asociacionesService.findOne(payload.sub);
-
-    if (!asociacion) {
-      throw new UnauthorizedException('Invalid token');
-    }
-
-    return asociacion;
+  async validate(payload: any) {
+    return { id: payload.sub, email: payload.email };
   }
 }
