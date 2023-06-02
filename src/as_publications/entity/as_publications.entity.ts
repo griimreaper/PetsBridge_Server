@@ -22,7 +22,7 @@ export class AsPublication extends Model<AsPublication> {
     allowNull:false,
   })
     ID_Asociation:string;
-
+ 
   @Column({
     type:DataType.STRING,
     allowNull:false,
@@ -40,4 +40,7 @@ export class AsPublication extends Model<AsPublication> {
 
   @BelongsTo(() => Asociaciones)
     asociacion:Asociaciones;
+
+  @BelongsTo(() => Animal)
+    Animal:Animal;
 }
