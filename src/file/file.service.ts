@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 import { config as dotenvConfig } from 'dotenv';
 import { unlink } from 'fs';
+
 dotenvConfig();
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,

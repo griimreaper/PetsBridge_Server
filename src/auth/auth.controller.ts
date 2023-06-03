@@ -30,6 +30,8 @@ export class AuthController {
         case HttpStatus.BAD_REQUEST:
           response.status(HttpStatus.BAD_REQUEST).send(resp.send);
           break;
+        default:
+          response.status(HttpStatus.BAD_REQUEST).send(resp.send);
       }
     } catch (error) {
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -39,7 +41,7 @@ export class AuthController {
   @Post('login')
   async loginAc(@Body() loginDto: LoginDto) {
     const user = await this.authService.validate(loginDto);
-    const token = await this.authService.login(user, loginDto.rol);
+    const token = await this.authService.login(user);
     return token;
   }
   
