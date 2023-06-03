@@ -9,6 +9,7 @@ import {
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table
 export class Users extends Model {
@@ -21,10 +22,10 @@ export class Users extends Model {
     id: string;
 
   @Column
-    first_Name: string;
+    firstName: string;
 
   @Column
-    last_Name: string;
+    lastName: string;
 
   @Column
     email: string;
@@ -49,6 +50,9 @@ export class Users extends Model {
   
   @HasMany(() => Publications)
     public: Publications[];
+
+  @HasMany( () => Comments)
+    comments: Comments[];  
 
   @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
     fundations: Asociaciones[];

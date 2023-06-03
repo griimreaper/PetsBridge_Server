@@ -104,8 +104,8 @@ export class UsersService {
         return 'Nada que actualizar';
       const user = await this.serviceUsers.findByPk(parseInt(id));
       if (user) {
-        if (first_Name) user.first_Name = first_Name;
-        if (last_Name) user.last_Name = last_Name;
+        if (first_Name) user.firstName = first_Name;
+        if (last_Name) user.lastName = last_Name;
         if (email) user.email = email;
         if (phone) user.phone = phone;
         if (password) {
