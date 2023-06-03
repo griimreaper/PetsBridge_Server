@@ -25,6 +25,6 @@ export class Adoption extends Model<Adoption> {
 
   @ForeignKey(() => Users)
   @Column
-    userID: number;
+    userID: string;
 
 }

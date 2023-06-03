@@ -33,7 +33,7 @@ export const databaseProviders = [
         UsersAssociated,
         SocialReds,
       ]);
-      await sequelize.sync({ force: false });
+      await sequelize.sync({ force: true });
       return sequelize;
     },
   },
