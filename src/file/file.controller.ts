@@ -11,7 +11,7 @@ export class FileController {
   @UseInterceptors(
     FilesInterceptor('file', undefined, multerConfig),
   )
-  async uploadFile(@UploadedFiles() files: Express.Multer.File[] | Express.Multer.File) {
+  async uploadFile(@UploadedFiles() files: any) {
     try {
       return await this.fileService.createFiles(files);
     } catch (error) {
