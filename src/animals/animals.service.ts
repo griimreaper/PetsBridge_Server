@@ -6,6 +6,11 @@ import { AnimalDto } from './dto/animals.dto';
 export class AnimalsService {
   constructor(@Inject('ANIMALS_REPOSITORY') private readonly animalsRepository:typeof Animal) {}
 
+  async getPets(): Promise<Animal[]> {
+    const animals = await this.animalsRepository.findAll();
+    return animals;
+  }
+
   async postPet(pet:AnimalDto):Promise<string> {
     try {
 
