@@ -3,9 +3,7 @@ import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Table({
-  timestamps:true,
-  createdAt:true,
-  updatedAt:false,
+  timestamps:false,
 })
 export class AsPublication extends Model<AsPublication> {
 
@@ -35,8 +33,23 @@ export class AsPublication extends Model<AsPublication> {
   })
     description:string;
 
-  @Column
+  @Column({
+    type:DataType.BOOLEAN,
+    allowNull:false,
+  })
     isActive:boolean;
+
+  @Column({
+    type:DataType.INTEGER,
+    defaultValue:0,
+  })
+    likes:number;
+
+  @Column({
+    type:DataType.STRING,
+    allowNull:false,
+  })
+    createdAt:string;
 
   @BelongsTo(() => Asociaciones)
     asociacion:Asociaciones;
