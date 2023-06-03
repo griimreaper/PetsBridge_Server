@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Get, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Delete, Put } from '@nestjs/common';
 import { AsPublicationsService } from './as_publications.service';
 import { AsPublicationDto } from './dto/as_publication.dto';
+import { LikeDto } from './dto/likes_publications.dto';
 
 @Controller('as-publications')
 export class AsPublicationsController {
@@ -9,6 +10,11 @@ export class AsPublicationsController {
   @Post()
   postAdoption(@Body() post: AsPublicationDto) {
     return this.asPublicationsService.postAdoption(post);
+  }
+
+  @Put()
+  likeOrDislike(@Body() like:LikeDto) {
+    return this.asPublicationsService.giveLike(like);
   }
 
   @Get()
