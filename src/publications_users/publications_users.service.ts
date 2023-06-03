@@ -26,7 +26,7 @@ export class PublicationsUsersService {
     });
     const newPub = publications.map((e) => {
       const filtUser = e.dataValues.user.dataValues;
-      const { firstName, lastName, imgProf, email } = filtUser;
+      const { firstName, lastName, img_profile, email } = filtUser;
       const filtro = e.dataValues.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
       const filtComentUsers = filtComent.map((x) => x.user.dataValues);
@@ -35,7 +35,7 @@ export class PublicationsUsersService {
           email : x.email,
           firstName: x.firstName,
           lastName: x.lastName,
-          imgProf: x.imgProf,
+          imgProf: x.img_profile,
         };
         return dataUser;
       });
@@ -48,7 +48,7 @@ export class PublicationsUsersService {
       return {
         ...e.dataValues,
         comments: filtro2, 
-        user: { firstName, lastName, imgProf, email },
+        user: { firstName, lastName, img_profile, email },
       };
     } );
     return newPub;

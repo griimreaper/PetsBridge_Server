@@ -18,9 +18,11 @@ export class FileService {
     // const results = await Promise.all(uploadPromises);
     // return results;
     try {
+      console.log(files);
       if (typeof files === 'object') {
         const uploadPromise = await cloudinary.uploader.upload(files.path, { folder: 'Upload' }, (error, result) => {
           if (error) {
+            console.log('aqui esta el error');
             console.error(error);
           } else {
             console.log(result);
