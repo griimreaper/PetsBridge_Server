@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpCode } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalDto } from './dto/animals.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -13,6 +13,7 @@ export class AnimalsController {
     return this.animalsService.getPets();
   }
 
+  @HttpCode(201)
   @Post()
   createPet(@Body() pet:AnimalDto):Promise<string> {
     return this.animalsService.postPet(pet);
