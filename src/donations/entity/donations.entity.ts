@@ -12,17 +12,17 @@ export class Donations extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+    id: number;
 
   @Column
-  id_Asociations: UUID;
+    id_Asociations: UUID;
 
   @Column
-  id_Users: UUID;
+    id_Users: UUID;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
-  mount: number;
+    mount: number;
 
   @Column
-  message: string;
+    message: string;
 }

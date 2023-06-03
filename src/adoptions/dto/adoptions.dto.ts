@@ -1,3 +1,5 @@
 export interface AdoptionDto {
-  animalID:string,
+  animalID: string,
+
+  userID: number
 }
