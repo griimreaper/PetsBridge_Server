@@ -4,6 +4,7 @@ import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { HttpStatus } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { Users } from 'src/users/entity/users.entity';
+import { Animal } from 'src/animals/animals.entity';
 
 @Injectable()
 export class AsociacionesService {
@@ -17,7 +18,14 @@ export class AsociacionesService {
   }
 
   async findOne(id: string): Promise<Asociaciones> { // funcion que retorna una asociacion
-    return this.asociacionesProviders.findOne({ where: { id } });
+    return this.asociacionesProviders.findOne({
+      where: { id }, 
+      include: { 
+        model: Animal,
+        attributes:{
+          exclude: ['as_id'] },
+      },
+    });
   }
 
   async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
