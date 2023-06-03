@@ -4,6 +4,7 @@ import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto, UserRole } from './dto/login.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
     private readonly asociacionesService: AsociacionesService,
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
+    private readonly fileService: FileService,
   ) {}
 
   async validate(body: LoginDto): Promise<object> {
@@ -34,12 +36,17 @@ export class AuthService {
     return { ...usuario.dataValues, token };
   }
 
-  async register(register: any) {
+  async register(register: any, profilePic?:Express.Multer.File) {
     const { password } = register;
     const hashedPassword = await hash(password, 10);
     let { rol, ...body } = register;
     rol = rol;
-    body = { ...body, password: hashedPassword };
+    if (profilePic) {
+      const url = await this.fileService.createFiles(profilePic);
+      body = { ...body, password: hashedPassword, img_profile: url };
+    } else {
+      body = { ...body, password: hashedPassword };
+    }
     switch (rol) {
       case 'user':
         return this.usersService.createUser(body);

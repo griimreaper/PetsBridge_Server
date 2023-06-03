@@ -9,7 +9,7 @@ export class CreatePublicationsDto {
 
   isActive?: boolean;
 
-  imagen?: string[];
+  imagen?: string[] | string;
 
   datePublication?: Date;
 }

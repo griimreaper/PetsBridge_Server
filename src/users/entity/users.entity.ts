@@ -35,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    imgProf: string;
+    img_profile: string;
 
   @Column
     country: string;

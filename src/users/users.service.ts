@@ -83,11 +83,11 @@ export class UsersService {
       email,
       phone,
       password,
-      imgProf,
       country,
       isGoogle,
       status,
     },
+    profilePic?: any,
   ): Promise<string> {
     try {
       if (
@@ -96,7 +96,7 @@ export class UsersService {
         !email &&
         !phone &&
         !password &&
-        !imgProf &&
+        !profilePic &&
         !country &&
         !isGoogle &&
         !status
@@ -112,7 +112,7 @@ export class UsersService {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (imgProf) user.imgProf = imgProf;
+        if (profilePic) user.img_profile = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
         if (status) user.status = status;

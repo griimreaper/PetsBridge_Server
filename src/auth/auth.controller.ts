@@ -1,8 +1,10 @@
-import { Controller, Post, Body, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/file/multer.config';
 
 
 
@@ -20,9 +22,12 @@ export class AuthController {
   //  }
 
   @Post('register')
-  async register(@Body() body :LoginDto, @Res() response: Response) {
+  @UseInterceptors(
+    FileInterceptor('profilePic', multerConfig),
+  )
+  async register(@Body() body :LoginDto, @Res() response: Response, @UploadedFile() profilePic?: Express.Multer.File) {
     try {
-      const resp = await this.authService.register(body);
+      const resp = await this.authService.register(body, profilePic);
       switch (resp.status) {
         case HttpStatus.CREATED:
           response.status(HttpStatus.CREATED).send(resp.send);
