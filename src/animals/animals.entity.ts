@@ -1,6 +1,8 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
+import { Users } from 'src/users/entity/users.entity';
 
 @Table({
   timestamps:false,
@@ -16,14 +18,28 @@ export class Animal extends Model<Animal> {
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
+    allowNull:true,
+  })
+    us_Id: string;
+
+  @ForeignKey(() => Asociaciones)
+  @Column({
+    type:DataType.UUID,
+    allowNull:false,
   })
     as_Id: string;
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
+
+  @BelongsTo(() => Users)
+    user: Users;
   
   @HasOne(() => Adoption)
     adoption: Adoption;
+
+  @HasOne(() => AsPublication)
+    as_publication:AsPublication;
 
   @Column({
     type:DataType.STRING,
