@@ -6,6 +6,7 @@ import { JwtStrategy } from './jwt-strategy/jwt-strategy.service';
 import { AsociacionesModule } from 'src/asociaciones/asociaciones.module';
 import { jwtConstanst } from '../constants/jwt.constants';
 import { UsersModule } from 'src/users/users.module';
+import { FileService } from 'src/file/file.service';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UsersModule } from 'src/users/users.module';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, FileService],
   controllers: [AuthController],
 })
 export class AuthModule {}
