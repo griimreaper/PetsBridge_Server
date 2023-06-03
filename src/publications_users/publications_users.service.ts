@@ -17,14 +17,35 @@ export class PublicationsUsersService {
     return publications;
   }
 
+  async findOne(id: string): Promise<Publications[]> {
+    const publications = await this.servicePublications.findAll({
+      where:{
+        userId: id,
+      },
+    });
+    return publications;
+  }
+
   async createUser(createUserDto: CreatePublicationsDto, file: Express.Multer.File[]) {
     try {
       if ( file.length ) {
         const URLS = await this.fileService.createFiles(file);
         createUserDto.imagen = URLS;
       }
+      
+      const date = new Date();
+      const hour = date.getHours();
+      const minutes = date.getMinutes();
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const allDate = year + '/' + month + '/' + day + '/' + hour  + ':' + minutes;
+
       const newUser = await this.servicePublications.create({
         ...createUserDto,
+        datePublication: allDate,
+        likes: 0,
+        isActive: false,
       });
       return newUser;
     } catch (error) {
@@ -34,11 +55,24 @@ export class PublicationsUsersService {
     }
   }
 
-  async update(id: string, { title, description }): Promise<string> {
-    if (!description && !title) return 'Nada que actualizar';
+  async updateLike(like: CreatePublicationsDto) {
+    const publicacion = await this.servicePublications.findByPk(like.id);
+    if (!publicacion) {
+      return 'Esta publicacion no existe';
+    }
+    if (like.like) {
+      publicacion.likes = publicacion.likes + 1;
+    } else {
+      publicacion.likes = publicacion.likes - 1;
+    }
+    await publicacion.save();
+    return publicacion;
+  }
+
+  async update(id: string, { description }): Promise<string> {
+    if (!description) return 'Nada que actualizar';
     const publicacion = await this.servicePublications.findByPk(parseInt(id));
     if (publicacion) {
-      if (title) publicacion.title = title;
       if (description) publicacion.description = description;
       await publicacion.save();
       return 'Actualizado';

@@ -27,7 +27,7 @@ export class Publications extends Model {
     user: Users;  
 
   @Column
-    title: string;
+    likes: number;
 
   @Column
     description: string;
@@ -36,7 +36,7 @@ export class Publications extends Model {
     isActive: boolean;
 
   @Column
-    datePublication: Date;
+    datePublication: string;
 
   @Column(
     {
