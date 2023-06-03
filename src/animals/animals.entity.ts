@@ -11,6 +11,7 @@ export class Animal extends Model<Animal> {
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
+    unique: true,
   })
     id: string;
 
@@ -28,7 +29,6 @@ export class Animal extends Model<Animal> {
 
   @Column({
     type:DataType.STRING,
-    unique: true,
     allowNull:false,
   })
     name: string;
