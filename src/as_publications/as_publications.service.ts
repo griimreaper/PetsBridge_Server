@@ -3,6 +3,8 @@ import { AsPublication } from './entity/as_publications.entity';
 import { AsPublicationDto } from './dto/as_publication.dto';
 import { LikeDto } from './dto/likes_publications.dto';
 import { FileService } from 'src/file/file.service';
+import { Animal } from 'src/animals/animals.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Injectable()
 export class AsPublicationsService {
@@ -14,7 +16,7 @@ export class AsPublicationsService {
     try {
       const date = new Date();
       const easyFormatDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/${date.getHours()}/${date.getMinutes()}`;
-      let urls:string[] | null;
+      let urls:string | string[];
       if (!file.length) urls = null;
       urls = await this.fileService.createFiles(file);
 
@@ -30,7 +32,9 @@ export class AsPublicationsService {
 
   async getAllPosts():Promise<AsPublication[]> {
     try {
-      const publications = await this.asPublicationRepository.findAll();
+      const publications = await this.asPublicationRepository.findAll({
+        include:[Animal, Asociaciones],
+      });
       return publications;
     } catch (error) {
       console.log(error);
