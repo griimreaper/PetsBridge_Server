@@ -19,7 +19,7 @@ export class AsPublicationsService {
       urls = await this.fileService.createFiles(file);
 
       
-      const publication = await this.asPublicationRepository.create({ ...post, createdAt:easyFormatDate, images:urls });
+      const publication = await this.asPublicationRepository.create({ ...post, createdAt:easyFormatDate, image:urls });
 
       return 'posted successfully';
 

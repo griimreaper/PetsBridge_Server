@@ -54,7 +54,7 @@ export class AsPublication extends Model<AsPublication> {
   @Column({
     type:DataType.ARRAY(DataType.STRING),
   })
-    images:string[];
+    image:string[];
 
   @BelongsTo(() => Asociaciones)
     asociacion:Asociaciones;
