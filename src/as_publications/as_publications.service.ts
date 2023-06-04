@@ -2,16 +2,25 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AsPublication } from './entity/as_publications.entity';
 import { AsPublicationDto } from './dto/as_publication.dto';
 import { LikeDto } from './dto/likes_publications.dto';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class AsPublicationsService {
-  constructor(@Inject('AS_PUBLICATION_REPOSITORY') private readonly asPublicationRepository: typeof AsPublication) {}
+  constructor(
+    @Inject('AS_PUBLICATION_REPOSITORY') private readonly asPublicationRepository: typeof AsPublication, 
+    private readonly fileService: FileService) {}
 
-  async postAdoption(post:AsPublicationDto):Promise<string> {
+  async postAdoption(post:AsPublicationDto, file:Express.Multer.File[]):Promise<string> {
     try {
       const date = new Date();
       const easyFormatDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/${date.getHours()}/${date.getMinutes()}`;
-      const publication = await this.asPublicationRepository.create({ ...post, createdAt:easyFormatDate });
+      let urls:string[] | null;
+      if (!file.length) urls = null;
+      urls = await this.fileService.createFiles(file);
+
+      
+      const publication = await this.asPublicationRepository.create({ ...post, createdAt:easyFormatDate, images:urls });
+
       return 'posted successfully';
 
     } catch (error) {
