@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
+import { Op } from 'sequelize/types/operators';
 
 @Injectable()
 export class AnimalsService {
@@ -19,7 +20,13 @@ export class AnimalsService {
 
   async getAllPets():Promise<Animal[]> {
     try {
-      const animals = await this.animalsRepository.findAll();
+      const animals = await this.animalsRepository.findAll({
+        where:{
+          status:{
+            [Op.or]:['homeless', 'pending'],
+          },
+        },
+      });
       return animals;
     } catch (error) {
       console.log(error.message);
