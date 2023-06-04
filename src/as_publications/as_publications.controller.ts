@@ -1,15 +1,19 @@
-import { Controller, Post, Body, Get, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Delete, Put, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { AsPublicationsService } from './as_publications.service';
 import { AsPublicationDto } from './dto/as_publication.dto';
 import { LikeDto } from './dto/likes_publications.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/file/multer.config';
 
 @Controller('as-publications')
 export class AsPublicationsController {
   constructor(private asPublicationsService: AsPublicationsService) {}
 
   @Post()
-  postAdoption(@Body() post: AsPublicationDto) {
-    return this.asPublicationsService.postAdoption(post);
+  @UseInterceptors(FilesInterceptor('file', undefined, multerConfig))
+  postAdoption(@Body() post: AsPublicationDto, @UploadedFiles() file:Express.Multer.File[]) {
+    console.log(post, 'este es el post');
+    return this.asPublicationsService.postAdoption(post, file);
   }
 
   @Put()
