@@ -1,6 +1,7 @@
-import { Table, Column, DataType, Model, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Table, Column, DataType, Model, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table({
   timestamps:false,
@@ -61,4 +62,7 @@ export class AsPublication extends Model<AsPublication> {
 
   @BelongsTo(() => Animal)
     Animal:Animal;
+
+  @HasMany(() => Comments)
+    comments:Comments;
 }
