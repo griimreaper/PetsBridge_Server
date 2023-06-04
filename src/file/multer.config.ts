@@ -11,7 +11,7 @@ export const multerConfig = {
   }),
   fileFilter: (req, file, callback) => {
     // Aquí puedes realizar la validación para permitir solo ciertos tipos de archivos
-    const allowedFormats = ['.jpg', '.png', '.jpeg', '.pdf'];
+    const allowedFormats = ['.jpg', '.png', '.jpeg'];
     const ext = extname(file.originalname).toLowerCase();
     if (allowedFormats.includes(ext)) {
       callback(null, true);

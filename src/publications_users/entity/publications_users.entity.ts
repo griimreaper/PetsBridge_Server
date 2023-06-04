@@ -5,7 +5,9 @@ import {
   BelongsTo,
   ForeignKey,
   DataType,
+  HasMany,
 } from 'sequelize-typescript';
+import { Comments } from 'src/coments/entity/comments.entity';
 import { Users } from 'src/users/entity/users.entity';
 
 @Table({ timestamps: false })
@@ -27,7 +29,7 @@ export class Publications extends Model {
     user: Users;  
 
   @Column
-    title: string;
+    likes: number;
 
   @Column
     description: string;
@@ -36,7 +38,7 @@ export class Publications extends Model {
     isActive: boolean;
 
   @Column
-    datePublication: Date;
+    datePublication: string;
 
   @Column(
     {
@@ -44,6 +46,8 @@ export class Publications extends Model {
     },
   )
     imagen: string[];  
-
+  
+  @HasMany(() => Comments)
+    comments: Comments[];
   
 }

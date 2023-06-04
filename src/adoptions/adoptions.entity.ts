@@ -1,5 +1,6 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
+import { Users } from 'src/users/entity/users.entity';
 
 @Table({
   timestamps:true,
@@ -12,7 +13,7 @@ export class Adoption extends Model<Adoption> {
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
   })
-    id;
+    id: string;
     
   @ForeignKey(()=> Animal)
   @Column({
@@ -20,8 +21,10 @@ export class Adoption extends Model<Adoption> {
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     allowNull:false,
   })
-    animalID;
+    animalID: string;
 
-  @BelongsTo(()=> Animal)
-    animal:Animal;
+  @ForeignKey(() => Users)
+  @Column
+    userID: string;
+
 }

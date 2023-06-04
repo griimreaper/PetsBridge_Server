@@ -12,6 +12,7 @@ import { DatabaseModule } from './database/database.module';
 import { PublicationsUsersModule } from './publications_users/publications_users.module';
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
+import { AdoptionsModule } from './adoptions/adoptions.module';
 import { AsPublicationsModule } from './as_publications/as_publications.module';
 
 @Module({
@@ -29,6 +30,7 @@ import { AsPublicationsModule } from './as_publications/as_publications.module';
     UsersModule,
     PublicationsUsersModule,
     DonationsModule,
+    AdoptionsModule,
     AsPublicationsModule,
   ],
   controllers: [AppController],

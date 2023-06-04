@@ -1,5 +1,6 @@
-import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Users } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
 import { Users } from 'src/users/entity/users.entity';
@@ -12,38 +13,38 @@ export class Animal extends Model<Animal> {
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
+    unique: true,
   })
     id: string;
 
-  @ForeignKey(() => Asociaciones)
+  /*  @ForeignKey(() => Users)
   @Column({
     type:DataType.UUID,
     allowNull:true,
   })
-    us_Id: string;
+    us_Id:string;*/
 
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
     allowNull:false,
   })
-    as_Id: string;
+    as_id: string;
+
+  /*   @BelongsTo(() => Users)
+    user: Users; */
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
-
-  @BelongsTo(() => Users)
-    user: Users;
   
-  @HasOne(() => Adoption)
-    adoption: Adoption;
+  @BelongsToMany(() => Users, () => Adoption)
+    adoption: Users;
 
   @HasOne(() => AsPublication)
     as_publication:AsPublication;
 
   @Column({
     type:DataType.STRING,
-    unique: true,
     allowNull:false,
   })
     name: string;
@@ -78,5 +79,10 @@ export class Animal extends Model<Animal> {
     type:DataType.STRING,
     allowNull:false,
   })
-    description;
+    description: string;
+
+  @Column({
+    type:DataType.ARRAY(DataType.STRING),
+  })
+    image:string[];
 }
