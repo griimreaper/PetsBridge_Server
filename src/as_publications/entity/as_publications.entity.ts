@@ -35,7 +35,7 @@ export class AsPublication extends Model<AsPublication> {
 
   @Column({
     type:DataType.BOOLEAN,
-    allowNull:false,
+    defaultValue:false,
   })
     isActive:boolean;
 
@@ -50,6 +50,11 @@ export class AsPublication extends Model<AsPublication> {
     allowNull:false,
   })
     createdAt:string;
+
+  @Column({
+    type:DataType.ARRAY(DataType.STRING),
+  })
+    images:string[];
 
   @BelongsTo(() => Asociaciones)
     asociacion:Asociaciones;
