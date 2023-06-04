@@ -5,10 +5,14 @@ import { AsociacionesModule } from './asociaciones/asociaciones.module';
 import { AnimalsModule } from './animals/animals.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FileModule } from './file/file.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { multerConfig } from './file/multer.config';
 import { DatabaseModule } from './database/database.module';
 import { PublicationsUsersModule } from './publications_users/publications_users.module';
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
+import { AdoptionsModule } from './adoptions/adoptions.module';
 
 @Module({
   imports: [
@@ -16,6 +20,8 @@ import { AuthModule } from './auth/auth.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    FileModule,
+    MulterModule.register(multerConfig),
     AsociacionesModule,
     DatabaseModule,
     AuthModule,
@@ -23,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
     PublicationsUsersModule,
     DonationsModule,
+    AdoptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

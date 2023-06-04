@@ -1,5 +1,6 @@
-import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Users } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Users } from 'src/users/entity/users.entity';
 
@@ -11,6 +12,7 @@ export class Animal extends Model<Animal> {
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
+    unique: true,
   })
     id: string;
 
@@ -26,7 +28,7 @@ export class Animal extends Model<Animal> {
     type:DataType.UUID,
     allowNull:false,
   })
-    as_Id: string;
+    as_id: string;
 
   @BelongsTo(() => Users)
     user: Users;
@@ -34,12 +36,11 @@ export class Animal extends Model<Animal> {
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
   
-  @HasOne(() => Adoption)
-    adoption: Adoption;
+  @BelongsToMany(() => Users, () => Adoption)
+    adoption: Users;
 
   @Column({
     type:DataType.STRING,
-    unique: true,
     allowNull:false,
   })
     name: string;
@@ -74,5 +75,5 @@ export class Animal extends Model<Animal> {
     type:DataType.STRING,
     allowNull:false,
   })
-    description;
+    description: string;
 }

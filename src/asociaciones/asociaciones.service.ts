@@ -4,6 +4,7 @@ import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { HttpStatus } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { Users } from 'src/users/entity/users.entity';
+import { Animal } from 'src/animals/animals.entity';
 
 @Injectable()
 export class AsociacionesService {
@@ -17,7 +18,14 @@ export class AsociacionesService {
   }
 
   async findOne(id: string): Promise<Asociaciones> { // funcion que retorna una asociacion
-    return this.asociacionesProviders.findOne({ where: { id } });
+    return this.asociacionesProviders.findOne({
+      where: { id }, 
+      include: { 
+        model: Animal,
+        attributes:{
+          exclude: ['as_id'] },
+      },
+    });
   }
 
   async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
@@ -37,12 +45,13 @@ export class AsociacionesService {
     return 'Asociacion eliminada correctamente';
   }
 
-  async update(id: string, { name, country, description, password, address }: CreateAsociacionDto): Promise<string> {
-    if (!name && !country && !description && !password) return 'Nada que actualizar';
+  async update(id: string, { name, country, description, password, address }: CreateAsociacionDto, img_profile?: any): Promise<string> {
+    if (!name && !country && !description && !password && !img_profile) return 'Nada que actualizar';
     const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
     if (asociacion) {
       if (name) asociacion.name = name;
       if (country) asociacion.country = country;
+      if (img_profile) asociacion.img_profile = img_profile;
       if (description) asociacion.description = description;
       if (address) asociacion.address = address;
       if (password) {

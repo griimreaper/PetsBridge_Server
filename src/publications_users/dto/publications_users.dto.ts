@@ -1,15 +1,13 @@
 export class CreatePublicationsDto {
-  id?: number;
 
-  userId: number;
-
-  title: string;
+  userId: string;
 
   description: string;
 
-  isActive?: boolean;
+  imagen?: string[] | string;
 
-  //   image?: string[];
+  like: boolean;
 
-  datePublication: Date;
+  id: string;
+
 }

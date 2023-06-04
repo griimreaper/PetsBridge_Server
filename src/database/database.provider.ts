@@ -1,12 +1,14 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Donations } from 'src/donations/entity/donations.entity';
-import { Publications } from 'src/publications_users/entity/publications_users.entity';
-import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
-import { Animal } from '../animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Animal } from 'src/animals/animals.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
 import { SocialReds } from 'src/asociaciones/entity/socialreds.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
+
 
 export const databaseProviders = [
   {
@@ -31,8 +33,9 @@ export const databaseProviders = [
         Animal,
         UsersAssociated,
         SocialReds,
+        Comments,
       ]);
-      await sequelize.sync({ force: true });
+      await sequelize.sync({ force: false });
       return sequelize;
     },
   },
