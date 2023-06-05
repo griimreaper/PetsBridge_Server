@@ -4,6 +4,7 @@ import { AsPublicationDto } from './dto/as_publication.dto';
 import { LikeDto } from './dto/likes_publications.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
+import { CreateCommentDto } from 'src/coments/comments.dto';
 
 @Controller('as-publications')
 export class AsPublicationsController {
@@ -16,9 +17,19 @@ export class AsPublicationsController {
     return this.asPublicationsService.postAdoption(post, file);
   }
 
+  @Post('comment')
+  makeComment(@Body() comment:CreateCommentDto) {
+    return this.asPublicationsService.comment(comment);
+  }
+
   @Put()
   likeOrDislike(@Body() like:LikeDto) {
     return this.asPublicationsService.giveLike(like);
+  }
+
+  @Put('comment')
+  updateComment(@Body() comment:CreateCommentDto) {
+    return this.asPublicationsService.updateComment(comment);
   }
 
   @Get()
@@ -39,5 +50,10 @@ export class AsPublicationsController {
   @Delete('delete/:id')
   deletePost(@Param('id') id:number) {
     return this.asPublicationsService.deletePublication(id);
+  }
+
+  @Delete('comment/:id')
+  deleteComment(@Param('id') id:string) {
+    return this.asPublicationsService.deleteComment(id);
   }
 }
