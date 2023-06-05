@@ -102,10 +102,10 @@ export class AsPublicationsService {
       if (!comment.description.length) return 'Can`t make an empty comment';
       const { userId, pubId, asPubId, description } = comment;
       if (pubId) {
-        const com = await this.commentsRepository.create<Comments>({ userId, asPubId, description });
+        const com = await this.commentsRepository.create<Comments>({ userId, pubId, description });
         return com;
       } else if (asPubId) {
-        const com = await this.commentsRepository.create<Comments>({ userId, pubId, description });
+        const com = await this.commentsRepository.create<Comments>({ userId, asPubId, description });
         return com;
       }
       throw Error('Request Error');
