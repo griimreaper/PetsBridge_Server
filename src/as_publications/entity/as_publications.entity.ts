@@ -8,6 +8,14 @@ import { Comments } from 'src/coments/entity/comments.entity';
 })
 export class AsPublication extends Model<AsPublication> {
 
+  @Column({
+    type:DataType.UUID,
+    defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
+    primaryKey:true,
+    unique: true,
+  })
+    id: string;
+
   @ForeignKey(() => Animal)
   @Column({
     type:DataType.UUID,
