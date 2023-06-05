@@ -22,12 +22,10 @@ export class AnimalsService {
 
   async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
     try {
-      let urls;
-      if (file.length) urls = null;
-      urls = await this.filesService.createFiles(file);
+      const urls = file ? await this.filesService.createFiles(file) : null;
       await this.animalsRepository.create<Animal>({
         ...pet,
-        images:urls,
+        image:urls,
       });
 
       return 'Posted successfully';

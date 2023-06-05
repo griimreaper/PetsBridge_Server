@@ -8,7 +8,7 @@ import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity'
 import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
-
+import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
 
 export const databaseProviders = [
   {
@@ -34,6 +34,7 @@ export const databaseProviders = [
         UsersAssociated,
         RedSocial,
         Comments,
+        AsPublication,
       ]);
       await sequelize.sync({ force: true });
       return sequelize;
