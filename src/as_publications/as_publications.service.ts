@@ -5,11 +5,15 @@ import { LikeDto } from './dto/likes_publications.dto';
 import { FileService } from 'src/file/file.service';
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
+import { CreateCommentDto } from 'src/coments/comments.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class AsPublicationsService {
   constructor(
-    @Inject('AS_PUBLICATION_REPOSITORY') private readonly asPublicationRepository: typeof AsPublication, 
+    @Inject('AS_PUBLICATION_REPOSITORY') private readonly asPublicationRepository: typeof AsPublication,
+    @Inject('COMMENTS_REPOSITORY') private readonly commentsRepository: typeof Comments,
     private readonly fileService: FileService) {}
 
   async postAdoption(post:AsPublicationDto, file:Express.Multer.File[]):Promise<string> {
@@ -33,7 +37,7 @@ export class AsPublicationsService {
   async getAllPosts():Promise<AsPublication[]> {
     try {
       const publications = await this.asPublicationRepository.findAll({
-        include:[Animal, Asociaciones],
+        include:[Animal, Asociaciones, Comments],
       });
       return publications;
     } catch (error) {
@@ -88,6 +92,48 @@ export class AsPublicationsService {
       await publication.save();
       return publication;
 
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async comment(comment:CreateCommentDto):Promise<Comments | string> {
+    try {
+      if (!comment.description.length) return 'Can`t make an empty comment';
+      const { userId, pubId, asPubId, description } = comment;
+      if (pubId) {
+        const com = await this.commentsRepository.create<Comments>({ userId, asPubId, description });
+        return com;
+      } else if (asPubId) {
+        const com = await this.commentsRepository.create<Comments>({ userId, pubId, description });
+        return com;
+      }
+      throw Error('Request Error');
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async deleteComment(id:string):Promise<string> {
+    try {
+      const comment = await this.asPublicationRepository.findByPk(id);
+      comment.destroy();
+      return 'deleted successfully';
+    } catch (error) {
+      
+    }
+  }
+
+  async updateComment(newCommentData:CreateCommentDto):Promise<number[]> {
+    try {
+      const { userId, pubId, asPubId } = newCommentData;
+      const newComment = await this.commentsRepository.update(newCommentData, {
+        where:{
+          userId:userId,
+          [Op.or]:[{ pubId:pubId }, { asPubId:asPubId }],
+        },
+      });
+      return newComment;
     } catch (error) {
       console.log(error.message);
     }
