@@ -6,5 +6,6 @@ export interface AnimalDto {
   breed:string,
   as_id:string,
   status:string,
-  description:string
+  description:string,
+  images:string[]
 }
