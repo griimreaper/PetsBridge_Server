@@ -28,7 +28,7 @@ export class Comments extends Model {
   @Column({
     type: DataType.UUID,
   })
-    as_pubId:string;
+    asPubId:string;
 
   @Column
     description: string;
@@ -38,4 +38,7 @@ export class Comments extends Model {
 
   @BelongsTo( () => Users)
     user: Users;
+
+  @BelongsTo(() => AsPublication)
+    as_publication: AsPublication;
 }
