@@ -2,6 +2,7 @@ import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsT
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
 
 @Table({
   timestamps:false,
@@ -15,17 +16,31 @@ export class Animal extends Model<Animal> {
   })
     id: string;
 
+  /*  @ForeignKey(() => Users)
+  @Column({
+    type:DataType.UUID,
+    allowNull:true,
+  })
+    us_Id:string;*/
+
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
+    allowNull:false,
   })
     as_id: string;
+
+  /*   @BelongsTo(() => Users)
+    user: Users; */
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
   
   @BelongsToMany(() => Users, () => Adoption)
     adoption: Users;
+
+  @HasOne(() => AsPublication)
+    as_publication:AsPublication;
 
   @Column({
     type:DataType.STRING,
@@ -64,4 +79,9 @@ export class Animal extends Model<Animal> {
     allowNull:false,
   })
     description: string;
+
+  @Column({
+    type:DataType.ARRAY(DataType.STRING),
+  })
+    image:string[] | string;
 }
