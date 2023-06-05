@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Publications } from './entity/publications_users.entity';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
 import { FileService } from 'src/file/file.service';
@@ -17,59 +17,70 @@ export class PublicationsUsersService {
   ) {}
 
   async findAll(): Promise<Publications[]> {
-    //funcion para retornar todas las publicaciones
-    const publications = await this.servicePublications.findAll({
-      include: [Comments, Users],
-    });
-    const comentarys = await this.comments.findAll({
-      include: Users,
-    });
-    const newPub = publications.map((e) => {
-      const filtUser = e.dataValues.user.dataValues;
-      const { firstName, lastName, imgProf, email } = filtUser;
-      const filtro = e.dataValues.comments.map((x) => x.dataValues);
-      const filtComent = comentarys.map((x) => x.dataValues);
-      const filtComentUsers = filtComent.map((x) => x.user.dataValues);
-      const filtDataComUser = filtComentUsers.map((x) => {
-        const dataUser = {
-          email : x.email,
-          firstName: x.firstName,
-          lastName: x.lastName,
-          imgProf: x.imgProf,
+    try {
+      const publications = await this.servicePublications.findAll({
+        include: [Comments, Users],
+      });
+  
+      const comentarys = await this.comments.findAll({
+        include: Users,
+      });
+  
+      const newPub = publications.map((e) => {
+        const filtUser = e.dataValues.user.dataValues;
+        const { firstName, lastName, imgProf, email } = filtUser;
+  
+        const filtro = e.dataValues.comments.map((x) => x.dataValues);
+        const filtComent = comentarys.map((x) => x.dataValues);
+        const filtComentUsers = filtComent.map((x) => x.user.dataValues);
+        const filtDataComUser = filtComentUsers.map((x) => {
+          const dataUser = {
+            email: x.email,
+            firstName: x.firstName,
+            lastName: x.lastName,
+            imgProf: x.imgProf,
+          };
+          return dataUser;
+        });
+  
+        const filtro2 = filtro.map(({ pubId, ...commentarios }, i) => {
+          const combinar = { ...commentarios, ...filtDataComUser[i] };
+          return combinar;
+        });
+  
+        return {
+          ...e.dataValues,
+          comments: filtro2,
+          user: { firstName, lastName, imgProf, email },
         };
-        return dataUser;
       });
-      console.log(filtDataComUser);
-      const filtro2 = filtro.map(({ pubId, ...commentarios }, i) => { 
-        const combinar = { ...commentarios, ...filtDataComUser[0] };
-        return combinar;
-      });
-      console.log(filtro2);
-      return {
-        ...e.dataValues,
-        comments: filtro2, 
-        user: { firstName, lastName, imgProf, email },
-      };
-    } );
-    return newPub;
+  
+      return newPub;
+    } catch (error) {
+      throw new HttpException('Error al buscar las publicaciones', 404);
+    }
   }
 
   async findOne(id: string): Promise<Publications[]> {
-    const publications = await this.servicePublications.findAll({
-      include: Comments,
-      where:{
-        userId: id,
-      },
-    });
-    const newPub = publications.map((e) => {
-      const filtro = e.dataValues.comments.map((x) => x.dataValues);
-      const filtro2 = filtro.map(({ pubId, ...commentarios }) => commentarios);
-      return {
-        ...e.dataValues,
-        comments: filtro2,  
-      };
-    } );
-    return newPub;
+    try {
+      const publications = await this.servicePublications.findAll({
+        include: Comments,
+        where: {
+          userId: id,
+        },
+      });
+      const newPub = publications.map((e) => {
+        const filtro = e.dataValues.comments.map((x) => x.dataValues);
+        const filtro2 = filtro.map(({ pubId, ...commentarios }) => commentarios);
+        return {
+          ...e.dataValues,
+          comments: filtro2,
+        };
+      });
+      return newPub;
+    } catch (error) {
+      throw new HttpException('Error al buscar las publicaciones', 404);
+    }
   }
 
   async createPub(createUserDto: CreatePublicationsDto, file: Express.Multer.File[]) {
@@ -95,49 +106,61 @@ export class PublicationsUsersService {
       });
       return newUser;
     } catch (error) {
-      throw new Error(
-        `Error al intentar crear una nueva publicacion: ${error.message}`,
-      );
+      throw new HttpException('Error al intentar crear una nueva publicacion', 404);
     }
   }
 
   async comment(newComment: CreateCommentDto) {
-    console.log(newComment.description);
-    if (!newComment.userId) {
-      return 'Debe de estar registrado para poder comentar';
+    try {
+      if (!newComment.userId) {
+        throw new HttpException('Debe estar registrado para poder comentar', 404);
+      }
+      if (!newComment.description) {
+        throw new HttpException('No puede enviar un comentario vacio', 404);
+      }
+      const addComment = await this.comments.create({
+        ...newComment,
+      });
+      return addComment;
+    } catch (error) {
+      throw new HttpException('Error al añadir comentario', 404);
     }
-    if (!newComment.description) {
-      return 'No puedes mandar un comentario vacío';
-    }
-    const addComment = await this.comments.create({
-      ...newComment,
-    });
-    return addComment;
   }
-
   async updateLike(like: CreatePublicationsDto) {
-    const publicacion = await this.servicePublications.findByPk(like.id);
-    if (!publicacion) {
-      return 'Esta publicacion no existe';
+    try {
+      const publicacion = await this.servicePublications.findByPk(like.id);
+      if (!publicacion) {
+        throw new HttpException('No existe la publicacion', 404);
+      }
+      if (like.like) {
+        publicacion.likes = publicacion.likes + 1;
+      } else {
+        publicacion.likes = publicacion.likes - 1;
+      }
+      await publicacion.save();
+      return publicacion;
+    } catch (error) {
+      throw new HttpException('Error al actualizar el like de la publicacion', 404);
     }
-    if (like.like) {
-      publicacion.likes = publicacion.likes + 1;
-    } else {
-      publicacion.likes = publicacion.likes - 1;
-    }
-    await publicacion.save();
-    return publicacion;
   }
 
   async update(id: string, { description }): Promise<string> {
-    if (!description) return 'Nada que actualizar';
-    const publicacion = await this.servicePublications.findByPk(parseInt(id));
-    if (publicacion) {
-      if (description) publicacion.description = description;
-      await publicacion.save();
-      return 'Actualizado';
-    } else {
-      return 'No existe la publicacion';
+    try {
+      if (!description) {
+        return 'Nada que actualizar';
+      }
+      const publicacion = await this.servicePublications.findByPk(parseInt(id));
+      if (publicacion) {
+        if (description) {
+          publicacion.description = description;
+        }
+        await publicacion.save();
+        return 'Actualizado';
+      } else {
+        throw new HttpException('No existe la publicacion', 404);
+      }
+    } catch (error) {
+      throw new HttpException('Error al actualizar la publicacion', 404);
     }
   }
 
@@ -146,14 +169,12 @@ export class PublicationsUsersService {
       const user = await this.servicePublications.findByPk(parseInt(id));
 
       if (!user) {
-        throw new Error(`La publicacion con el ID '${id}' no se encuentra`);
+        throw new HttpException('No se encuentra la publicacion', 404);
       }
       await this.servicePublications.destroy({ where: { id: parseInt(id) } });
       return 'Eliminado';
     } catch (error) {
-      throw new Error(
-        `Error al intentar remover la publicacion: ${error.message}`,
-      );
+      throw new HttpException('Error al intentar remover la publicacion', 404);
     }
   }
 }

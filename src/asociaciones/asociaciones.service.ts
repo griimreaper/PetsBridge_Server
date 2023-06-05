@@ -1,4 +1,4 @@
-import { Inject, Injectable, HttpStatus } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { hash } from 'bcrypt';
@@ -21,26 +21,30 @@ export class AsociacionesService {
     return this.asociacionesProviders.findAll({});
   }
 
-  async findOne(id: string): Promise<Asociaciones> { // funcion que retorna una asociacion
-    return this.asociacionesProviders.findOne({
-      where: { id }, 
-      include: [ 
-        { 
-          model: Animal,
-          attributes: {
-            exclude: ['as_id'],
+  async findOne(id: string): Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({
+        where: { id },
+        include: [
+          {
+            model: Animal,
+            attributes: {
+              exclude: ['as_id'],
+            },
           },
-        }, 
-        {
-          model: RedSocial,
-        },
-      ],
-    });
+          {
+            model: RedSocial,
+          },
+        ],
+      });
+      return asociacion;
+    } catch (error) {
+      throw new HttpException(error.message, 404);
+    }
   }
 
   async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
     const { email, reds } = body;
-    console.log(body)
     const transaction = await this.sequelize.transaction();
     try {
       if (await Users.findOne({ where: { email } }) 
@@ -48,9 +52,7 @@ export class AsociacionesService {
         return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; // el email ya esta en uso
       
       const asociacion = await this.asociacionesProviders.create({ ...body }, { transaction }); //
-      console.log(asociacion);
       if (Array.isArray(reds) && reds.length > 0) {
-        console.log(reds);
         await Promise.all(
           reds.map((red) =>
             RedSocial.create(
@@ -67,36 +69,55 @@ export class AsociacionesService {
     } catch (error) {
       await transaction.rollback();
 
-      throw new Error(`Error al crear la asociación: ${error}`);
+      throw new HttpException(error.message, 404);
     }
   }
 
-  async delete(id: string): Promise<string> { // funcion de borrado logico de asociaciones
-    const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
-    if (asociacion) {
-      asociacion.status = false;
-    }
-    await asociacion.save();
-    return 'Asociacion eliminada correctamente';
-  }
-
-  async update(id: string, { name, country, description, password, address }: CreateAsociacionDto, img_profile?: any): Promise<string> {
-    if (!name && !country && !description && !password && !img_profile) return 'Nada que actualizar';
-    const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
-    if (asociacion) {
-      if (name) asociacion.name = name;
-      if (country) asociacion.country = country;
-      if (img_profile) asociacion.img_profile = img_profile;
-      if (description) asociacion.description = description;
-      if (address) asociacion.address = address;
-      if (password) {
-        const hashedPassword = await hash(password, 10);
-        asociacion.password = hashedPassword;
+  async delete(id: string): Promise<string> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
+      if (asociacion) {
+        asociacion.status = false;
+        await asociacion.save();
+        return 'Asociación eliminada correctamente';
+      } else {
+        throw new Error('No se encontró la asociación');
       }
-      await asociacion.save();
-      return 'Datos actualizados';
-    } else {
-      return 'La asociacion no existe';
+    } catch (error) {
+      throw new HttpException(error.message, 404);
+    }
+  }
+
+  async update(
+    id: string,
+    { name, country, description, password, address }: CreateAsociacionDto,
+    img_profile?: any
+  ): Promise<string> {
+    try {
+      if (!name && !country && !description && !password && !img_profile) {
+        return 'Nada que actualizar';
+      }
+  
+      const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
+  
+      if (asociacion) {
+        if (name) asociacion.name = name;
+        if (country) asociacion.country = country;
+        if (img_profile) asociacion.img_profile = img_profile;
+        if (description) asociacion.description = description;
+        if (address) asociacion.address = address;
+        if (password) {
+          const hashedPassword = await hash(password, 10);
+          asociacion.password = hashedPassword;
+        }
+  
+        await asociacion.save();
+        return 'Datos actualizados';
+      } else {
+        throw new HttpException('La asociación no existe', 404);
+      }
+    } catch (error) {
+      throw new HttpException('Error al actualizar la asociación', 404);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Adoption } from './adoptions.entity';
 import { AdoptionDto } from './dto/adoptions.dto';
 import { Users } from 'src/users/entity/users.entity';
@@ -23,11 +23,10 @@ export class AdoptionsService {
 
         return 'Adopted successfully';
       } else {
-        throw new Error('User or animal not found');
+        throw new HttpException('User or animal not found', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
-      console.log(error.message);
-      throw new Error('Adoption failed');
+      throw new HttpException('Adoption failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
+}
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, UseInterceptors, UploadedFiles, Get } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFiles, Get, HttpException } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import { multerConfig } from '../file/multer.config';
@@ -15,7 +15,7 @@ export class FileController {
     try {
       return await this.fileService.createFiles(files);
     } catch (error) {
-      throw new Error(error.message);
+      throw new HttpException(error.message, 404);
     }
   }
 
