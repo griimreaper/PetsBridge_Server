@@ -26,9 +26,9 @@ export class Comments extends Model {
 
   @ForeignKey(() => AsPublication)
   @Column({
-    type: DataType.UUID,
+    type:DataType.INTEGER,
   })
-    asPubId:string;
+    asPubId:number;
 
   @Column
     description: string;
