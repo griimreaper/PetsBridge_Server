@@ -15,11 +15,22 @@ export class Animal extends Model<Animal> {
   })
     id: string;
 
+  /*  @ForeignKey(() => Users)
+  @Column({
+    type:DataType.UUID,
+    allowNull:true,
+  })
+    us_Id:string;*/
+
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
+    allowNull:false,
   })
     as_id: string;
+
+  /*   @BelongsTo(() => Users)
+    user: Users; */
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
@@ -64,4 +75,9 @@ export class Animal extends Model<Animal> {
     allowNull:false,
   })
     description: string;
+
+  @Column({
+    type:DataType.ARRAY(DataType.STRING),
+  })
+    image:string[];
 }
