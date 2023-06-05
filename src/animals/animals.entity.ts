@@ -79,5 +79,5 @@ export class Animal extends Model<Animal> {
   @Column({
     type:DataType.ARRAY(DataType.STRING),
   })
-    image:string[];
+    images:string[];
 }
