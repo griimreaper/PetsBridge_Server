@@ -20,11 +20,7 @@ export class AsPublicationsService {
     try {
       const date = new Date();
       const easyFormatDate = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/${date.getHours()}/${date.getMinutes()}`;
-      let urls:string | string[];
-      if (!file.length) urls = null;
-      urls = await this.fileService.createFiles(file);
-
-      
+      const urls: string | string[] = file ? await this.fileService.createFiles(file) : null;
       const publication = await this.asPublicationRepository.create({ ...post, createdAt:easyFormatDate, image:urls });
 
       return 'posted successfully';
@@ -127,10 +123,11 @@ export class AsPublicationsService {
   async updateComment(newCommentData:CreateCommentDto):Promise<number[]> {
     try {
       const { userId, pubId, asPubId } = newCommentData;
+      const publicationId: string = pubId ? pubId : asPubId;
       const newComment = await this.commentsRepository.update(newCommentData, {
         where:{
           userId:userId,
-          [Op.or]:[{ pubId:pubId }, { asPubId:asPubId }],
+          [Op.or]:[{ pubId:publicationId }, { asPubId:publicationId }],
         },
       });
       return newComment;
