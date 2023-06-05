@@ -3,7 +3,6 @@ import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
-import { Users } from 'src/users/entity/users.entity';
 
 @Table({
   timestamps:false,
@@ -84,5 +83,5 @@ export class Animal extends Model<Animal> {
   @Column({
     type:DataType.ARRAY(DataType.STRING),
   })
-    image:string[];
+    image:string[] | string;
 }
