@@ -40,7 +40,7 @@ export class AsociacionesService {
 
   async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
     const { email, reds } = body;
-    console.log(body)
+    console.log(body);
     const transaction = await this.sequelize.transaction();
     try {
       if (await Users.findOne({ where: { email } }) 

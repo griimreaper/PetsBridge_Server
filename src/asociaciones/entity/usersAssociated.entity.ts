@@ -1,4 +1,4 @@
-import { Table, Column, Model, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Table, Column, Model, ForeignKey, BelongsTo, DataType } from 'sequelize-typescript';
 import { Users } from 'src/users/entity/users.entity';
 import { Asociaciones } from './asociaciones.entity';
 
@@ -11,11 +11,15 @@ export class UsersAssociated extends Model {
     id: number;
 
   @ForeignKey(() => Users)
-  @Column
+  @Column({
+    type: DataType.UUID,
+  })
     user_id: string;
 
   @ForeignKey(() => Asociaciones)
-  @Column
+  @Column({
+    type: DataType.UUID,
+  })
     asoc_id: string;
 
 }
