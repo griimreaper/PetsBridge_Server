@@ -86,11 +86,11 @@ export class AsociacionesService {
     return 'Asociacion eliminada correctamente';
   }
 
-  /* async update(id: string, { asociationName, country, description, password, address }: CreateAsociacionDto, img_profile?: any): Promise<string> {
-    if (!name && !country && !description && !password && !img_profile) return 'Nada que actualizar';
+  async update(id: string, { asociationName, country, description, password, address }: CreateAsociacionDto, img_profile?: any): Promise<string> {
+    if (!asociationName && !country && !description && !password && !img_profile) return 'Nada que actualizar';
     const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
     if (asociacion) {
-      if (name) asociacion.asociationName = name;
+      if (asociationName) asociacion.asociationName = asociationName;
       if (country) asociacion.country = country;
       if (img_profile) asociacion.img_profile = img_profile;
       if (description) asociacion.description = description;
@@ -104,5 +104,5 @@ export class AsociacionesService {
     } else {
       return 'La asociacion no existe';
     }
-  } */
+  } 
 }

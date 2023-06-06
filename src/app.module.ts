@@ -32,7 +32,6 @@ import { SpeciesModule } from './species/species.module';
     PublicationsUsersModule,
     DonationsModule,
     AdoptionsModule,
-    AsPublicationsModule,
     SpeciesModule,
   ],
   controllers: [AppController],

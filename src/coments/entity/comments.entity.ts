@@ -24,11 +24,11 @@ export class Comments extends Model {
   })
     pubId: string;
 
-  @ForeignKey(() => AsPublication)
+  /*  @ForeignKey(() => AsPublication)
   @Column({
     type:DataType.UUID,
   })
-    asPubId:string;
+    asPubId:string; */
 
   @Column
     description: string;
@@ -39,6 +39,6 @@ export class Comments extends Model {
   @BelongsTo( () => User)
     user: User;
 
-  @BelongsTo(() => AsPublication)
-    as_publication: AsPublication;
+  /* @BelongsTo(() => AsPublication)
+    as_publication: AsPublication; */
 }
