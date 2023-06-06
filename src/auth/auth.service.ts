@@ -52,6 +52,7 @@ export class AuthService {
         return this.usersService.createUser(body);
         break;
       case 'fundation':
+        console.log(body);
         return this.asociacionesService.create(body);
         break;
       default:
