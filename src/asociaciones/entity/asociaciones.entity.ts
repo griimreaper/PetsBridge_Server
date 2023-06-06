@@ -34,7 +34,7 @@ export class Asociaciones extends Model {
     img_profile: string;
 
   @Column
-    dateStart: Date;
+    date_created: Date;
 
   @Column
     description: string;
