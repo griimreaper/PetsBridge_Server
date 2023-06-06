@@ -18,11 +18,13 @@ export class AnimalsService {
 
   async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
     try {
-      const urls = file ? await this.filesService.createFiles(file) : null;
-      await this.animalsRepository.create<Animal>({
-        ...pet,
-        image:urls,
-      });
+      if (Array.isArray(file)) {
+        const urls: any = await this.filesService.createFiles(file) ;
+        await this.animalsRepository.create<Animal>({ ...pet, images:urls });
+        return 'Posted successfully';
+      }
+
+      await this.animalsRepository.create<Animal>(pet);
 
       return 'Posted successfully';
     } catch (error) {
