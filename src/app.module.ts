@@ -14,6 +14,7 @@ import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
 import { AdoptionsModule } from './adoptions/adoptions.module';
 import { AsPublicationsModule } from './as_publications/as_publications.module';
+import { SpeciesModule } from './species/species.module';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { AsPublicationsModule } from './as_publications/as_publications.module';
     PublicationsUsersModule,
     DonationsModule,
     AdoptionsModule,
-    AsPublicationsModule,
+    SpeciesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

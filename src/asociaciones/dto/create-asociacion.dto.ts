@@ -8,7 +8,7 @@ export class CreateAsociacionDto {
 
   password: string;
 
-  name: string;
+  asociationName: string;
 
   img_profile?: string;
 

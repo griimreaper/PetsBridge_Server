@@ -1,6 +1,6 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany, AllowNull } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 // import { UsersAssociated } from './usersAssociated.entity';
 import { RedSocial } from './redSocial.entity';
 import { RedSocialDto } from '../dto/create-RedSocial.dto';
@@ -28,7 +28,7 @@ export class Asociaciones extends Model {
   @Column({
     allowNull: false,
   })
-    name: string;
+    asociationName: string;
 
   @Column
     img_profile: string;

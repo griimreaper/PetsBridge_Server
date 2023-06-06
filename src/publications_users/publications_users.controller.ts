@@ -62,4 +62,9 @@ export class PublicationsUsersController {
   async deleteById(@Param('id') id: string) {
     return this.publicatiosService.delete(id);
   }
+
+  @Get('filter')
+  async filterByTopic(@Query('topics') topics:number[]) {
+    return this.publicatiosService.filterByTopic(topics);
+  }
 }

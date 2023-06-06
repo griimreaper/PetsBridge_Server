@@ -41,7 +41,7 @@ export class AsPublicationsService {
     }
   }
 
-  async getPostsByAso(idAsociation:string):Promise<string | AsPublication[]> {
+  /* async getPostsByAso(idAsociation:string):Promise<string | AsPublication[]> {
     try {
       const publications = await this.asPublicationRepository.findAll({
         where:{
@@ -54,7 +54,7 @@ export class AsPublicationsService {
     } catch (error) {
       console.log(error.message);
     }
-  }
+  } */
 
   async deletePublication(id:number):Promise<string> {
     try {
