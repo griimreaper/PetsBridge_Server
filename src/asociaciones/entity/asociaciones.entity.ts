@@ -55,6 +55,6 @@ export class Asociaciones extends Model {
   //   members: Users[];
 
   @HasMany(() => RedSocial)
-    reds: RedSocialDto;
+    reds: RedSocial;
 
 }

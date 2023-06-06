@@ -22,7 +22,7 @@ export class CreateAsociacionDto {
 
   status: boolean;
 
-  reds?: RedSocialDto[] | RedSocialDto;
+  reds?: string;
 
   rol?: UserRole;
 }
