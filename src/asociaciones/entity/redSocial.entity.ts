@@ -3,22 +3,22 @@ import { Column, DataType, ForeignKey, Table, BelongsTo } from 'sequelize-typesc
 import { Asociaciones } from './asociaciones.entity';
 
 @Table
-export class SocialReds extends Model<SocialReds> {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-    nombre_red: string;
-
-  @Column
-    body: string;
-
+export class RedSocial extends Model<RedSocial> {
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
   })
     as_Id: string;
-
+  
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
+  
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    name: string;
+
+  @Column
+    url: string;
 }

@@ -4,8 +4,6 @@ export class CreatePublicationsDto {
 
   description: string;
 
-  isActive?: boolean;
-
   imagen?: string[] | string;
 
   like: boolean;

@@ -18,8 +18,7 @@ export class FileService {
     // const results = await Promise.all(uploadPromises);
     // return results;
     try {
-      console.log(files);
-      if (typeof files === 'object') {
+      if (!Array.isArray(files)) {
         const uploadPromise = await cloudinary.uploader.upload(files.path, { folder: 'Upload' }, (error, result) => {
           if (error) {
             console.log('aqui esta el error');
@@ -31,7 +30,7 @@ export class FileService {
         this.deleteFiles(files);
         return uploadPromise.secure_url;
       } else {
-        const uploadPromises = files.map((file) => cloudinary.uploader.upload(file.path, { folder: 'Upload' }, (error, result) => {
+        const uploadPromises =  files.map((file) => cloudinary.uploader.upload(file.path, { folder: 'Upload' }, (error, result) => {
           if (error) {
             console.error(error);
           } else {
@@ -52,7 +51,7 @@ export class FileService {
   }
 
   deleteFiles( files: any ) {
-    if (typeof files === 'object') {
+    if (!Array.isArray(files)) {
       unlink(files.path, (err) => {
         if (err) {
           console.error('Error al eliminar el archivo:', err);

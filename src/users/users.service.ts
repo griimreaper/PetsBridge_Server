@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { hash } from 'bcrypt';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -49,7 +51,9 @@ export class UsersService {
 
   async findById(id: string): Promise<Users> {
     try {
-      const user = await this.serviceUsers.findByPk(id);
+      const user = await this.serviceUsers.findByPk(id, {
+        include: Publications,
+      });
 
       if (!user) {
         throw new Error('No hay con ese id');
