@@ -22,7 +22,8 @@ export class AnimalsService {
       console.log(pet, 'PEEEEEEEEEEEEEEETTTTTT');
       if (file.length) {
         const URLS = await this.fileService.createFiles(file);
-        pet.imagen = URLS;
+        if (Array.isArray(URLS))
+          pet.imagen = URLS;
       }
       await this.animalsRepository.create<Animal>(pet);
 

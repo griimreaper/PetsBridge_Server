@@ -64,4 +64,9 @@ export class Animal extends Model<Animal> {
     allowNull:false,
   })
     description: string;
+
+  @Column( {
+    type: DataType.ARRAY(DataType.STRING),
+  })
+    imagen: string[]; 
 }
