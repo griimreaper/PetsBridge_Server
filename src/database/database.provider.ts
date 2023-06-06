@@ -28,12 +28,14 @@ export const databaseProviders = [
         Users,
         Asociaciones,
         Publications,
-        Donations,
+        Comments,
         Adoption,
         Animal,
         RedSocial,
-        Comments,
         AsPublication,
+      ]);
+      sequelize.addModels([
+        Donations,
       ]);
       await sequelize.sync({ force: true });
       return sequelize;
