@@ -1,5 +1,5 @@
 export interface AnimalDto {
-  us_Id?:string,
+  // us_Id?:string,
   name:string,
   specie:string,
   gender:string,
@@ -7,5 +7,5 @@ export interface AnimalDto {
   as_id:string,
   status:string,
   description:string,
-  images:string[]
+  image: string [];
 }

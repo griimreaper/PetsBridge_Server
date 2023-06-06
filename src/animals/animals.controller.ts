@@ -18,7 +18,7 @@ export class AnimalsController {
   @HttpCode(201)
   @Post()
   @UseInterceptors(FilesInterceptor('file', undefined, multerConfig))
-  createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]):Promise<string> {
+  createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]) {
     return this.animalsService.postPet(pet, file);
   }
 
