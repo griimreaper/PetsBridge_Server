@@ -156,4 +156,18 @@ export class PublicationsUsersService {
       );
     }
   }
+
+  async filterByTopic(topics:number[]):Promise<Publications[] | string> {
+    try {
+      const publications =  await this.servicePublications.findAll({
+        where:{
+          topic:topics,
+        },
+      });
+
+      return publications;
+    } catch (error) {
+      return error.message;
+    }
+  }
 }

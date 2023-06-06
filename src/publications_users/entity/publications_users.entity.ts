@@ -48,10 +48,10 @@ export class Publications extends Model {
     imagen: string[];  
 
   @Column({
-    type:DataType.ARRAY(DataType.INTEGER),
+    type:DataType.INTEGER,
     allowNull:false,
   })
-    topics:number[];
+    topic:number;
   
   @HasMany(() => Comments)
     comments: Comments[];
