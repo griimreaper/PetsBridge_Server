@@ -8,7 +8,7 @@ export class RedSocial extends Model<RedSocial> {
   @Column({
     type:DataType.UUID,
   })
-    as_Id: string;
+    as_id: string;
   
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
