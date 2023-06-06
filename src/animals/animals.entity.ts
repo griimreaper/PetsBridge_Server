@@ -18,7 +18,6 @@ export class Animal extends Model<Animal> {
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
-    allowNull:false,
   })
     as_id: string;
 
@@ -65,9 +64,4 @@ export class Animal extends Model<Animal> {
     allowNull:false,
   })
     description: string;
-
-  @Column({
-    type:DataType.ARRAY(DataType.STRING),
-  })
-    images:string[];
 }
