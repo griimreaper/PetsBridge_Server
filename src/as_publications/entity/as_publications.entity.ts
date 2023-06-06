@@ -17,17 +17,9 @@ export class AsPublication extends Model<AsPublication> {
     id: string;
 
   @ForeignKey(() => Animal)
-  @Column({
-    type:DataType.UUID,
-    allowNull:false,
-  })
     ID_Animal:string;
 
   @ForeignKey(() => Asociaciones)
-  @Column({
-    type:DataType.UUID,
-    allowNull:false,
-  })
     ID_Asociation:string;
  
   @Column({
