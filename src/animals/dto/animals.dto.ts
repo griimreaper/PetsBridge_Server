@@ -1,5 +1,5 @@
 export interface AnimalDto {
-  us_Id?:string,
+  us_id?:string,
   name:string,
   specie:string,
   gender:string,

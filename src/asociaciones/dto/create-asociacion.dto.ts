@@ -12,7 +12,7 @@ export class CreateAsociacionDto {
 
   img_profile?: string;
 
-  date_created: Date;
+  dateStart: Date;
 
   description: string;
 
