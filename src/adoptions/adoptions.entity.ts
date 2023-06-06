@@ -1,6 +1,6 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 
 @Table({
   timestamps:true,
@@ -23,7 +23,7 @@ export class Adoption extends Model<Adoption> {
   })
     animalID: string;
 
-  @ForeignKey(() => Users)
+  @ForeignKey(() => User)
   @Column
     userID: string;
 

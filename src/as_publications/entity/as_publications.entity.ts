@@ -16,19 +16,19 @@ export class AsPublication extends Model<AsPublication> {
   })
     id: string;
 
-  @ForeignKey(() => Animal)
+  /* @ForeignKey(() => Animal)
   @Column({
     type:DataType.UUID,
     allowNull:false,
   })
-    ID_Animal:string;
+    ID_Animal:string; */
 
-  @ForeignKey(() => Asociaciones)
+  /* @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
     allowNull:false,
   })
-    ID_Asociation:string;
+    ID_Asociation:string; */
  
   @Column({
     type:DataType.STRING,
@@ -65,12 +65,12 @@ export class AsPublication extends Model<AsPublication> {
   })
     image:string | string[];
 
-  @BelongsTo(() => Asociaciones)
+  /* @BelongsTo(() => Asociaciones)
     asociacion:Asociaciones;
+ */
+  /* @BelongsTo(() => Animal)
+    Animal:Animal; */
 
-  @BelongsTo(() => Animal)
-    Animal:Animal;
-
-  @HasMany(() => Comments)
-    comments:Comments;
+  /* @HasMany(() => Comments)
+    comments:Comments; */
 }

@@ -1,5 +1,5 @@
 import { Inject, Injectable, HttpStatus } from '@nestjs/common';
-import { Users } from './entity/users.entity';
+import { User } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
@@ -11,11 +11,11 @@ import { Animal } from 'src/animals/animals.entity';
 export class UsersService {
   constructor(
     @Inject('USERS_REPOSITORY')
-    private serviceUsers: typeof Users,
+    private serviceUsers: typeof User,
     private readonly configureService: ConfigService,
   ) {}
 
-  async findAll(): Promise<Users[]> {
+  async findAll(): Promise<User[]> {
     try {
       const api = this.configureService.get('DB_HOST');
       return await this.serviceUsers.findAll(api);
@@ -50,7 +50,7 @@ export class UsersService {
   //   }
   // }
 
-  async findById(id: string): Promise<Users> {
+  async findById(id: string): Promise<User> {
     try {
       const user = await this.serviceUsers.findByPk(id, {
         include: [Publications, Animal],

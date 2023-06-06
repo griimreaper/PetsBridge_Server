@@ -4,7 +4,7 @@ import { CreatePublicationsDto } from './dto/publications_users.dto';
 import { FileService } from 'src/file/file.service';
 import { Comments } from 'src/coments/entity/comments.entity';
 import { CreateCommentDto } from 'src/coments/comments.dto';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 
 @Injectable()
 export class PublicationsUsersService {
@@ -19,10 +19,10 @@ export class PublicationsUsersService {
   async findAll(): Promise<Publications[]> {
     //funcion para retornar todas las publicaciones
     const publications = await this.servicePublications.findAll({
-      include: [Comments, Users],
+      include: [Comments, User],
     });
     const comentarys = await this.comments.findAll({
-      include: Users,
+      include: User,
     });
     const newPub = publications.map((e) => {
       const filtUser = e.dataValues.user.dataValues;
@@ -160,6 +160,20 @@ export class PublicationsUsersService {
       throw new Error(
         `Error al intentar remover la publicacion: ${error.message}`,
       );
+    }
+  }
+
+  async filterByTopic(topics:number[]):Promise<Publications[] | string> {
+    try {
+      const publications =  await this.servicePublications.findAll({
+        where:{
+          topic:topics,
+        },
+      });
+
+      return publications;
+    } catch (error) {
+      return error.message;
     }
   }
 }

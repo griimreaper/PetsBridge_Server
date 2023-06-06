@@ -42,10 +42,10 @@ export class AsPublicationsController {
     return this.asPublicationsService.findPostByPK(id);
   }
 
-  @Get(':id')
+  /*  @Get(':id')
   getPosstByAs(@Param('id') id:string) {
     return this.asPublicationsService.getPostsByAso(id);
-  }
+  } */
 
   @Delete('delete/:id')
   deletePost(@Param('id') id:number) {

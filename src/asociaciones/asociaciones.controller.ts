@@ -31,7 +31,7 @@ export class AsociacionesController {
     return this.asociacionesService.delete(idAsociacion);
   }
 
-  @UseGuards(JwtAuthGuard)
+  /* @UseGuards(JwtAuthGuard)
   @Put('update/:id')
   @UseInterceptors(
     FileInterceptor('profilePic', multerConfig),
@@ -42,5 +42,5 @@ export class AsociacionesController {
       return this.asociacionesService.update(idAsociacion, body, url);
     }
     return this.asociacionesService.update(idAsociacion, body);
-  }
+  } */
 }

@@ -8,7 +8,7 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { Comments } from 'src/coments/entity/comments.entity';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 
 @Table({ timestamps: false })
 export class Publications extends Model {
@@ -19,14 +19,14 @@ export class Publications extends Model {
   })
     id: string;
     
-  @ForeignKey(() => Users)
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
   })
     userId: string;
 
-  @BelongsTo(() => Users)
-    user: Users;  
+  @BelongsTo(() => User)
+    user: User;  
 
   @Column
     likes: number;
@@ -46,6 +46,12 @@ export class Publications extends Model {
     },
   )
     imagen: string[];  
+
+  @Column({
+    type:DataType.INTEGER,
+    allowNull:false,
+  })
+    topic:number;
   
   @HasMany(() => Comments)
     comments: Comments[];
