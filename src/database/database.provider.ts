@@ -26,10 +26,10 @@ export const databaseProviders = [
       });
       sequelize.addModels([
         Users,
+        Asociaciones,
         Publications,
         Donations,
         Adoption,
-        Asociaciones,
         Animal,
         UsersAssociated,
         RedSocial,
