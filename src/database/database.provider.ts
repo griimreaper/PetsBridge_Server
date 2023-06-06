@@ -35,7 +35,7 @@ export const databaseProviders = [
         SocialReds,
         Comments,
       ]);
-      await sequelize.sync({ force: true });
+      await sequelize.sync({ force: false });
       return sequelize;
     },
   },
