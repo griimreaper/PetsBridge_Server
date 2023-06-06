@@ -37,7 +37,7 @@ export const databaseProviders = [
       sequelize.addModels([
         Donations,
       ]);
-      await sequelize.sync({ force: true });
+      await sequelize.sync({ force: false });
       return sequelize;
     },
   },
