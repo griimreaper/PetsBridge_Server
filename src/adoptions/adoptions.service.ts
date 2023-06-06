@@ -1,13 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Adoption } from './adoptions.entity';
 import { AdoptionDto } from './dto/adoptions.dto';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 import { Animal } from 'src/animals/animals.entity';
 @Injectable()
 export class AdoptionsService {
   constructor(
     @Inject('ADOPTIONS_REPOSITORY') private readonly adoptionsRepository: typeof Adoption,
-    @Inject('USERS_REPOSITORY') private readonly usersRepository: typeof Users,
+    @Inject('USERS_REPOSITORY') private readonly usersRepository: typeof User,
     @Inject('ANIMALS_REPOSITORY') private readonly animalsRepository: typeof Animal,
   ) {}
 

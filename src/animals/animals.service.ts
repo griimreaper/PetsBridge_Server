@@ -16,7 +16,7 @@ export class AnimalsService {
     return animals;
   }
 
-  async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
+  /*   async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
     try {
       if (Array.isArray(file)) {
         const urls: any = await this.filesService.createFiles(file) ;
@@ -31,7 +31,7 @@ export class AnimalsService {
       console.log(error.message);
       throw new HttpException(error.message, 404);
     }
-  }
+  } */
 
   async getAllPets():Promise<Animal[]> {
     try {

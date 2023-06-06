@@ -14,7 +14,7 @@ import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table
-export class Users extends Model {
+export class User extends Model {
   
   @Column({
     type: DataType.UUID,
@@ -59,6 +59,6 @@ export class Users extends Model {
   // @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
   //   fundations: Asociaciones[];
 
-  @BelongsToMany(() => Animal, () => Adoption)
+  @HasMany(() => Animal)
     animals: Animal;
 }

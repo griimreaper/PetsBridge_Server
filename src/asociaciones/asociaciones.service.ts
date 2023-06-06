@@ -2,7 +2,7 @@ import { Inject, Injectable, HttpStatus } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { hash } from 'bcrypt';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 import { Animal } from 'src/animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
@@ -50,7 +50,7 @@ export class AsociacionesService {
     const transaction = await this.sequelize.transaction();
 
     try {
-      if (await Users.findOne({ where: { email } }) 
+      if (await User.findOne({ where: { email } }) 
       || await Asociaciones.findOne({ where: { email } })) 
         return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; // el email ya esta en uso
       
@@ -86,11 +86,11 @@ export class AsociacionesService {
     return 'Asociacion eliminada correctamente';
   }
 
-  async update(id: string, { name, country, description, password, address }: CreateAsociacionDto, img_profile?: any): Promise<string> {
+  /* async update(id: string, { asociationName, country, description, password, address }: CreateAsociacionDto, img_profile?: any): Promise<string> {
     if (!name && !country && !description && !password && !img_profile) return 'Nada que actualizar';
     const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
     if (asociacion) {
-      if (name) asociacion.name = name;
+      if (name) asociacion.asociationName = name;
       if (country) asociacion.country = country;
       if (img_profile) asociacion.img_profile = img_profile;
       if (description) asociacion.description = description;
@@ -104,5 +104,5 @@ export class AsociacionesService {
     } else {
       return 'La asociacion no existe';
     }
-  }
+  } */
 }

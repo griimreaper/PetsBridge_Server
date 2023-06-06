@@ -1,7 +1,9 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Specie } from 'src/species/species.entity';
+
 
 @Table({
   timestamps:false,
@@ -14,18 +16,35 @@ export class Animal extends Model<Animal> {
     unique: true,
   })
     id: string;
-
+  
+  @ForeignKey( () => User)
+  @Column({
+    type:DataType.UUID,
+    allowNull:false,
+  })
+    userId:string;
+  
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
   })
     as_id: string;
 
+  @ForeignKey(() => Specie)
+  @Column({
+    type:DataType.INTEGER,
+    allowNull:false,
+  })
+    specieId: number;
+
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
-  
-  @BelongsToMany(() => Users, () => Adoption)
-    adoption: Users;
+
+  @BelongsTo( () => User)
+    user: User;
+
+  @BelongsTo( () => Specie)
+    specie:Specie;
 
   @Column({
     type:DataType.STRING,
@@ -35,13 +54,6 @@ export class Animal extends Model<Animal> {
 
   @Column({
     type:DataType.STRING,
-    allowNull:false,
-  })
-    specie: string;
-
-  @Column({
-    type:DataType.ENUM,
-    values:['male', 'female'],
     allowNull:false,
   })
     gender:string;
@@ -69,4 +81,6 @@ export class Animal extends Model<Animal> {
     allowNull:false,
   })
     description: string;
+
+  
 }

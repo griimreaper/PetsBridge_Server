@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Users } from 'src/users/entity/users.entity';
+import { User } from 'src/users/entity/users.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
@@ -9,6 +9,7 @@ import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
 import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
+import { Specie } from 'src/species/species.entity';
 
 export const databaseProviders = [
   {
@@ -25,7 +26,7 @@ export const databaseProviders = [
         native: false,
       });
       sequelize.addModels([
-        Users,
+        User,
         Asociaciones,
         Publications,
         Comments,
@@ -33,6 +34,7 @@ export const databaseProviders = [
         Animal,
         RedSocial,
         AsPublication,
+        Specie,
       ]);
       sequelize.addModels([
         Donations,
