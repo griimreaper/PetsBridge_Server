@@ -2,13 +2,13 @@ import { Model } from 'sequelize-typescript';
 import { Column, DataType, ForeignKey, Table, BelongsTo } from 'sequelize-typescript';
 import { Asociaciones } from './asociaciones.entity';
 
-@Table
+@Table({ timestamps: false })
 export class RedSocial extends Model<RedSocial> {
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
   })
-    as_Id: string;
+    as_id: string;
   
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;

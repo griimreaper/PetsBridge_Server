@@ -34,18 +34,28 @@ export class AsociacionesService {
           },
           {
             model: RedSocial,
+            attributes: {
+              exclude: ['id', 'as_id'],
+            },
           },
         ],
       });
+  
       return asociacion;
     } catch (error) {
-      throw new HttpException(error.message, 404);
+      console.error(error);
+      throw new Error('Ocurrió un error al buscar la asociación.');
     }
   }
 
   async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
-    const { email, reds } = body;
+    const { email } = body;
+    let { reds } = body;
+
+    if (reds && typeof reds === 'string') reds = JSON.parse(reds);
+
     const transaction = await this.sequelize.transaction();
+
     try {
       if (await Users.findOne({ where: { email } }) 
       || await Asociaciones.findOne({ where: { email } })) 
@@ -56,7 +66,7 @@ export class AsociacionesService {
         await Promise.all(
           reds.map((red) =>
             RedSocial.create(
-              { as_Id: asociacion.id, name: red.name, url: red.url },
+              { as_id: asociacion.id, name: red.name, url: red.url },
               { transaction },
             ),
           ),

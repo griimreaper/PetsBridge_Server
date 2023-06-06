@@ -33,13 +33,14 @@ export class FileService {
           if (error) {
             throw new Error(error.message);
           } else {
-            return result
+            // console.log(result);
           }
         }));
         const results = await Promise.all(uploadPromises);
         // Eliminar el archivo de la carpeta local
         this.deleteFiles(files);
         const URLS = results.map( (e) => e.secure_url);
+        // console.log(URLS);
         return URLS;
       }
     } catch (error) {

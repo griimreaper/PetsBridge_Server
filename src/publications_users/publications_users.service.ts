@@ -17,48 +17,47 @@ export class PublicationsUsersService {
   ) {}
 
   async findAll(): Promise<Publications[]> {
-    try {
-      const publications = await this.servicePublications.findAll({
-        include: [Comments, Users],
-      });
-  
-      const comentarys = await this.comments.findAll({
-        include: Users,
-      });
-  
-      const newPub = publications.map((e) => {
-        const filtUser = e.dataValues.user.dataValues;
-        const { firstName, lastName, imgProf, email } = filtUser;
-  
-        const filtro = e.dataValues.comments.map((x) => x.dataValues);
-        const filtComent = comentarys.map((x) => x.dataValues);
-        const filtComentUsers = filtComent.map((x) => x.user.dataValues);
-        const filtDataComUser = filtComentUsers.map((x) => {
-          const dataUser = {
-            email: x.email,
-            firstName: x.firstName,
-            lastName: x.lastName,
-            imgProf: x.imgProf,
-          };
-          return dataUser;
-        });
-  
-        const filtro2 = filtro.map(({ pubId, ...commentarios }, i) => {
-          const combinar = { ...commentarios, ...filtDataComUser[i] };
-          return combinar;
-        });
-  
-        return {
-          ...e.dataValues,
-          comments: filtro2,
-          user: { firstName, lastName, imgProf, email },
+    //funcion para retornar todas las publicaciones
+    const publications = await this.servicePublications.findAll({
+      include: [Comments, Users],
+    });
+    const comentarys = await this.comments.findAll({
+      include: Users,
+    });
+    const newPub = publications.map((e) => {
+      const filtUser = e.dataValues.user.dataValues;
+      const { firstName, lastName, imgProf, email } = filtUser;
+      const filtro = e.dataValues.comments.map((x) => x.dataValues);
+      const filtComent = comentarys.map((x) => x.dataValues);
+      
+      const filtComentUsers = filtComent.map((x) => x.user.dataValues);
+      // console.log(filtComentUsers, 'FILTUSERRRRR');
+      const filtDataComUser = filtComentUsers.map((x) => {
+        
+        const dataUser = {
+          email : x.email,
+          firstName: x.firstName,
+          lastName: x.lastName,
+          imgProf: x.img_profile,
         };
+        console.log(dataUser);
+        return dataUser;
       });
-  
-      return newPub;
-    } catch (error) {
-      throw new HttpException('Error al buscar las publicaciones', 404);
-    }
+      // console.log(filtDataComUser);
+      const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
+        const combinar = { ...commentarios, ...filtDataComUser[i] };
+        console.log(combinar);
+        return combinar;
+      });
+      // console.log(filtro2);
+      return {
+        ...e.dataValues,
+        comments: filtro2, 
+        user: { firstName, lastName, imgProf, email },
+      };
+    } );
+    // console.log(newPub);
+    return newPub;
   }
 
   async findOne(id: string): Promise<Publications[]> {
