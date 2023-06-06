@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { hash } from 'bcrypt';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Animal } from 'src/animals/animals.entity';
 
 @Injectable()
 export class UsersService {
@@ -52,7 +53,7 @@ export class UsersService {
   async findById(id: string): Promise<Users> {
     try {
       const user = await this.serviceUsers.findByPk(id, {
-        include: Publications,
+        include: [Publications, Animal],
       });
 
       if (!user) {

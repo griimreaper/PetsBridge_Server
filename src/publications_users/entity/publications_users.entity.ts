@@ -20,9 +20,6 @@ export class Publications extends Model {
     id: string;
     
   @ForeignKey(() => Users)
-  @Column({
-    type: DataType.UUID,
-  })
     userId: string;
 
   @BelongsTo(() => Users)
@@ -46,12 +43,6 @@ export class Publications extends Model {
     },
   )
     imagen: string[];  
-
-  @Column({
-    type:DataType.ARRAY(DataType.INTEGER),
-    allowNull:false,
-  })
-    topics:number[];
   
   @HasMany(() => Comments)
     comments: Comments[];

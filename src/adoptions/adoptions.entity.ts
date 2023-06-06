@@ -16,15 +16,9 @@ export class Adoption extends Model<Adoption> {
     id: string;
     
   @ForeignKey(()=> Animal)
-  @Column({
-    type:DataType.UUID,
-    defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
-    allowNull:false,
-  })
     animalID: string;
 
   @ForeignKey(() => Users)
-  @Column
     userID: string;
 
 }
