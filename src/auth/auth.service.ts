@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto, UserRole } from './dto/login.dto';
+import { LoginDto } from './dto/login.dto';
 import { FileService } from 'src/file/file.service';
 
 @Injectable()

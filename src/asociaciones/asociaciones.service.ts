@@ -33,28 +33,34 @@ export class AsociacionesService {
         }, 
         {
           model: RedSocial,
+          attributes:{
+            exclude: ['id', 'as_id'],
+          },
         },
       ],
     });
   }
 
   async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
-    const { email, reds } = body;
-    console.log(body);
+    const { email } = body;
+    let { reds } = body;
+
+    if (reds && typeof reds === 'string') reds = JSON.parse(reds);
+
     const transaction = await this.sequelize.transaction();
+
     try {
       if (await Users.findOne({ where: { email } }) 
       || await Asociaciones.findOne({ where: { email } })) 
         return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; // el email ya esta en uso
       
       const asociacion = await this.asociacionesProviders.create({ ...body }, { transaction }); //
-      console.log(asociacion);
+
       if (Array.isArray(reds) && reds.length > 0) {
-        console.log(reds);
         await Promise.all(
           reds.map((red) =>
             RedSocial.create(
-              { as_Id: asociacion.id, name: red.name, url: red.url },
+              { as_id: asociacion.id, name: red.name, url: red.url },
               { transaction },
             ),
           ),
