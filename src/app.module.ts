@@ -13,7 +13,6 @@ import { PublicationsUsersModule } from './publications_users/publications_users
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
 import { AdoptionsModule } from './adoptions/adoptions.module';
-import { AsPublicationsModule } from './as_publications/as_publications.module';
 
 @Module({
   imports: [
@@ -26,12 +25,11 @@ import { AsPublicationsModule } from './as_publications/as_publications.module';
     UsersModule,
     AsociacionesModule,
     DatabaseModule,
-    AuthModule,
     AnimalsModule,
     PublicationsUsersModule,
     DonationsModule,
     AdoptionsModule,
-    AsPublicationsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

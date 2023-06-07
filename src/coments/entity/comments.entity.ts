@@ -1,5 +1,4 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Users } from 'src/users/entity/users.entity';
 
@@ -24,12 +23,6 @@ export class Comments extends Model {
   })
     pubId: string;
 
-  @ForeignKey(() => AsPublication)
-  @Column({
-    type:DataType.UUID,
-  })
-    asPubId:string;
-
   @Column
     description: string;
 
@@ -38,7 +31,4 @@ export class Comments extends Model {
 
   @BelongsTo( () => Users)
     user: Users;
-
-  @BelongsTo(() => AsPublication)
-    as_publication: AsPublication;
 }

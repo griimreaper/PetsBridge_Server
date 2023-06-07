@@ -16,9 +16,6 @@ export class Animal extends Model<Animal> {
     id: string;
 
   @ForeignKey(() => Asociaciones)
-  @Column({
-    type:DataType.UUID,
-  })
     as_id: string;
 
   @BelongsTo(() => Asociaciones)

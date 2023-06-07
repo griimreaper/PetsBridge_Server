@@ -36,7 +36,6 @@ export class PublicationsUsersController {
   @UseInterceptors(
     FilesInterceptor('file', undefined, multerConfig))
   async createPub(@Body() newUser: CreatePublicationsDto, @UploadedFiles() file: Express.Multer.File[]) {
-    console.log(newUser, 'AVERIGUANDO DATOOOSSS');
     return this.publicatiosService.createPub(newUser, file);
   }
 
