@@ -11,7 +11,7 @@ export class AdoptionsService {
     @Inject('ANIMALS_REPOSITORY') private readonly animalsRepository: typeof Animal,
   ) {}
 
-  async adopt(IDS: AdoptionDto): Promise<string> {
+  async adopt(IDS: AdoptionDto): Promise<string> { 
     try {
       const user = await this.usersRepository.findByPk(IDS.userID);
       const animal = await this.animalsRepository.findOne({ where: { id: IDS.animalID } });
@@ -28,5 +28,5 @@ export class AdoptionsService {
     } catch (error) {
       throw new HttpException('Adoption failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-}
+  }
 }
