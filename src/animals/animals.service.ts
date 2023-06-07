@@ -28,6 +28,7 @@ export class AnimalsService {
         return 'Posted successfully';
       }
 
+      console.log(pet, 'PEEEEEEEEEEEEEEETTTTTT');
       if (file) {
         const URLS = await this.fileService.createFiles(file);
         if (Array.isArray(URLS))

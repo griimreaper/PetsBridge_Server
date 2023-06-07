@@ -32,7 +32,7 @@ export const databaseProviders = [
         RedSocial,
         Donations,
       ]);
-      await sequelize.sync({ force: false });
+      await sequelize.sync({ force: true });
       return sequelize;
     },
   },
