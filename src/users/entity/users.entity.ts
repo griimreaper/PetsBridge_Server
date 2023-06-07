@@ -49,6 +49,9 @@ export class Users extends Model {
 
   @Column
     status: boolean;
+
+  @Column
+    reset:string;
   
   @HasMany(() => Publications)
     public: Publications[];
