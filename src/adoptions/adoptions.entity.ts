@@ -6,6 +6,7 @@ import { Users } from 'src/users/entity/users.entity';
   timestamps:true,
   updatedAt:false,
   createdAt:'AdoptedAt',
+  tableName: 'adoptions',
 })
 export class Adoption extends Model<Adoption> {
   @Column({

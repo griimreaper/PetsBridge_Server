@@ -5,6 +5,7 @@ import { Users } from 'src/users/entity/users.entity';
 
 @Table({
   timestamps:false,
+  tableName: 'animals',
 })
 export class Animal extends Model<Animal> {
   @Column({
