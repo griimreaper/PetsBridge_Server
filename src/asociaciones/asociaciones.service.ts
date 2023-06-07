@@ -65,4 +65,13 @@ export class AsociacionesService {
       console.log(error);
     }
   }
+
+  async findByReset(reset:string):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ reset } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

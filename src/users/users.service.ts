@@ -135,4 +135,13 @@ export class UsersService {
       console.log(error);
     }
   }
+
+  async findByReset(reset:string):Promise<Users> {
+    try {
+      const user = await this.serviceUsers.findOne({ where:{ reset } });
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
