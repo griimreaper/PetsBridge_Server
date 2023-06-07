@@ -86,7 +86,7 @@ export class AuthService {
         asociacion.save();
       } 
 
-      const verificationLink = `localhost:3000/${jwt}`;
+      const verificationLink = `localhost:3001/${jwt}`;
 
       //Proximamente lógica para el envío de emails
       
@@ -96,7 +96,7 @@ export class AuthService {
     }
   }
 
-  async createNewPassword(newPassword:string, reset:string):Promise<string> {
+  async createNewPassword(newPassword:string, reset:string | string[]):Promise<string> {
 
     try {
       if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
@@ -105,7 +105,7 @@ export class AuthService {
       const user = await this.usersService.findByReset(reset);
       const asociacion = await this.asociacionesService.findByReset(reset);
 
-      //if (!(user && asociacion)) throw new NotFoundException('Something went wrong');
+      if (!(user && asociacion)) throw new NotFoundException('Something went wrong');
 
       if (user) {
         user.password = hashedPassword;

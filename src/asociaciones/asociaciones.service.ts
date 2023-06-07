@@ -66,7 +66,7 @@ export class AsociacionesService {
     }
   }
 
-  async findByReset(reset:string):Promise<Asociaciones> {
+  async findByReset(reset:string | string[]):Promise<Asociaciones> {
     try {
       const asociacion = await this.asociacionesProviders.findOne({ where:{ reset } });
       return asociacion;
