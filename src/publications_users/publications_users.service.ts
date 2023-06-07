@@ -125,6 +125,7 @@ export class PublicationsUsersService {
       throw new HttpException('Error al añadir comentario', 404);
     }
   }
+  
   async updateLike(like: CreatePublicationsDto) {
     try {
       const publicacion = await this.servicePublications.findByPk(like.id);
