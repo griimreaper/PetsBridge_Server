@@ -4,6 +4,9 @@ import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { hash } from 'bcrypt';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Animal } from 'src/animals/animals.entity';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -49,7 +52,9 @@ export class UsersService {
 
   async findById(id: string): Promise<Users> {
     try {
-      const user = await this.serviceUsers.findByPk(id);
+      const user = await this.serviceUsers.findByPk(id, {
+        include: [Publications, Animal],
+      });
 
       if (!user) {
         throw new Error('No hay con ese id');
@@ -83,11 +88,11 @@ export class UsersService {
       email,
       phone,
       password,
-      imgProf,
       country,
       isGoogle,
       status,
     },
+    profilePic?: any,
   ): Promise<string> {
     try {
       if (
@@ -96,23 +101,23 @@ export class UsersService {
         !email &&
         !phone &&
         !password &&
-        !imgProf &&
+        !profilePic &&
         !country &&
         !isGoogle &&
         !status
       )
         return 'Nada que actualizar';
-      const user = await this.serviceUsers.findByPk(parseInt(id));
+      const user = await this.serviceUsers.findByPk(id);
       if (user) {
-        if (first_Name) user.first_Name = first_Name;
-        if (last_Name) user.last_Name = last_Name;
+        if (first_Name) user.firstName = first_Name;
+        if (last_Name) user.lastName = last_Name;
         if (email) user.email = email;
         if (phone) user.phone = phone;
         if (password) {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (imgProf) user.imgProf = imgProf;
+        if (profilePic) user.img_profile = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
         if (status) user.status = status;

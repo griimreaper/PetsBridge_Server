@@ -8,5 +8,5 @@ export class LoginDto {
 
   password: string;
 
-  rol: UserRole;
+  rol?: UserRole;
 }

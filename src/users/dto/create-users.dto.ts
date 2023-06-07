@@ -10,7 +10,7 @@ export class CreateUserDto {
 
   password: string;
 
-  imgProf: string;
+  img_profile: string;
 
   country: string;
 

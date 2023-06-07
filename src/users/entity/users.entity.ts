@@ -6,9 +6,12 @@ import {
   Table,
   DataType,
 } from 'sequelize-typescript';
+import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Animal } from 'src/animals/animals.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
+// import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table
 export class Users extends Model {
@@ -21,10 +24,10 @@ export class Users extends Model {
     id: string;
 
   @Column
-    first_Name: string;
+    firstName: string;
 
   @Column
-    last_Name: string;
+    lastName: string;
 
   @Column
     email: string;
@@ -33,7 +36,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    imgProf: string;
+    img_profile: string;
 
   @Column
     country: string;
@@ -50,6 +53,12 @@ export class Users extends Model {
   @HasMany(() => Publications)
     public: Publications[];
 
-  @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
-    fundations: Asociaciones[];
+  @HasMany( () => Comments)
+    comments: Comments[];  
+
+  // @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
+  //   fundations: Asociaciones[];
+
+  @BelongsToMany(() => Animal, () => Adoption)
+    animals: Animal;
 }

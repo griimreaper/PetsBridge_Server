@@ -2,6 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Publications } from './entity/publications_users.entity';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
 import { FileService } from 'src/file/file.service';
+import { Comments } from 'src/coments/entity/comments.entity';
+import { CreateCommentDto } from 'src/coments/comments.dto';
+import { Users } from 'src/users/entity/users.entity';
 
 @Injectable()
 export class PublicationsUsersService {
@@ -9,24 +12,73 @@ export class PublicationsUsersService {
     @Inject('PUBLICATIONS_REPOSITORY') // Inyectamos los providers de publicaciones
     private servicePublications: typeof Publications,
     private readonly fileService: FileService,
+    @Inject('COMMENTS_REPOSITORY')
+    private comments: typeof Comments,
   ) {}
 
   async findAll(): Promise<Publications[]> {
     //funcion para retornar todas las publicaciones
-    const publications = await this.servicePublications.findAll();
-    return publications;
+    const publications = await this.servicePublications.findAll({
+      include: [Comments, Users],
+    });
+    const comentarys = await this.comments.findAll({
+      include: Users,
+    });
+    const newPub = publications.map((e) => {
+      const filtUser = e.dataValues.user.dataValues;
+      const { firstName, lastName, img_profile, email } = filtUser;
+      const filtro = e.dataValues.comments.map((x) => x.dataValues);
+      const filtComent = comentarys.map((x) => x.dataValues);
+      
+      const filtComentUsers = filtComent.map((x) => x.user.dataValues);
+      // console.log(filtComentUsers, 'FILTUSERRRRR');
+      const filtDataComUser = filtComentUsers.map((x) => {
+        
+        const dataUser = {
+          email : x.email,
+          firstName: x.firstName,
+          lastName: x.lastName,
+          imgProf: x.img_profile,
+        };
+        console.log(dataUser);
+        return dataUser;
+      });
+      // console.log(filtDataComUser);
+      const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
+        const combinar = { ...commentarios, ...filtDataComUser[i] };
+        console.log(combinar);
+        return combinar;
+      });
+      // console.log(filtro2);
+      return {
+        ...e.dataValues,
+        comments: filtro2, 
+        user: { firstName, lastName, img_profile, email },
+      };
+    } );
+    // console.log(newPub);
+    return newPub;
   }
 
   async findOne(id: string): Promise<Publications[]> {
     const publications = await this.servicePublications.findAll({
+      include: Comments,
       where:{
         userId: id,
       },
     });
-    return publications;
+    const newPub = publications.map((e) => {
+      const filtro = e.dataValues.comments.map((x) => x.dataValues);
+      const filtro2 = filtro.map(({ pubId, ...commentarios }) => commentarios);
+      return {
+        ...e.dataValues,
+        comments: filtro2,  
+      };
+    } );
+    return newPub;
   }
 
-  async createUser(createUserDto: CreatePublicationsDto, file: Express.Multer.File[]) {
+  async createPub(createUserDto: CreatePublicationsDto, file: Express.Multer.File[]) {
     try {
       if ( file.length ) {
         const URLS = await this.fileService.createFiles(file);
@@ -53,6 +105,20 @@ export class PublicationsUsersService {
         `Error al intentar crear una nueva publicacion: ${error.message}`,
       );
     }
+  }
+
+  async comment(newComment: CreateCommentDto) {
+    console.log(newComment.description);
+    if (!newComment.userId) {
+      return 'Debe de estar registrado para poder comentar';
+    }
+    if (!newComment.description) {
+      return 'No puedes mandar un comentario vacío';
+    }
+    const addComment = await this.comments.create({
+      ...newComment,
+    });
+    return addComment;
   }
 
   async updateLike(like: CreatePublicationsDto) {

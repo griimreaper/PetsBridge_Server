@@ -4,7 +4,7 @@ export class CreatePublicationsDto {
 
   description: string;
 
-  imagen?: string[];
+  imagen?: string[] | string;
 
   like: boolean;
 

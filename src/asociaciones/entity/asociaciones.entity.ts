@@ -1,8 +1,9 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany, AllowNull } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
 import { Users } from 'src/users/entity/users.entity';
-import { UsersAssociated } from './usersAssociated.entity';
-import { SocialReds } from './socialreds.entity';
+// import { UsersAssociated } from './usersAssociated.entity';
+import { RedSocial } from './redSocial.entity';
+import { RedSocialDto } from '../dto/create-RedSocial.dto';
 
 @Table
 export class Asociaciones extends Model {
@@ -50,10 +51,10 @@ export class Asociaciones extends Model {
   @HasMany(()=> Animal)
     pets: Animal[];
 
-  @BelongsToMany(()=> Users, ()=> UsersAssociated)
-    members: Users[];
+  // @BelongsToMany(()=> Users, ()=> UsersAssociated)
+  //   members: Users[];
 
-  @HasMany(() => SocialReds)
-    reds: SocialReds[];
+  @HasMany(() => RedSocial)
+    reds: RedSocial;
 
 }
