@@ -25,7 +25,7 @@ export const databaseProviders = [
         logging: false,
         native: false,
       });
-      sequelize.addModels([
+      sequelize.addModels( [ 
         Users,
         Asociaciones,
         Animal,
@@ -33,9 +33,8 @@ export const databaseProviders = [
         Donations,
         Adoption,
         Comments,
-        RedSocial,
-      ]);
-      await sequelize.sync({ force: true });
+        RedSocial] );
+      await sequelize.sync( { force: false } );
       return sequelize;
     },
   },

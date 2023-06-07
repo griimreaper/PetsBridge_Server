@@ -3,12 +3,15 @@ import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
 import { FileService } from 'src/file/file.service';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Users } from 'src/users/entity/users.entity';
 
 @Injectable()
 export class AnimalsService {
   constructor(
     @Inject('ANIMALS_REPOSITORY') 
     private readonly animalsRepository:typeof Animal,
+    @Inject('ASOCIACIONES_REPOSITORY')
+    private readonly asociationRepository: typeof Asociaciones,
     private readonly fileService: FileService,
   ) {}
 
@@ -47,12 +50,19 @@ export class AnimalsService {
   async getPet(id:string):Promise<Animal> {
     try {
       const animal = await this.animalsRepository.findByPk(id, {
-        include: Asociaciones,
+        include: [Asociaciones, Users],
       } );
       return animal;
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
+  }
+
+  async animalAssoc(id: string) {
+    const AsocAnimal = await this.asociationRepository.findByPk(id, {
+      include: Animal,
+    });
+    return AsocAnimal;
   }
 
   async deletePet(id:string):Promise<string> {

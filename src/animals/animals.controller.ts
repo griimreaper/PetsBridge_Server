@@ -27,4 +27,8 @@ export class AnimalsController {
     return this.animalsService.postPet(pet, file);
   }
 
+  @Get('/animalAsoc/:id')
+  animalByAssoc(@Param('id') id: string) {
+    return this.animalsService.animalAssoc(id);
+  }
 }
