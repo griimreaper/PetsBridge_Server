@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
@@ -60,12 +60,64 @@ export class AuthService {
   }
 
   async forgotPassword(email:string) {
-    if (!email) {
-      throw new BadRequestException('Must provide a valid email');
-    }
+    try {
+      if (!email) {
+        throw new BadRequestException('Must provide a valid email');
+      }
 
-    const message = 'Check your email for a link to reset password';
-    return;
+      const message = 'Check your email for a link to reset password';
+      const emailStatus = 'OK';
+      let jwt; 
+
+      //Checking if email is registered
+      const user = await this.usersService.findByEmail(email);
+      const asociacion =  await this.asociacionesService.findByEmail(email);
+
+      if (!user && !asociacion) throw new NotFoundException('This user is not registered');
+
+      if (user) {
+        jwt = this.jwtService.sign({ email:user.email, sub:user.id, rol:'user' }, { expiresIn:'10m' });
+        user.reset = jwt;
+        user.save();
+      }
+      if (asociacion) {
+        jwt = this.jwtService.sign({ email:user.email, sub:user.id, rol:'fundation' }, { expiresIn:'10min' });
+        asociacion.reset = jwt;
+        asociacion.save();
+      } 
+
+      const verificationLink = `localhost:3000/${jwt}`;
+
+      //Proximamente lógica para el envío de emails
+      
+      return { message:message, status:emailStatus, verificationLink:verificationLink };
+    } catch (error) {
+      throw new HttpException('Something went wrong', error.response.status, { cause:error });
+    }
   }
 
+  async createNewPassword(newPassword:string, reset:string):Promise<string> {
+
+    try {
+      if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
+      const hashedPassword = await hash(newPassword, 10);
+      //Checking if it's a user or an asociation
+      const user = await this.usersService.findByReset(reset);
+      const asociacion = await this.asociacionesService.findByReset(reset);
+
+      //if (!(user && asociacion)) throw new NotFoundException('Something went wrong');
+
+      if (user) {
+        user.password = hashedPassword;
+        user.save();
+      } else if (asociacion) {
+        asociacion.password = hashedPassword;
+        asociacion.save();
+      }
+
+      return 'Changed password successfully';
+    } catch (error) {
+      throw new HttpException('Something went wrong', error.response.status, { cause:error });
+    }
+  }
 }
