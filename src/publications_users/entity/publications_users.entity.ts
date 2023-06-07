@@ -20,6 +20,9 @@ export class Publications extends Model {
     id: string;
     
   @ForeignKey(() => Users)
+  @Column({
+    type: DataType.UUID,
+  })
     userId: string;
 
   @BelongsTo(() => Users)

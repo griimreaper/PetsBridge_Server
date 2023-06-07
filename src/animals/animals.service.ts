@@ -3,6 +3,7 @@ import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
 import { Op } from 'sequelize';
 import { FileService } from 'src/file/file.service';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Injectable()
 export class AnimalsService {
@@ -22,7 +23,7 @@ export class AnimalsService {
 
   async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
     try {
-      const urls:any = Array.isArray(file) ? await this.filesService.createFiles(file) : undefined;
+      const urls:any = Array.isArray(file) ? await this.filesService.createFiles(file) : null;
       await this.animalsRepository.create({
         ...pet,
         image: urls,
@@ -51,7 +52,10 @@ export class AnimalsService {
 
   async getPet(id:string):Promise<Animal> {
     try {
-      const animal = await this.animalsRepository.findByPk(id);
+      const animal = await this.animalsRepository.findByPk(id, {
+        include: Asociaciones,
+      } );
+      console.log( animal);
       return animal;
     } catch (error) {
       throw new HttpException(error.message, 404);

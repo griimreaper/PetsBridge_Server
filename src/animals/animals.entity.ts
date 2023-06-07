@@ -1,7 +1,7 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Users } from 'src/users/entity/users.entity';
-import { Adoption } from 'src/adoptions/adoptions.entity';
+// import { Adoption } from 'src/adoptions/adoptions.entity';
 
 @Table({
   timestamps:false,
@@ -11,7 +11,6 @@ export class Animal extends Model<Animal> {
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
-    unique: true,
   })
     id: string;
 
@@ -21,8 +20,14 @@ export class Animal extends Model<Animal> {
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
   
-  @BelongsToMany(() => Users, () => Adoption)
-    adoption: Users;
+  // @BelongsToMany(() => Users, () => Adoption)
+  //   adoption: Users;
+
+  @ForeignKey(() => Users)
+    userId: string;
+    
+  @BelongsTo(() => Users)
+    userAnimal: Users;
 
   @Column({
     type:DataType.STRING,
@@ -45,7 +50,6 @@ export class Animal extends Model<Animal> {
 
   @Column({
     type:DataType.STRING,
-    allowNull:false,
   })
     breed: string;
 
@@ -62,6 +66,26 @@ export class Animal extends Model<Animal> {
   })
     description: string;
   
-  @Column
-    image: string;
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+  })
+    image: string[];
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    country: string;
+    
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    state: string;
+ 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    city: string;    
 }

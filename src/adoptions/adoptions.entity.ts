@@ -19,6 +19,9 @@ export class Adoption extends Model<Adoption> {
     animalID: string;
 
   @ForeignKey(() => Users)
+  @Column({
+    type: DataType.UUID,
+  })
     userID: string;
 
 }
