@@ -12,8 +12,12 @@ export class AnimalsService {
   ) {}
 
   async getPets(): Promise<Animal[]> {
-    const animals = await this.animalsRepository.findAll();
-    return animals;
+    try {
+      const animals = await this.animalsRepository.findAll();
+      return animals;      
+    } catch (error) {
+      throw new HttpException(error.message, 404);
+    }
   }
 
   async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
@@ -28,7 +32,6 @@ export class AnimalsService {
 
       return 'Posted successfully';
     } catch (error) {
-      console.log(error.message);
       throw new HttpException(error.message, 404);
     }
   }
@@ -44,7 +47,7 @@ export class AnimalsService {
       });
       return animals;
     } catch (error) {
-      console.log(error.message);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -53,7 +56,7 @@ export class AnimalsService {
       const animal = await this.animalsRepository.findByPk(id);
       return animal;
     } catch (error) {
-      console.log(error.message);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -63,7 +66,7 @@ export class AnimalsService {
       await animal.destroy();
       return 'Deleted succesfully';
     } catch (error) {
-      console.log(error.message);
+      throw new HttpException(error.message, 404);
     }
    
   }
