@@ -56,4 +56,13 @@ export class AsociacionesService {
       return 'La asociacion no existe';
     }
   }
+
+  async findByEmail(email:string):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where: { email } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
