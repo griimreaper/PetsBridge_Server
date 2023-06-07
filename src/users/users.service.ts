@@ -1,4 +1,4 @@
-import { Inject, Injectable, HttpStatus } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, BadRequestException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
@@ -124,6 +124,15 @@ export class UsersService {
       }
     } catch (error) {
       throw new Error(`Error al intentar editar el usuario: ${error.message}`);
+    }
+  }
+
+  async findByEmail(email:string):Promise<Users> {
+    try {
+      const user = await this.serviceUsers.findOne({ where:{ email } });
+      return user;
+    } catch (error) {
+      console.log(error);
     }
   }
 }
