@@ -25,4 +25,7 @@ export class Donations extends Model {
 
   @Column
     message: string;
+
+    @Column
+    paymentId: string; // Nueva propiedad para almacenar el ID de pago
 }
