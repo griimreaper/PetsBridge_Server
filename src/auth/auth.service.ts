@@ -6,6 +6,7 @@ import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { FileService } from 'src/file/file.service';
 
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -42,6 +43,7 @@ export class AuthService {
     let { rol, ...body } = register;
     rol = rol;
     if (profilePic) {
+      console.log(profilePic);
       const url = await this.fileService.createFiles(profilePic);
       body = { ...body, password: hashedPassword, img_profile: url };
     } else {

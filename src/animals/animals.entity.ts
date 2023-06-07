@@ -54,6 +54,11 @@ export class Animal extends Model<Animal> {
     breed: string;
 
   @Column({
+    type: DataType.ARRAY(DataType.STRING),
+  })
+    images:string[];
+
+  @Column({
     type:DataType.ENUM,
     values:['adopted', 'pending', 'homeless'],
     allowNull:false,

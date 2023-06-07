@@ -12,15 +12,9 @@ export class Comments extends Model {
     id: string;
 
   @ForeignKey( () => Users) 
-  @Column({
-    type: DataType.UUID,
-  })
     userId: string;
   
   @ForeignKey( ()=> Publications)
-  @Column({
-    type: DataType.UUID,
-  })
     pubId: string;
 
   @Column

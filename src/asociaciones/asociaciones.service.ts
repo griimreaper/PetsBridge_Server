@@ -101,7 +101,7 @@ export class AsociacionesService {
   async update(
     id: string,
     { name, country, description, password, address }: CreateAsociacionDto,
-    img_profile?: any
+    img_profile?: any,
   ): Promise<string> {
     try {
       if (!name && !country && !description && !password && !img_profile) {
