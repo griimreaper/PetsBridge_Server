@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
@@ -57,6 +57,15 @@ export class AuthService {
       default:
         return { send: 'No se ha recibido un rol', status: 400 };
     }
+  }
+
+  async forgotPassword(email:string) {
+    if (!email) {
+      throw new BadRequestException('Must provide a valid email');
+    }
+
+    const message = 'Check your email for a link to reset password';
+    return;
   }
 
 }

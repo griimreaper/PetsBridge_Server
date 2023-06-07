@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -48,6 +48,11 @@ export class AuthController {
     const user = await this.authService.validate(loginDto);
     const token = await this.authService.login(user);
     return token;
+  }
+
+  @Put('forgot-password')
+  async forgotPassword(@Body() email:string) {
+    await this.authService.forgotPassword(email);
   }
   
 }
