@@ -8,7 +8,6 @@ import { Donations } from 'src/donations/entity/donations.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
 import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 
-
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
