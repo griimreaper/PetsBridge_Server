@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import {
   AutoIncrement,
   Column,
@@ -15,10 +14,10 @@ export class Donations extends Model {
     id: number;
 
   @Column
-    id_Asociations: UUID;
+    id_Asociations: string;
 
   @Column
-    id_Users: UUID;
+    id_Users: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
     mount: number;
