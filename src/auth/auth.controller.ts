@@ -1,8 +1,8 @@
-import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put, Patch, Headers, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
 
@@ -50,9 +50,14 @@ export class AuthController {
     return token;
   }
 
-  @Put('forgot-password')
+  @Post('forgot-password')
   async forgotPassword(@Body() email:string) {
     await this.authService.forgotPassword(email);
+  }
+
+  @Patch()
+  async createNewPassword(@Body() newPassword:string, @Req() request:Request) {
+    return this.authService.createNewPassword(newPassword, request.headers.reset);
   }
   
 }
