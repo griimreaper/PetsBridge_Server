@@ -139,12 +139,13 @@ export class PublicationsUsersService {
     }
   }
 
-  async update(id: string, { description }): Promise<string> {
+  async update(id: string, body: CreatePublicationsDto): Promise<string> {
+    const { description } = body;
     try {
       if (!description) {
         return 'Nada que actualizar';
       }
-      const publicacion = await this.servicePublications.findByPk(parseInt(id));
+      const publicacion = await this.servicePublications.findByPk(id);
       if (publicacion) {
         if (description) {
           publicacion.description = description;
