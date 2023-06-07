@@ -7,5 +7,5 @@ export interface AnimalDto {
   as_id:string,
   status:string,
   description:string,
-  images:string[]
+  imagen?: string[],
 }
