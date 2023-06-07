@@ -15,7 +15,8 @@ export class UsersService {
   async findAll(): Promise<Users[]> {
     try {
       const api = this.configureService.get('DB_HOST');
-      return await this.serviceUsers.findAll(api);
+      const allUsers = await this.serviceUsers.findAll(api);
+      return allUsers;
     } catch (error) {
       throw new Error(
         `Error al intentar buscar los usuarios: ${error.message}`,
