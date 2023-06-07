@@ -49,7 +49,6 @@ export class AnimalsService {
       const animal = await this.animalsRepository.findByPk(id, {
         include: Asociaciones,
       } );
-      console.log( animal);
       return animal;
     } catch (error) {
       throw new HttpException(error.message, 404);
