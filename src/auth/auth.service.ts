@@ -34,7 +34,7 @@ export class AuthService {
     const payload = { email: usuario.email, sub: usuario.id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
-    return { ...usuario, token };
+    return { token };
   }
 
   async register(register: any, profilePic?:Express.Multer.File) {

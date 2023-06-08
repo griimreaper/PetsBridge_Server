@@ -5,10 +5,10 @@ import { Users } from 'src/users/entity/users.entity';
 @Table({
   timestamps:true,
   updatedAt:false,
-  createdAt:'AdoptedAt',
+  createdAt:'adoptedAt',
   tableName: 'adoptions',
 })
-export class Adoption extends Model<Adoption> {
+export class Adoption extends Model {
   @Column({
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
@@ -20,9 +20,6 @@ export class Adoption extends Model<Adoption> {
     animalID: string;
 
   @ForeignKey(() => Users)
-  @Column({
-    type: DataType.UUID,
-  })
-    userID: string;
+    userID:string;
 
 }

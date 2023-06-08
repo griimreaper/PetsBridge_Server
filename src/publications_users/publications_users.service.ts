@@ -58,10 +58,10 @@ export class PublicationsUsersService {
   async findOne(id: string): Promise<Publications[]> {
     try {
       const publications = await this.servicePublications.findAll({
-        include: Comments,
         where: {
-          userId: id,
+          id,
         },
+        include: Comments,
       });
       const newPub = publications.map((e) => {
         const filtro = e.dataValues.comments.map((x) => x.dataValues);
@@ -139,12 +139,13 @@ export class PublicationsUsersService {
     }
   }
 
-  async update(id: string, { description }): Promise<string> {
+  async update(id: string, body: CreatePublicationsDto): Promise<string> {
+    const { description } = body;
     try {
       if (!description) {
         return 'Nada que actualizar';
       }
-      const publicacion = await this.servicePublications.findByPk(parseInt(id));
+      const publicacion = await this.servicePublications.findByPk(id);
       if (publicacion) {
         if (description) {
           publicacion.description = description;

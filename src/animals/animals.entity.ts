@@ -7,7 +7,7 @@ import { Users } from 'src/users/entity/users.entity';
   timestamps:false,
   tableName: 'animals',
 })
-export class Animal extends Model<Animal> {
+export class Animal extends Model {
   @Column({
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
