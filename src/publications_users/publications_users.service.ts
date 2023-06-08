@@ -96,7 +96,7 @@ export class PublicationsUsersService {
         ...createUserDto,
         datePublication: allDate,
         likes: 0,
-        isActive: false,
+        isActive: true,
       });
       return newUser;
     } catch (error) {
@@ -162,12 +162,15 @@ export class PublicationsUsersService {
 
   async delete(id: string): Promise<string> {
     try {
-      const user = await this.servicePublications.findByPk(parseInt(id));
+      const publication = await this.servicePublications.findByPk(id);
 
-      if (!user) {
+      if (!publication) {
         throw new HttpException('No se encuentra la publicacion', 404);
       }
-      await this.servicePublications.destroy({ where: { id: parseInt(id) } });
+      
+      publication.isActive = false;
+      await publication.save();
+
       return 'Eliminado';
     } catch (error) {
       throw new HttpException('Error al intentar remover la publicacion', 404);
