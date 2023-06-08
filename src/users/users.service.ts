@@ -136,9 +136,9 @@ export class UsersService {
     }
   }
 
-  async findByReset(reset:string | string[]):Promise<Users> {
+  async findByToken(token:string | string[]):Promise<Users> {
     try {
-      const user = await this.serviceUsers.findOne({ where:{ reset } });
+      const user = await this.serviceUsers.findOne({ where:{ reset:token } });
       return user;
     } catch (error) {
       console.log(error);
