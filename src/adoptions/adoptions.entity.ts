@@ -7,7 +7,7 @@ import { Users } from 'src/users/entity/users.entity';
   updatedAt:false,
   createdAt:'AdoptedAt',
 })
-export class Adoption extends Model<Adoption> {
+export class Adoption extends Model {
   @Column({
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1

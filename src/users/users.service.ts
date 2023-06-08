@@ -39,9 +39,15 @@ export class UsersService {
   async findById(id: string): Promise<Users> {
     try {
       const user = await this.serviceUsers.findByPk(id, {
-        include: [Publications, Animal],
+        include: [{
+          model: Publications,
+          attributes: {
+            exclude: ['userId'],
+          },
+        }],
       });
 
+      console.log(user);  
       if (!user) {
         throw new Error('No hay con ese id');
       }

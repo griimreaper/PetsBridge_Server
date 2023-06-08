@@ -36,7 +36,12 @@ export class AsociacionesController {
   @UseInterceptors(
     FileInterceptor('profilePic', multerConfig),
   )
-  async updateAsociation(@Param('id') idAsociacion: string, @Body() body: CreateAsociacionDto, @UploadedFile() profilePic?: Express.Multer.File ) {
+  async updateAsociation(
+  @GetUser() user: any,
+    @Param('id') idAsociacion: string,
+    @Body() body: CreateAsociacionDto,
+    @UploadedFile() profilePic?: Express.Multer.File) {
+    if (user.id !== idAsociacion) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.asociacionesService.update(idAsociacion, body, url);

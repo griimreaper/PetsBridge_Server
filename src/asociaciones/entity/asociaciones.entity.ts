@@ -25,16 +25,19 @@ export class Asociaciones extends Model {
   @Column({
     allowNull: false,
   })
-    name: string;
+    nameOfFoundation: string;
 
   @Column
     img_profile: string;
 
   @Column
-    date_created: Date;
+    dateStart: Date;
 
   @Column
     description: string;
+
+  @Column
+    phone: string;
 
   @Column
     country: string;

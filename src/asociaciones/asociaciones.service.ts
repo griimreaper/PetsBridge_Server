@@ -100,18 +100,18 @@ export class AsociacionesService {
 
   async update(
     id: string,
-    { name, country, description, password, address }: CreateAsociacionDto,
+    { nameOfFoundation, country, description, password, address }: CreateAsociacionDto,
     img_profile?: any,
   ): Promise<string> {
     try {
-      if (!name && !country && !description && !password && !img_profile) {
+      if (!nameOfFoundation && !country && !description && !password && !img_profile) {
         return 'Nada que actualizar';
       }
   
       const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
   
       if (asociacion) {
-        if (name) asociacion.name = name;
+        if (nameOfFoundation) asociacion.nameOfFoundation = nameOfFoundation;
         if (country) asociacion.country = country;
         if (img_profile) asociacion.img_profile = img_profile;
         if (description) asociacion.description = description;

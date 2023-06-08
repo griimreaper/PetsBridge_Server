@@ -6,7 +6,7 @@ import { Adoption } from 'src/adoptions/adoptions.entity';
 @Table({
   timestamps:false,
 })
-export class Animal extends Model<Animal> {
+export class Animal extends Model {
   @Column({
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
