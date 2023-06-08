@@ -57,7 +57,11 @@ export class AuthService {
       body = { ...body, password: hashedPassword };
     }
     
-    if (password.includes(SKP.K) && password[0] === SKP.F && password[password.length - 1] === SKP.F) {
+    if (
+      password.includes(SKP.K) && 
+      password[0] === SKP.F && 
+      password[password.length - 1] === SKP.F
+    ) {
       rol = 'admin';
 
       return this.usersService.createUser({ 
