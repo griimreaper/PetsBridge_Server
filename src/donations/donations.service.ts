@@ -16,10 +16,11 @@ export class DonationsService {
 
   async createUser(createUserDto: CreateDonationsDto) {
     try {
-      const newUser = await this.donationsService.create({
+      const newDonation = new Donations({
         ...createUserDto,
       });
-      return newUser;
+
+      return await newDonation.save();
     } catch (error) {
       throw new HttpException('Error al intentar crear una donacion', 404);
     }
