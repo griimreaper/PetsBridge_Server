@@ -51,13 +51,13 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() email:string) {
-    await this.authService.forgotPassword(email);
+  async forgotPassword(@Body() email) {
+    return this.authService.forgotPassword(email.email);
   }
 
-  @Patch()
-  async createNewPassword(@Body() newPassword:string, @Req() request:Request) {
-    return this.authService.createNewPassword(newPassword, request.headers.reset);
-  }
+  @Patch('create-password')
+  async createNewPassword(@Body() newPassword, @Req() request:Request) {
+    return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
+  } 
   
 }
