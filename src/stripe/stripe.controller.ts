@@ -7,7 +7,7 @@ import { Response } from 'express';
 export class StripeController {
     constructor(private stripeService: StripeService){}
 
-    @Post('/stripe')
+    @Post()
   createPayments(
     @Res() response: Response,
     @Body() stripeRequestBody: StripeRequestBody,

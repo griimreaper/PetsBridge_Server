@@ -2,10 +2,12 @@ import { UUID } from 'crypto';
 import {
   AutoIncrement,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Users } from 'src/users/entity/users.entity';
 
 @Table
 export class Donations extends Model {
@@ -17,6 +19,7 @@ export class Donations extends Model {
   @Column
     id_Asociations: UUID;
 
+    @ForeignKey(() => Users)
   @Column
     id_Users: UUID;
 
