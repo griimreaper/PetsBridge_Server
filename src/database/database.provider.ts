@@ -4,9 +4,9 @@ import { Publications } from 'src/publications_users/entity/publications_users.e
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
-import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
+import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 
 export const databaseProviders = [
   {
@@ -14,6 +14,9 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
+        dialectOptions: {
+          concurrency: 1,
+        },
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT),
         username: process.env.DB_USERNAME,
@@ -25,18 +28,14 @@ export const databaseProviders = [
       sequelize.addModels([
         Users,
         Asociaciones,
+        Animal,
         Publications,
-        Comments,
         Donations,
         Adoption,
-        Animal,
+        Comments,
         RedSocial,
       ]);
-      sequelize.addModels([
-        Donations,
-      ]);
       await sequelize.sync({ force: true });
-      await sequelize.sync();
       return sequelize;
     },
   },

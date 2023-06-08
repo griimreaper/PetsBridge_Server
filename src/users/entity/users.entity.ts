@@ -12,7 +12,7 @@ import { Publications } from 'src/publications_users/entity/publications_users.e
 import { Comments } from 'src/coments/entity/comments.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 
-@Table
+@Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
   
   @Column({
@@ -60,4 +60,7 @@ export class Users extends Model {
 
   @BelongsToMany(() => Animal, () => Adoption)
     animals: Animal;
+
+  @HasMany(() => Animal)
+    animalUser: Animal[]; 
 }

@@ -9,6 +9,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-users.dto';
@@ -17,6 +18,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
 import { FileService } from 'src/file/file.service';
+import { GetUser } from 'src/auth/decorator/get-user.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -50,7 +52,8 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('profilePic', multerConfig),
   )
-  async updatePost(@Param('id') id: string, @Body() body: CreateUserDto, @UploadedFile() profilePic?: Express.Multer.File ) {
+  async updateUser(@GetUser() user: any, @Param('id') id: string, @Body() body: CreateUserDto, @UploadedFile() profilePic?: Express.Multer.File ) {
+    if (user.id !== id) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.usersService.update(id, body, url);

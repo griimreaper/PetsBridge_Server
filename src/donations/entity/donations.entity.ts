@@ -1,4 +1,3 @@
-import { UUID } from 'crypto';
 import {
   AutoIncrement,
   BelongsTo,
@@ -10,7 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { Users } from 'src/users/entity/users.entity';
 
-@Table
+@Table({ tableName: 'donations' })
 export class Donations extends Model {
   @PrimaryKey
   @AutoIncrement
@@ -18,11 +17,11 @@ export class Donations extends Model {
     id: number;
 
   @Column
-    id_Asociations: UUID;
+    id_Asociations: string;
 
     @ForeignKey(() => Users)
   @Column
-    id_Users: UUID;
+    id_Users: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
     mount: number;

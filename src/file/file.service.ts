@@ -23,7 +23,7 @@ export class FileService {
           if (error) {
             throw new Error(error.message);
           } else {
-            return result
+            return result;
           }
         });
         this.deleteFiles(files);
