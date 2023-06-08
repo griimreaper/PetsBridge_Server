@@ -58,10 +58,10 @@ export class PublicationsUsersService {
   async findOne(id: string): Promise<Publications[]> {
     try {
       const publications = await this.servicePublications.findAll({
-        include: Comments,
         where: {
-          userId: id,
+          id,
         },
+        include: Comments,
       });
       const newPub = publications.map((e) => {
         const filtro = e.dataValues.comments.map((x) => x.dataValues);
