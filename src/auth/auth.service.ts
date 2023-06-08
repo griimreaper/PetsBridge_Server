@@ -45,7 +45,7 @@ export class AuthService {
     if (profilePic) {
       console.log(profilePic);
       const url = await this.fileService.createFiles(profilePic);
-      body = { ...body, password: hashedPassword, img_profile: url };
+      body = { ...body, password: hashedPassword, profilePic: url };
     } else {
       body = { ...body, password: hashedPassword };
     }

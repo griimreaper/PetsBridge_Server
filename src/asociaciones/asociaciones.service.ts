@@ -101,10 +101,10 @@ export class AsociacionesService {
   async update(
     id: string,
     { nameOfFoundation, country, description, password, address }: CreateAsociacionDto,
-    img_profile?: any,
+    profilePic?: any,
   ): Promise<string> {
     try {
-      if (!nameOfFoundation && !country && !description && !password && !img_profile) {
+      if (!nameOfFoundation && !country && !description && !password && !profilePic) {
         return 'Nada que actualizar';
       }
   
@@ -113,7 +113,7 @@ export class AsociacionesService {
       if (asociacion) {
         if (nameOfFoundation) asociacion.nameOfFoundation = nameOfFoundation;
         if (country) asociacion.country = country;
-        if (img_profile) asociacion.img_profile = img_profile;
+        if (profilePic) asociacion.profilePic = profilePic;
         if (description) asociacion.description = description;
         if (address) asociacion.address = address;
         if (password) {
