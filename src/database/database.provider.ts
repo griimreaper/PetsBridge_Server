@@ -27,6 +27,7 @@ export const databaseProviders = [
         Asociaciones,
         Publications,
         Comments,
+        Donations,
         Adoption,
         Animal,
         RedSocial,

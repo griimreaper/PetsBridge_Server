@@ -1,6 +1,7 @@
 import { UUID } from 'crypto';
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
   ForeignKey,
   Model,
