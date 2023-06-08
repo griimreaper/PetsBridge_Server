@@ -21,7 +21,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto } from 'src/coments/comments.dto';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Publications } from './entity/publications_users.entity';
 
 @ApiTags('Publications_user')
 @Controller('publications_user')
@@ -68,8 +67,16 @@ export class PublicationsUsersController {
     return this.publicatiosService.update(id, body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string) {
+  async deleteById(
+  @GetUser() user: any,
+    @Param('id') id: string,
+  ) {
+    const publication: any = await this.publicatiosService.findOne(id);
+
+    if (user.id !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
+
     return this.publicatiosService.delete(id);
   }
 }
