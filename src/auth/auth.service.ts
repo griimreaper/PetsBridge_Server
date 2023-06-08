@@ -61,13 +61,10 @@ export class AuthService {
 
   async forgotPassword(email:string) {
     try {
+
       if (!email) {
         throw new BadRequestException('Must provide a valid email');
       }
-
-      const message = 'Check your email for a link to reset password';
-      const emailStatus = 'OK';
-      let jwt; 
 
       //Checking if email is registered
       const user = await this.usersService.findByEmail(email);
@@ -75,49 +72,80 @@ export class AuthService {
 
       if (!user && !asociacion) throw new NotFoundException('This user is not registered');
 
+      let token;
+
       if (user) {
-        jwt = this.jwtService.sign({ email:user.email, sub:user.id, rol:'user' }, { expiresIn:'10m' });
-        user.reset = jwt;
+        token = this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
+        user.reset = token;
         user.save();
       }
       if (asociacion) {
-        jwt = this.jwtService.sign({ email:user.email, sub:user.id, rol:'fundation' }, { expiresIn:'10min' });
-        asociacion.reset = jwt;
+        token = this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
+        asociacion.reset = token;
         asociacion.save();
       } 
 
-      const verificationLink = `localhost:3001/${jwt}`;
-
       //Proximamente lógica para el envío de emails
       
-      return { message:message, status:emailStatus, verificationLink:verificationLink };
+      return { message:'Check your email for a token', token:token };
     } catch (error) {
-      throw new HttpException('Something went wrong', error.response.status, { cause:error });
+      console.log(error);
     }
   }
 
-  async createNewPassword(newPassword:string, reset:string | string[]):Promise<string> {
+  async verifyToken(token:string):Promise<any> {
+    try {
+      const user = await this.usersService.findByToken(token);
+      const asociacion = await this.asociacionesService.findByToken(token);
+
+      if (!user && !asociacion) throw new NotFoundException('Token erróneo');
+
+      if (user) {
+  
+        const payload = { email: user.email, sub: user.id, rol: 'user' };
+        const newToken = this.jwtService.sign(payload, { expiresIn:'10min' });
+        user.reset = newToken;
+        user.save();
+        return { token:newToken, expirationTime:'10min' };
+      }
+      if (asociacion) {
+        const payload = { email: asociacion.email, sub: asociacion.id, rol: 'fundation' };
+        const newToken = this.jwtService.sign(payload, { expiresIn:'10min' });
+        asociacion.reset = newToken;
+        asociacion.save();
+        return {  token:newToken, expirationTime:'10min' };
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async createNewPassword(newPassword, reset:string | string[]):Promise<string> {
 
     try {
       if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
-      const hashedPassword = await hash(newPassword, 10);
+
       //Checking if it's a user or an asociation
-      const user = await this.usersService.findByReset(reset);
-      const asociacion = await this.asociacionesService.findByReset(reset);
+      const user = await this.usersService.findByToken(reset);
+      const asociacion = await this.asociacionesService.findByToken(reset);
 
-      if (!(user && asociacion)) throw new NotFoundException('Something went wrong');
+      if (!user && !asociacion) throw new NotFoundException('Something went wrong');
 
+      const hashedPassword = await hash(newPassword, 10);
       if (user) {
         user.password = hashedPassword;
+        user.reset = null;
         user.save();
       } else if (asociacion) {
         asociacion.password = hashedPassword;
+        asociacion.reset = null;
         asociacion.save();
       }
 
       return 'Changed password successfully';
     } catch (error) {
-      throw new HttpException('Something went wrong', error.response.status, { cause:error });
+      console.log(error);
+      return error.message;
     }
   }
 }
