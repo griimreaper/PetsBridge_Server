@@ -5,11 +5,11 @@ import { Response } from 'express';
 
 @Controller('stripe')
 export class StripeController {
-    constructor(private stripeService: StripeService){}
+  constructor(private stripeService: StripeService) {}
 
-    @Post()
+  @Post()
   createPayments(
-    @Res() response: Response,
+  @Res() response: Response,
     @Body() stripeRequestBody: StripeRequestBody,
   ) {
     this.stripeService

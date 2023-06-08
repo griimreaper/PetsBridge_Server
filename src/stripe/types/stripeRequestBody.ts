@@ -1,7 +1,7 @@
-import { DonationsPay } from "./donations";
+import { DonationsPay } from './donations';
 
 
 export interface StripeRequestBody {
-    donations: DonationsPay[];
-    currency: string;
-  }
+  donations: DonationsPay[];
+  currency: string;
+}
