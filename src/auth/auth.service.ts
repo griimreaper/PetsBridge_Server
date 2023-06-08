@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto, UserRole } from './dto/login.dto';
+import { LoginDto } from './dto/login.dto';
 import { FileService } from 'src/file/file.service';
 import { MailsService } from 'src/mails/mails.service';
 
@@ -35,7 +35,7 @@ export class AuthService {
     const payload = { email: usuario.email, sub: usuario.id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
-    return { ...usuario.dataValues, token };
+    return { ...usuario, token };
   }
 
   async register(register: any, profilePic?:Express.Multer.File) {

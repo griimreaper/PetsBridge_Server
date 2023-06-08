@@ -22,7 +22,7 @@ export class Comments extends Model {
     type: DataType.UUID,
   })
     pubId: string;
-  
+
   @Column
     description: string;
 

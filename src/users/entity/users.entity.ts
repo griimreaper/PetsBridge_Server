@@ -9,8 +9,6 @@ import {
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Animal } from 'src/animals/animals.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table
@@ -58,9 +56,6 @@ export class Users extends Model {
 
   @HasMany( () => Comments)
     comments: Comments[];  
-
-  @BelongsToMany(()=> Asociaciones, () => UsersAssociated)
-    fundations: Asociaciones[];
 
   @BelongsToMany(() => Animal, () => Adoption)
     animals: Animal;

@@ -4,11 +4,9 @@ import { Publications } from 'src/publications_users/entity/publications_users.e
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
-import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
-import { SocialReds } from 'src/asociaciones/entity/socialreds.entity';
+import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
-
 
 export const databaseProviders = [
   {
@@ -26,16 +24,18 @@ export const databaseProviders = [
       });
       sequelize.addModels([
         Users,
-        Publications,
-        Donations,
-        Adoption,
         Asociaciones,
-        Animal,
-        UsersAssociated,
-        SocialReds,
+        Publications,
         Comments,
+        Adoption,
+        Animal,
+        RedSocial,
+      ]);
+      sequelize.addModels([
+        Donations,
       ]);
       await sequelize.sync({ force: true });
+      await sequelize.sync();
       return sequelize;
     },
   },

@@ -1,9 +1,12 @@
-import { Inject, Injectable, HttpStatus, BadRequestException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { hash } from 'bcrypt';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Animal } from 'src/animals/animals.entity';
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -18,9 +21,7 @@ export class UsersService {
       const allUsers = await this.serviceUsers.findAll(api);
       return allUsers;
     } catch (error) {
-      throw new Error(
-        `Error al intentar buscar los usuarios: ${error.message}`,
-      );
+      throw new HttpException('Error al intentar buscar los usuarios', 404);
     }
   }
 
@@ -36,21 +37,11 @@ export class UsersService {
     return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED };
   }
 
-  // async createUser(createUserDto: CreateUserDto) {
-  //   try {
-
-  //     const newUser = await this.serviceUsers.create({ ...createUserDto });
-  //     return newUser;
-  //   } catch (error) {
-  //     throw new Error(
-  //       `Error al intentar crear un nuevo usuarios: ${error.message}`,
-  //     );
-  //   }
-  // }
-
   async findById(id: string): Promise<Users> {
     try {
-      const user = await this.serviceUsers.findByPk(id);
+      const user = await this.serviceUsers.findByPk(id, {
+        include: [Publications, Animal],
+      });
 
       if (!user) {
         throw new Error('No hay con ese id');
@@ -58,7 +49,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      throw new Error(`No se pudo encontrar el usuario: ${error.message}`);
+      throw new HttpException('No se enontro el usuario', 404);
     }
   }
 
@@ -72,7 +63,7 @@ export class UsersService {
       await this.serviceUsers.destroy({ where: { id: parseInt(id) } });
       return 'Eliminado';
     } catch (error) {
-      throw new Error(`Error al intentar remover el usuario: ${error.message}`);
+      throw new HttpException('Error al eliminar el usuario', 404);
     }
   }
 
@@ -123,7 +114,7 @@ export class UsersService {
         return 'No existe el Usuario';
       }
     } catch (error) {
-      throw new Error(`Error al intentar editar el usuario: ${error.message}`);
+      throw new HttpException('Error al editar el usuario', 404);
     }
   }
 
