@@ -11,7 +11,7 @@ import { Animal } from 'src/animals/animals.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
 
-@Table
+@Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
   
   @Column({
@@ -56,4 +56,7 @@ export class Users extends Model {
 
   @BelongsToMany(() => Animal, () => Adoption)
     animals: Animal;
+
+  @HasMany(() => Animal)
+    animalUser: Animal[]; 
 }

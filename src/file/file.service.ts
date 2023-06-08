@@ -24,7 +24,7 @@ export class FileService {
           if (error) {
             console.error(error.message);
           } else {
-            return result
+            return result;
           }
         });
         this.deleteFiles(files);

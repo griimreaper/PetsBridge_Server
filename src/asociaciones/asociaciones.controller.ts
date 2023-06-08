@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Delete, Put, UseGuards, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Delete, Put, UseGuards, UploadedFile, UseInterceptors, HttpStatus } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FileService } from 'src/file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
+import { GetUser } from 'src/auth/decorator/get-user.decorator';
 
 
 @ApiBearerAuth()
@@ -36,11 +37,7 @@ export class AsociacionesController {
   @UseInterceptors(
     FileInterceptor('profilePic', multerConfig),
   )
-  async updateAsociation(
-  @GetUser() user: any,
-    @Param('id') idAsociacion: string,
-    @Body() body: CreateAsociacionDto,
-    @UploadedFile() profilePic?: Express.Multer.File) {
+  async updateAsociation(@GetUser() user: any, @Param('id') idAsociacion: string, @Body() body: CreateAsociacionDto, @UploadedFile() profilePic?: Express.Multer.File ) {
     if (user.id !== idAsociacion) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
