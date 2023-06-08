@@ -5,6 +5,7 @@ import { hash, compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto, UserRole } from './dto/login.dto';
 import { FileService } from 'src/file/file.service';
+import { MailsService } from 'src/mails/mails.service';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
     private readonly fileService: FileService,
+    private readonly mailsService:MailsService,
   ) {}
 
   async validate(body: LoginDto): Promise<object> {
@@ -86,8 +88,9 @@ export class AuthService {
       } 
 
       //Proximamente lógica para el envío de emails
+      this.mailsService.sendMails(user, 'RESET_PASSWORD');
       
-      return { message:'Check your email for a token', token:token };
+      return { message:'Check your email for a token' };
     } catch (error) {
       console.log(error);
     }

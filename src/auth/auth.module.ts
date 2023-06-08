@@ -7,6 +7,7 @@ import { AsociacionesModule } from 'src/asociaciones/asociaciones.module';
 import { jwtConstanst } from '../constants/jwt.constants';
 import { UsersModule } from 'src/users/users.module';
 import { FileService } from 'src/file/file.service';
+import { MailsService } from 'src/mails/mails.service';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { FileService } from 'src/file/file.service';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, FileService],
+  providers: [AuthService, JwtStrategy, FileService, MailsService],
   controllers: [AuthController],
 })
 export class AuthModule {}
