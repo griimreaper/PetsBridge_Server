@@ -13,6 +13,7 @@ import { PublicationsUsersModule } from './publications_users/publications_users
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
 import { AdoptionsModule } from './adoptions/adoptions.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AdoptionsModule } from './adoptions/adoptions.module';
     DonationsModule,
     AdoptionsModule,
     AuthModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

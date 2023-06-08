@@ -6,4 +6,5 @@ export class CreateDonationsDto {
   id_Users?: UUID;
   mount: number;
   message: string;
+  paymentId: string; // Nueva propiedad para almacenar el ID de pago
 }

@@ -1,10 +1,13 @@
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Users } from 'src/users/entity/users.entity';
 
 @Table({ tableName: 'donations' })
 export class Donations extends Model {
@@ -16,7 +19,7 @@ export class Donations extends Model {
   @Column
     id_Asociations: string;
 
-  @Column
+    @ForeignKey(() => Users)
     id_Users: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
@@ -24,4 +27,7 @@ export class Donations extends Model {
 
   @Column
     message: string;
+
+    @Column
+    paymentId: string; // Nueva propiedad para almacenar el ID de pago
 }

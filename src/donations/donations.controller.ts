@@ -23,7 +23,13 @@ export class DonationsController {
 
   @Post()
   async createUser(@Body() newUser: CreateDonationsDto) {
-    return this.donationsService.createUser(newUser);
+    const donation = await this.donationsService.createUser(newUser);
+
+    // Guardar el ID de pago en la entidad Donations
+    donation.paymentId = newUser.paymentId;
+    await donation.save();
+
+    return donation;
   }
 
   @Patch('update/:id') // actualizar publicacion (recibe un id y body)
