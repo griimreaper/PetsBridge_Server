@@ -14,7 +14,7 @@ export class CreateAsociacionDto {
 
   phone: string;
 
-  date_created: Date;
+  dateStart: Date;
 
   description: string;
 

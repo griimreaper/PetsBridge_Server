@@ -5,7 +5,7 @@ import { Users } from 'src/users/entity/users.entity';
 @Table({
   timestamps:true,
   updatedAt:false,
-  createdAt:'AdoptedAt',
+  createdAt:'adoptedAt',
   tableName: 'adoptions',
 })
 export class Adoption extends Model {
@@ -20,9 +20,6 @@ export class Adoption extends Model {
     animalID: string;
 
   @ForeignKey(() => Users)
-  @Column({
-    type: DataType.UUID,
-  })
-    userID: string;
+    userID:string;
 
 }
