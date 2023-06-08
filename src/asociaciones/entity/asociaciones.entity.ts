@@ -46,7 +46,7 @@ export class Asociaciones extends Model {
     address: string;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
   @HasMany(()=> Animal)
     pets: Animal[];
