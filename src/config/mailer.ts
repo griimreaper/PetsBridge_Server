@@ -1,19 +1,16 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import nodemailer from 'nodemailer';
+import nodemailer = require('nodemailer');
 import * as dotenv from 'dotenv';
-
 
 dotenv.config();
 const { APP_EMAIL, APP_PASSWORD } = process.env;
 
-
-
-
 // create reusable transporter object using the default SMTP transport
+console.log(nodemailer);
 export const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // true for 465, false for other ports
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
     user: APP_EMAIL, // generated ethereal user
     pass: APP_PASSWORD, // generated ethereal password
