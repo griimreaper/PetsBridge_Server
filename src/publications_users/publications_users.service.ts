@@ -121,6 +121,41 @@ export class PublicationsUsersService {
     }
   }
   
+  async updateComment(idUser: string, id: string, { description }) {
+    try {
+      const comentario = await this.comments.findByPk(id);
+
+      if (!comentario) throw new HttpException('Este comentario no existe', 400);
+      if (idUser !== comentario.userId) throw new HttpException('Forbidden resource', 403);
+      if (!description) throw new HttpException('Nada que actualizar', 400);
+
+      if (description) comentario.description = description;
+      await comentario.save();
+
+      return comentario;
+    } catch (error) {
+      throw new HttpException('Forbiden resource', 403);
+    }
+  }
+  
+  async deleteComment(idUser: string, id: string) {
+    try {
+      const comentario = await this.comments.findByPk(id);
+      const publicacion = await this.servicePublications.findByPk(comentario.pubId);
+
+      if (!comentario) throw new HttpException('Este comentario no existe', 400); 
+
+      if (idUser === publicacion.userId || idUser === comentario.userId) {
+        await this.comments.destroy({ where: { id } });
+        return 'Comentario eliminado';
+      }
+
+      throw new HttpException('Forbidden resource', 403);
+    } catch (error) {
+      throw new HttpException(error.message, 403);
+    }
+  }
+
   async updateLike(like: CreatePublicationsDto) {
     try {
       const publicacion = await this.servicePublications.findByPk(like.id);
