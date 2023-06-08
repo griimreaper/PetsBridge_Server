@@ -20,7 +20,6 @@ export class Donations extends Model {
     id_Asociations: string;
 
     @ForeignKey(() => Users)
-  @Column
     id_Users: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
