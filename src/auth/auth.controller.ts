@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put, Patch, Headers, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put, Patch, Headers, Req, UseGuards, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -79,5 +79,10 @@ export class AuthController {
     const { reset } = request.headers;
 
     return this.authService.createAdminPassword(newPassword, reset);
+  }
+
+  @Patch('verify')
+  async verify(@Query('id') id:string) {
+    return this.authService.verifyUser(id);
   }
 }

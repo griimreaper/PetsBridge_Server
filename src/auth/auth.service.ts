@@ -212,4 +212,26 @@ export class AuthService {
       return error;
     }
   }
+
+  async verifyUser(id:string) {
+    try {
+      const user = await this.usersService.findById(id);
+      const asociacion = await this.asociacionesService.findOne(id);
+
+      if (user.verified || asociacion.verified) return 'Ya está verificado';
+
+      if (user) {
+        user.verified = true;
+        user.save();
+      } else if (asociacion) {
+        asociacion.verified = true;
+        asociacion.save();
+      } else {
+        throw new BadRequestException('No está registrado');
+      }
+      return 'Verified User';
+    } catch (error) {
+      return error;
+    }
+  }
 }
