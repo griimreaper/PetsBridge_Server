@@ -6,7 +6,7 @@ import { Users } from 'src/users/entity/users.entity';
 import { Animal } from 'src/animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
-
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class AsociacionesService {
@@ -138,5 +138,26 @@ export class AsociacionesService {
     } catch (error) {
       throw new HttpException('Error al actualizar la asociación', 404);
     }
+  }
+
+  async generateData() {
+    const dataAso = [];
+    console.log(faker.internet.email());
+    for ( let i = 0; i < 20; i++) {
+      const asociacion = {
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        nameOfFoundation: faker.company.name(),
+        img_profile: faker.image.url(),
+        dateStart: faker.date.past().toISOString().split('T')[0],
+        description: faker.lorem.sentence(),
+        phone: faker.phone.number(),
+        country: faker.location.country(),
+        address: faker.location.streetAddress(),
+      };
+      dataAso.push(asociacion);
+    }
+    this.asociacionesProviders.bulkCreate(dataAso);
+    return dataAso;
   }
 }
