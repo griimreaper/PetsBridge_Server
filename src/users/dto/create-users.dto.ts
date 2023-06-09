@@ -10,7 +10,7 @@ export class CreateUserDto {
 
   password: string;
 
-  imgProf: string;
+  profilePic: string;
 
   country: string;
 
@@ -18,7 +18,7 @@ export class CreateUserDto {
 
   isGoogle: boolean;
 
-  status: boolean;
-  
+  isActive: boolean;
+
   rol?: UserRole;
 }

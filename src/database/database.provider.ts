@@ -4,10 +4,9 @@ import { Publications } from 'src/publications_users/entity/publications_users.e
 import { Animal } from 'src/animals/animals.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
-import { UsersAssociated } from 'src/asociaciones/entity/usersAssociated.entity';
-import { SocialReds } from 'src/asociaciones/entity/socialreds.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
-import { AsPublication } from 'src/as_publications/entity/as_publications.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
+import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
 
 export const databaseProviders = [
   {
@@ -15,27 +14,31 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT),
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
+        host: process.env.DP_HOST,
+        port: parseInt(process.env.DP_PORT),
+        username: process.env.DP_USERNAME,
+        password: process.env.DP_PASSWORD,
+        database: process.env.DP_DATABASE,
         logging: false,
         native: false,
       });
-      sequelize.addModels([
+      sequelize.addModels( [ 
         Users,
+        Asociaciones,
+        Animal,
         Publications,
         Donations,
         Adoption,
-        Asociaciones,
-        Animal,
-        UsersAssociated,
-        SocialReds,
-        AsPublication,
+        Comments,
+        RedSocial,
       ]);
-      await sequelize.sync({ force: true });
+      try {
+        await sequelize.sync({ force: false });
+      } catch (error) {
+        console.error('SEQUALIZE SYNC ERROR: ', error);
+      }
       return sequelize;
     },
   },
 ];
+//

@@ -1,55 +1,61 @@
-import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne } from 'sequelize-typescript';
+import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Users } from 'src/users/entity/users.entity';
 import { Adoption } from 'src/adoptions/adoptions.entity';
+import { AnimaleGender } from './dto/animals.dto';
 
+const animalGender =  AnimaleGender;
 @Table({
-  timestamps:false,
+  timestamps:true,
+  updatedAt: false,
+  createdAt: 'registredAt',
+  tableName: 'animals',
 })
-export class Animal extends Model<Animal> {
+export class Animal extends Model {
   @Column({
     type:DataType.UUID,
     defaultValue:DataType.UUIDV4, // Or DataTypes.UUIDV1
     primaryKey:true,
+    unique: true,
   })
-    id: string;
+    id: string; 
 
   @ForeignKey(() => Asociaciones)
   @Column({
     type:DataType.UUID,
+    allowNull: false,
   })
-    as_Id: string;
+    as_id: string;
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
   
-  @HasOne(() => Adoption)
-    adoption: Adoption;
+  @BelongsToMany(() => Users, () => Adoption)
+    usersAdopt: Users[];
+
+  @ForeignKey(() => Users)
+    userId: string;
+    
+  @BelongsTo(() => Users)
+    userAnimal: Users[];
 
   @Column({
     type:DataType.STRING,
-    unique: true,
     allowNull:false,
   })
     name: string;
 
   @Column({
-    type:DataType.STRING,
     allowNull:false,
   })
     specie: string;
 
   @Column({
     type:DataType.ENUM,
-    values:['male', 'female'],
+    values: [ animalGender.FEMALE, animalGender.MALE ],
     allowNull:false,
   })
     gender:string;
-
-  @Column({
-    type:DataType.STRING,
-    allowNull:false,
-  })
-    breed: string;
 
   @Column({
     type:DataType.ENUM,
@@ -62,5 +68,37 @@ export class Animal extends Model<Animal> {
     type:DataType.STRING,
     allowNull:false,
   })
-    description;
+    description: string;
+  
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+  })
+    image: string[];
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    country: string;
+    
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    state: string;
+ 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+    city: string;    
+
+  @Column
+    age_M: string;  
+
+  @Column
+    age_Y: string;  
+
+  @Column
+    weight: string;  
 }

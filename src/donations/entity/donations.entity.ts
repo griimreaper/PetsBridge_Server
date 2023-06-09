@@ -1,28 +1,36 @@
-import { UUID } from 'crypto';
 import {
   AutoIncrement,
+  BelongsTo,
   Column,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Users } from 'src/users/entity/users.entity';
 
-@Table
+@Table({ tableName: 'donations' })
 export class Donations extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
-  id: number;
+    id: number;
 
   @Column
-  id_Asociations: UUID;
+    id_Asociations: string;
 
-  @Column
-  id_Users: UUID;
+  @ForeignKey(() => Users)
+    id_Users: string;
+
+  @BelongsTo(() => Users)
+    userDonation: string;  
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
-  mount: number;
+    mount: number;
 
   @Column
-  message: string;
+    message: string;
+
+  @Column
+    paymentId: string; // Nueva propiedad para almacenar el ID de pago
 }

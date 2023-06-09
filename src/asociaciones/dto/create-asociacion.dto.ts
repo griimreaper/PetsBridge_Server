@@ -1,4 +1,5 @@
 import { UserRole } from 'src/auth/dto/login.dto';
+import { RedSocialDto } from './create-RedSocial.dto';
 
 export class CreateAsociacionDto {
   id?: string;
@@ -7,11 +8,13 @@ export class CreateAsociacionDto {
 
   password: string;
 
-  name: string;
+  nameOfFoundation: string;
 
-  img_profile: string;
+  profilePic?: string;
 
-  date_created: Date;
+  phone: string;
+
+  dateStart: Date;
 
   description: string;
 
@@ -19,7 +22,9 @@ export class CreateAsociacionDto {
 
   address:string;
 
-  status: boolean;
+  isActive: boolean;
+
+  reds?: string;
 
   rol?: UserRole;
 }
