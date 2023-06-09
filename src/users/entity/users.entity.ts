@@ -62,7 +62,7 @@ export class Users extends Model {
     donations: Donations[];
 
   @BelongsToMany(() => Animal, () => Adoption)
-    animals: Animal;
+    animalsAdopt: Animal[];
 
   @HasMany(() => Animal)
     animalUser: Animal[]; 

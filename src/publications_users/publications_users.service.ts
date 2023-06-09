@@ -25,11 +25,12 @@ export class PublicationsUsersService {
       include: Users,
     });
     const newPub = publications.map((e) => {
-      const filtUser = e.user;
+      const filtUser = e.dataValues.user.dataValues;
       const { firstName, lastName, profilePic, email } = filtUser;
-      const filtro = e.comments.map((x) => x.dataValues);
+      const filtro = e.dataValues.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
-      const filtComentUsers = filtComent.map((x) => x.commentsuser);
+      const filtComentUsers = filtComent.map((x) => x.commentsUser.dataValues);
+
       const filtDataComUser = filtComentUsers.map((x) => {
         
         const dataUser = {

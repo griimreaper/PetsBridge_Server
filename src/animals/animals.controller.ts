@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseInterceptors, UploadedFiles, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseInterceptors, UploadedFiles, Param, HttpCode, HttpException, HttpStatus, Query } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalDto } from './dto/animals.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -9,7 +9,18 @@ import { multerConfig } from 'src/file/multer.config';
 @Controller('animals')
 export class AnimalsController {
   constructor(private animalsService: AnimalsService) {}
+  
+  @Get('/paginate')
+  animalPaginate(@Query('currentPage') currentPage: string, @Query('slicePage') slicePage: string) {
+    return this.animalsService.paginate(Number(currentPage), Number(slicePage));
+  }
 
+  
+  @Get('/animalsFake') 
+  fakeAnimal() {
+    return this.animalsService.generateAnimal();
+  }  
+  
   @Get(':id')
   detail(@Param('id') id: string) {
     return this.animalsService.getPet(id);
@@ -23,17 +34,14 @@ export class AnimalsController {
 
   @Post()
   @UseInterceptors(FilesInterceptor('file', undefined, multerConfig))
-  createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]) {
-    return this.animalsService.postPet(pet, file);
+  createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]): Promise<string> {
+    return  this.animalsService.postPet(pet, file);
   }
 
-  @Get()
-  getAllPets() {
-    return this.animalsService.getAllPets();
+  @Get('/animalAsoc/:id')
+  animalByAssoc(@Param('id') id: string) {
+    return this.animalsService.animalAssoc(id);
   }
 
-  @Get(':id')
-  getPet(@Param('id') id:string) {
-    return this.animalsService.getPet(id);
-  }
+
 }
