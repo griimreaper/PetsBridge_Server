@@ -109,7 +109,7 @@ export class UsersService {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (profilePic) user.img_profile = profilePic;
+        if (profilePic) user.image = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
         if (status) user.status = status;

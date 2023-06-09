@@ -19,6 +19,6 @@ export class CreateUserDto {
   isGoogle: boolean;
 
   status: boolean;
-  
+
   rol?: UserRole;
 }

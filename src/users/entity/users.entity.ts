@@ -13,7 +13,7 @@ import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
-  
+
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -34,7 +34,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    img_profile: string;
+    image: string;
 
   @Column
     country: string;
@@ -47,16 +47,16 @@ export class Users extends Model {
 
   @Column
     status: boolean;
-  
+
   @HasMany(() => Publications)
     public: Publications[];
 
   @HasMany( () => Comments)
-    comments: Comments[];  
+    comments: Comments[];
 
   @BelongsToMany(() => Animal, () => Adoption)
     animals: Animal;
 
   @HasMany(() => Animal)
-    animalUser: Animal[]; 
+    animalUser: Animal[];
 }

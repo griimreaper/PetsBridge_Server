@@ -113,7 +113,7 @@ export class AsociacionesService {
       if (asociacion) {
         if (nameOfFoundation) asociacion.nameOfFoundation = nameOfFoundation;
         if (country) asociacion.country = country;
-        if (img_profile) asociacion.img_profile = img_profile;
+        if (img_profile) asociacion.image = img_profile;
         if (description) asociacion.description = description;
         if (address) asociacion.address = address;
         if (password) {
