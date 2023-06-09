@@ -1,14 +1,26 @@
-import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put, Patch, Headers, Req, UseGuards, Query } from '@nestjs/common';
+import { 
+  Controller,
+  Post,
+  Body,
+  HttpStatus,
+  Res,
+  UseInterceptors,
+  UploadedFile,
+  Put,
+  Patch,
+  Headers,
+  Req,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, RegisterDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
-
-
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -24,12 +36,14 @@ export class AuthController {
   //  }
 
   @Post('register')
-  @UseInterceptors(
-    FileInterceptor('profilePic', multerConfig),
-  )
-  async register(@Body() body :LoginDto, @Res() response: Response, @UploadedFile() profilePic?: Express.Multer.File) {
+  @UseInterceptors(FileInterceptor('image', multerConfig))
+  async register(
+  @Body() body: RegisterDto,
+    @Res() response: Response,
+    @UploadedFile() image?: Express.Multer.File,
+  ) {
     try {
-      const resp = await this.authService.register(body, profilePic);
+      const resp = await this.authService.register(body, image);
       switch (resp.status) {
         case HttpStatus.CREATED:
           response.status(HttpStatus.CREATED).send(resp.send);
@@ -41,18 +55,18 @@ export class AuthController {
           response.status(HttpStatus.BAD_REQUEST).send(resp.send);
       }
     } catch (error) {
-      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+      response
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: error.message });
     }
   }
 
   @Post('login')
-  async loginAc(@Body() loginDto: LoginDto, @Res() response: Response) {
+  async loginAc(@Body() loginDto: LoginDto) {
     const user = await this.authService.validate(loginDto);
     const token = await this.authService.login(user);
-
-    response.setHeader('Authorization', token.token).json(token);
+    return { ...token, id: user.id };
   }
-
   @Post('forgot-password')
   async forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email.email);

@@ -20,9 +20,15 @@ export class AnimalsController {
   fakeAnimal() {
     return this.animalsService.generateAnimal();
   }  
+
+  @Get('/specie')
+  filtSpecie( @Query('specie') specie: string) {
+    return this.animalsService.filtSpecie(specie);
+  }
   
   @Get(':id')
   detail(@Param('id') id: string) {
+    console.log('hola detail');
     return this.animalsService.getPet(id);
   }
 

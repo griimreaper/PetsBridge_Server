@@ -51,7 +51,7 @@ export class AnimalsService {
   async getAllPets():Promise<Animal[]> {
     try {
       const animals = await this.animalsRepository.findAll({
-        attributes: ['id', 'name', 'as_id', 'image', 'userId', 'country', 'status' ],
+        attributes: ['id', 'name', 'as_id', 'image', 'userId', 'country', 'gender', 'state', 'city', 'status', 'description' ],
       });
       return animals;
     } catch (error) {
@@ -63,7 +63,7 @@ export class AnimalsService {
     try {
       const animal = await this.animalsRepository.findByPk(id,  {
         include: [
-          { model: Asociaciones, as: 'asociacion', attributes: ['id', 'email', 'phone', 'nameOfFoundation', 'img_profile'] },
+          { model: Asociaciones, as: 'asociacion', attributes: ['id', 'email', 'phone', 'nameOfFoundation', 'profilePic'] },
         ],
       });
       return animal;
@@ -107,6 +107,18 @@ export class AnimalsService {
     }
     
   }
+
+  async filtSpecie(specie: string) {
+    console.log(specie);
+    const filtAnimal = await this.animalsRepository.findAll({
+      where:{
+        specie: specie,
+      },
+    });
+    const dataAnimal = filtAnimal.map((e) => e.dataValues);
+    return dataAnimal;
+  }
+
 
   async generateAnimal() {
     try {

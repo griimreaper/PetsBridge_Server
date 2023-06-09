@@ -25,30 +25,61 @@ export class UsersService {
     }
   }
 
+<<<<<<< HEAD
   async createUser(body:CreateUserDto): Promise<{ send: string; status: number, user?:Users }> { // funcion para crear usuario
+=======
+  async createUser(
+    body: CreateUserDto,
+  ): Promise<{ send: string; status: number }> {
+    // funcion para crear usuario
+>>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
     const { email } = body;
     //verificamos que ese email no exista en la tabla asociaciones
-    if (await Asociaciones.findOne({ where: { email } })) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; 
+    if (await Asociaciones.findOne({ where: { email } }))
+      return {
+        send: 'El email ya esta en uso.',
+        status: HttpStatus.BAD_REQUEST,
+      };
     //findOrCreate para que no se duplique el email
-    const [users, created] = await this.serviceUsers.findOrCreate({ where: { email }, defaults: { ...body } }); 
+    const [users, created] = await this.serviceUsers.findOrCreate({
+      where: { email },
+      defaults: { ...body },
+    });
     //condicion por si se encontro un email en uso
-    if (!created) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
+    if (!created)
+      return {
+        send: 'El email ya esta en uso.',
+        status: HttpStatus.BAD_REQUEST,
+      };
     //status 201
+<<<<<<< HEAD
     return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED, user:users };
+=======
+    return {
+      send: 'El usuario se creo exitosamente.',
+      status: HttpStatus.CREATED,
+    };
+>>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
   }
 
   async findById(id: string): Promise<Users> {
     try {
       const user = await this.serviceUsers.findByPk(id, {
-        include: [{
-          model: Publications,
-          attributes: {
-            exclude: ['userId'],
+        include: [
+          {
+            model: Publications,
+            attributes: {
+              exclude: ['userId'],
+            },
           },
-        }],
+        ],
       });
 
+<<<<<<< HEAD
       //console.log(user);  
+=======
+      console.log(user);
+>>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
       if (!user) {
         throw new Error('No hay con ese id');
       }
@@ -109,7 +140,7 @@ export class UsersService {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (profilePic) user.profilePic = profilePic;
+        if (profilePic) user.image = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
         await user.save();

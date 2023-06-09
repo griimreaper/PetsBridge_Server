@@ -25,33 +25,32 @@ export class PublicationsUsersService {
       include: Users,
     });
     const newPub = publications.map((e) => {
-      const filtUser = e.dataValues.user.dataValues;
-      const { firstName, lastName, profilePic, email } = filtUser;
+      const filtUser: Users = e.dataValues.user.dataValues;
+      const { firstName, lastName, image, email } = filtUser;
       const filtro = e.dataValues.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
       const filtComentUsers = filtComent.map((x) => x.commentsUser.dataValues);
 
       const filtDataComUser = filtComentUsers.map((x) => {
-        
         const dataUser = {
-          email : x.email,
+          email: x.email,
           firstName: x.firstName,
           lastName: x.lastName,
-          imgProf: x.img_profile,
+          imgProf: x.image,
         };
         return dataUser;
       });
-      const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
+      const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => {
         const combinar = { ...commentarios, ...filtDataComUser[i] };
 
         return combinar;
       });
       return {
         ...e.dataValues,
-        comments: filtro2, 
-        user: { firstName, lastName, profilePic, email },
+        comments: filtro2,
+        user: { firstName, lastName, image, email },
       };
-    } );
+    });
     return newPub;
   }
 
@@ -65,7 +64,9 @@ export class PublicationsUsersService {
       });
       const newPub = publications.map((e) => {
         const filtro = e.dataValues.comments.map((x) => x.dataValues);
-        const filtro2 = filtro.map(({ pubId, ...commentarios }) => commentarios);
+        const filtro2 = filtro.map(
+          ({ pubId, ...commentarios }) => commentarios,
+        );
         return {
           ...e.dataValues,
           comments: filtro2,
@@ -77,20 +78,24 @@ export class PublicationsUsersService {
     }
   }
 
-  async createPub(createUserDto: CreatePublicationsDto, file: Express.Multer.File[]) {
+  async createPub(
+    createUserDto: CreatePublicationsDto,
+    file: Express.Multer.File[],
+  ) {
     try {
-      if ( file.length ) {
+      if (file.length) {
         const URLS = await this.fileService.createFiles(file);
         createUserDto.imagen = URLS;
       }
-      
+
       const date = new Date();
       const hour = date.getHours();
       const minutes = date.getMinutes();
       const day = date.getDate();
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
-      const allDate = year + '/' + month + '/' + day + '/' + hour  + ':' + minutes;
+      const allDate =
+        year + '/' + month + '/' + day + '/' + hour + ':' + minutes;
 
       const newUser = await this.servicePublications.create({
         ...createUserDto,
@@ -100,14 +105,20 @@ export class PublicationsUsersService {
       });
       return newUser;
     } catch (error) {
-      throw new HttpException('Error al intentar crear una nueva publicacion', 404);
+      throw new HttpException(
+        'Error al intentar crear una nueva publicacion',
+        404,
+      );
     }
   }
 
   async comment(newComment: CreateCommentDto) {
     try {
       if (!newComment.userId) {
-        throw new HttpException('Debe estar registrado para poder comentar', 404);
+        throw new HttpException(
+          'Debe estar registrado para poder comentar',
+          404,
+        );
       }
       if (!newComment.description) {
         throw new HttpException('No puede enviar un comentario vacio', 404);
@@ -120,13 +131,15 @@ export class PublicationsUsersService {
       throw new HttpException('Error al añadir comentario', 404);
     }
   }
-  
+
   async updateComment(idUser: string, id: string, { description }) {
     try {
       const comentario = await this.comments.findByPk(id);
 
-      if (!comentario) throw new HttpException('Este comentario no existe', 400);
-      if (idUser !== comentario.userId) throw new HttpException('Forbidden resource', 403);
+      if (!comentario)
+        throw new HttpException('Este comentario no existe', 400);
+      if (idUser !== comentario.userId)
+        throw new HttpException('Forbidden resource', 403);
       if (!description) throw new HttpException('Nada que actualizar', 400);
 
       if (description) comentario.description = description;
@@ -137,14 +150,18 @@ export class PublicationsUsersService {
       throw new HttpException('Forbiden resource', 403);
     }
   }
-  
+
   async deleteComment(idUser: string, id: string) {
     try {
       const comentario = await this.comments.findByPk(id);
-      const publicacion = await this.servicePublications.findByPk(comentario.pubId);
+      const publicacion = await this.servicePublications.findByPk(
+        comentario.pubId,
+      );
 
-      if (!comentario) throw new HttpException('Este comentario no existe', 400);
-      if (!publicacion) throw new HttpException('Esta publicacion no existe', 400); 
+      if (!comentario)
+        throw new HttpException('Este comentario no existe', 400);
+      if (!publicacion)
+        throw new HttpException('Esta publicacion no existe', 400);
 
       if (idUser === publicacion.userId || idUser === comentario.userId) {
         await this.comments.destroy({ where: { id } });
@@ -171,7 +188,10 @@ export class PublicationsUsersService {
       await publicacion.save();
       return publicacion;
     } catch (error) {
-      throw new HttpException('Error al actualizar el like de la publicacion', 404);
+      throw new HttpException(
+        'Error al actualizar el like de la publicacion',
+        404,
+      );
     }
   }
 
@@ -203,7 +223,7 @@ export class PublicationsUsersService {
       if (!publication) {
         throw new HttpException('No se encuentra la publicacion', 404);
       }
-      
+
       publication.isActive = false;
       await publication.save();
 
