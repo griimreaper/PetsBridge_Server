@@ -10,11 +10,11 @@ export class CreateAsociacionDto {
 
   nameOfFoundation: string;
 
-  img_profile?: string;
+  profilePic?: string;
 
   phone: string;
 
-  date_created: Date;
+  dateStart: Date;
 
   description: string;
 

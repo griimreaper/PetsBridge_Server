@@ -42,7 +42,7 @@ export class AuthService {
     const payload = { email: usuario.email, sub: usuario.id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
-    return { token };
+    return { ...usuario, token };
   }
 
   async register(register: any, profilePic?:Express.Multer.File) {
@@ -52,7 +52,7 @@ export class AuthService {
 
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
-      body = { ...body, password: hashedPassword, img_profile: url };
+      body = { ...body, password: hashedPassword, profilePic: url };
     } else {
       body = { ...body, password: hashedPassword };
     }

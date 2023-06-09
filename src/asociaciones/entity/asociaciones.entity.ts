@@ -28,7 +28,7 @@ export class Asociaciones extends Model {
     nameOfFoundation: string;
 
   @Column
-    img_profile: string;
+    profilePic: string;
 
   @Column
     dateStart: Date;
