@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { CORS } from './constants';
+const port = process.env.SERVER_PORT || 3001;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -28,7 +29,7 @@ async function bootstrap() {
   });
 
 
-  await app.listen(process.env.SERVER_PORT);
-  console.log(`Application running on: ${process.env.SERVER_PORT}`);
+  await app.listen(port);
+  console.log(`Application running on: ${port}`);
 }
 bootstrap();

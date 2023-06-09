@@ -52,20 +52,19 @@ export class AsociacionesService {
     const { email } = body;
     let { reds } = body;
 
-    if (reds && typeof reds === 'string') reds = JSON.parse(reds);
-
-    const transaction = await this.sequelize.transaction();
+    if (reds && typeof reds === 'string') reds = JSON.parse(reds); // condicional si el json existe y esta en formato string
+  
+    const transaction = await this.sequelize.transaction(); // transaccion iniciada para manejar errores al momento de crear
 
     try {
-      if (await Users.findOne({ where: { email } }) 
-      || await Asociaciones.findOne({ where: { email } })) 
+      if (await Users.findOne({ where: { email } }) || await Asociaciones.findOne({ where: { email } })) 
         return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; // el email ya esta en uso
       
-      const asociacion = await this.asociacionesProviders.create({ ...body }, { transaction }); //
-      if (Array.isArray(reds) && reds.length > 0) {
-        await Promise.all(
+      const asociacion = await this.asociacionesProviders.create({ ...body, isActive: true }, { transaction }); // se crea una asociacion
+      if (Array.isArray(reds) && reds.length > 0) {                                          // se le envia la transaccion para crear la
+        await Promise.all(                                                                   // tabla aninada RedSocial
           reds.map((red) =>
-            RedSocial.create(
+            RedSocial.create(  //se itera y se crear cada redsocial
               { as_id: asociacion.id, name: red.name, url: red.url },
               { transaction },
             ),
@@ -73,22 +72,32 @@ export class AsociacionesService {
         );
       }
 
-      await transaction.commit();
+      await transaction.commit(); // transaccion exitosa
   
       return { send:'La asociacion se creo exitosamente.', status: HttpStatus.CREATED };
     } catch (error) {
-      await transaction.rollback();
+      await transaction.rollback(); //transaccion erronea, no se crea el usuario
 
       throw new HttpException(error.message, 404);
     }
   }
 
   async delete(id: string): Promise<string> {
+    let resultado = '';
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0;i < 10; i++) {
+      const indice = Math.floor(Math.random() * caracteres.length);
+      resultado += caracteres.charAt(indice);          // se genera un string aleatorio
+    }
+
     try {
-      const asociacion = await this.asociacionesProviders.findOne({ where: { id } });
+      const asociacion: Asociaciones = await this.asociacionesProviders.findOne({ where: { id } });
+
       if (asociacion) {
-        asociacion.status = false;
-        await asociacion.save();
+        asociacion.isActive = false;    // BORRADO LOGICO
+        asociacion.email =  `_${asociacion.email}_${resultado}`;   //cambio de valor de email para que no hayan colisiones 
+        await asociacion.save();                                   //al momento de volver a registrarse
         return 'Asociación eliminada correctamente';
       } else {
         throw new Error('No se encontró la asociación');
@@ -101,10 +110,10 @@ export class AsociacionesService {
   async update(
     id: string,
     { nameOfFoundation, country, description, password, address }: CreateAsociacionDto,
-    img_profile?: any,
+    profilePic?: any,
   ): Promise<string> {
     try {
-      if (!nameOfFoundation && !country && !description && !password && !img_profile) {
+      if (!nameOfFoundation && !country && !description && !password && !profilePic) {
         return 'Nada que actualizar';
       }
   
@@ -113,7 +122,7 @@ export class AsociacionesService {
       if (asociacion) {
         if (nameOfFoundation) asociacion.nameOfFoundation = nameOfFoundation;
         if (country) asociacion.country = country;
-        if (img_profile) asociacion.img_profile = img_profile;
+        if (profilePic) asociacion.profilePic = profilePic;
         if (description) asociacion.description = description;
         if (address) asociacion.address = address;
         if (password) {

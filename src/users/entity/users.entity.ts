@@ -35,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    img_profile: string;
+    profilePic: string;
 
   @Column
     country: string;
@@ -47,7 +47,7 @@ export class Users extends Model {
     isGoogle: boolean;
 
   @Column
-    status: boolean;
+    isActive: boolean;
   
   @HasMany(() => Publications)
     public: Publications[];

@@ -28,7 +28,7 @@ export class Asociaciones extends Model {
     nameOfFoundation: string;
 
   @Column
-    img_profile: string;
+    profilePic: string;
 
   @Column
     dateStart: Date;
@@ -46,7 +46,7 @@ export class Asociaciones extends Model {
     address: string;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
   @HasMany(()=> Animal)
     pets: Animal[];
