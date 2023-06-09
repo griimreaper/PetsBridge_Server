@@ -49,7 +49,7 @@ export class Users extends Model {
   @Column
     isActive: boolean;
 
-    @Column
+  @Column
     reset:string;
   
   @HasMany(() => Publications)
