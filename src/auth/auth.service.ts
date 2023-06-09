@@ -72,12 +72,14 @@ export class AuthService {
       });
     }
 
+    const date = new Date();
+    const code = await hash(`${date.getTime()}`, 10);
+
     switch (rol) {
       case 'user':
-        const date = new Date();
-        const code = await hash(`${date.getTime()}`);
         const user = await this.usersService.createUser(body);
-        this.mailsService.sendMails({ ...user.user, code:code }, 'REGISTER');
+        this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'REGISTER');
+        console.log(user.user.dataValues.id);
         return user;
         break;
       case 'fundation':
@@ -218,12 +220,12 @@ export class AuthService {
       const user = await this.usersService.findById(id);
       const asociacion = await this.asociacionesService.findOne(id);
 
-      if (user.verified || asociacion.verified) return 'Ya está verificado';
-
       if (user) {
+        if (user.verified) return 'Ya está verificado';
         user.verified = true;
         user.save();
       } else if (asociacion) {
+        if (asociacion.verified) return 'Ya está verificado';
         asociacion.verified = true;
         asociacion.save();
       } else {
@@ -231,6 +233,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
+      console.log(error);
       return error;
     }
   }
