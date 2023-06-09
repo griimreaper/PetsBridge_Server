@@ -48,7 +48,7 @@ export class UsersService {
         }],
       });
 
-      console.log(user);  
+      //console.log(user);  
       if (!user) {
         throw new Error('No hay con ese id');
       }
