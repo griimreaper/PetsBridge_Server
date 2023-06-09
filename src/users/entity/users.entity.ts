@@ -51,6 +51,12 @@ export class Users extends Model {
 
   @Column
     reset:string;
+
+  @Column({
+    type:DataType.BOOLEAN,
+    defaultValue:false,
+  })
+    verified:boolean;
   
   @HasMany(() => Publications)
     public: Publications[];
