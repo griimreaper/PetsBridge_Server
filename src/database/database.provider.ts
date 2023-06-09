@@ -14,9 +14,6 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
-        dialectOptions: {
-          concurrency: 1,
-        },
         host: process.env.DB_HOST,
         port: parseInt(process.env.DB_PORT),
         username: process.env.DB_USERNAME,
@@ -35,7 +32,12 @@ export const databaseProviders = [
         Comments,
         RedSocial,
       ]);
-      await sequelize.sync({ force: false });
+      try {
+        await sequelize.sync({ force: false });
+      } catch (error) {
+        console.error('SEQUALIZE SYNC ERROR: ', error);
+      }
+      
       return sequelize;
     },
   },

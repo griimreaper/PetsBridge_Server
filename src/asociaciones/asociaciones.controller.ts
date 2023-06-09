@@ -22,6 +22,11 @@ export class AsociacionesController {
     return this.asociacionesService.findAll();
   }
 
+  @Get('/datafake')
+  getFakeData() {
+    return this.asociacionesService.generateData();
+  }
+
   @Get(':id')
   async getOne(@Param('id') idAsociacion: string) {
     return this.asociacionesService.findOne(idAsociacion);

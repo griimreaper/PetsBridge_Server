@@ -3,18 +3,10 @@ export enum AnimaleGender {
   FEMALE = 'female',
 }
 
-export enum AnimalSpecie {
-  DOG = 'perro',
-  CAT = 'gato',
-  ROEDOR = 'roedor',
-  AVE = 'ave',
-  OTRO = '',
-}
-
 export interface AnimalDto {
   userId?:string,
   name:string,
-  specie:AnimalSpecie,
+  specie:string,
   gender:AnimaleGender,
   as_id:string,
   description:string,
@@ -22,6 +14,6 @@ export interface AnimalDto {
   state: string,
   city: string,
   weight?: string,
-  age_M?: number,
-  age_Y?: number,
+  age_M?: string,
+  age_Y?: string,
 }
