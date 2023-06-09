@@ -48,7 +48,7 @@ export class AsociacionesService {
     }
   }
 
-  async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number }> { // funcion para crear asociacion
+  async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number, asociacion?:Asociaciones }> { // funcion para crear asociacion
     const { email } = body;
     let { reds } = body;
 
@@ -74,7 +74,7 @@ export class AsociacionesService {
 
       await transaction.commit(); // transaccion exitosa
   
-      return { send:'La asociacion se creo exitosamente.', status: HttpStatus.CREATED };
+      return { send:'La asociacion se creo exitosamente.', status: HttpStatus.CREATED, asociacion: asociacion };
     } catch (error) {
       await transaction.rollback(); //transaccion erronea, no se crea el usuario
 
