@@ -32,7 +32,7 @@ export class AnimalsService {
         image: urls,
       });
 
-      return 'Posted successfully';
+      return 'La mascota se ha registrado!';
     } catch (error) {
       throw new HttpException(error.message, 404);
     }

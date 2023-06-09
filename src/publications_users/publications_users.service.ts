@@ -26,11 +26,12 @@ export class PublicationsUsersService {
     });
     const newPub = publications.map((e) => {
       const filtUser = e.dataValues.user.dataValues;
+
       const { firstName, lastName, img_profile, email } = filtUser;
       const filtro = e.dataValues.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
-      
-      const filtComentUsers = filtComent.map((x) => x.user.dataValues);
+      const filtComentUsers = filtComent.map((x) => x.commentsUser.dataValues);
+
       const filtDataComUser = filtComentUsers.map((x) => {
         
         const dataUser = {
@@ -43,7 +44,6 @@ export class PublicationsUsersService {
       });
       const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
         const combinar = { ...commentarios, ...filtDataComUser[i] };
-        console.log(combinar);
         return combinar;
       });
       return {

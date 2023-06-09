@@ -23,7 +23,7 @@ export class Publications extends Model {
     userId: string;
 
   @BelongsTo(() => Users)
-    user: Users;  
+    user: Users[];  
 
   @Column
     likes: number;
