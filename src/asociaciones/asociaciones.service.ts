@@ -50,14 +50,10 @@ export class AsociacionesService {
     }
   }
 
-<<<<<<< HEAD
-  async create(body: CreateAsociacionDto ): Promise<{ send: string; status: number, asociacion?:Asociaciones }> { // funcion para crear asociacion
-=======
   async create(
     body: CreateAsociacionDto,
-  ): Promise<{ send: string; status: number }> {
+  ): Promise<{ send: string; status: number, asociacion?:Asociaciones }> {
     // funcion para crear asociacion
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
     const { email } = body;
     let { reds } = body;
 
@@ -94,16 +90,12 @@ export class AsociacionesService {
       }
 
       await transaction.commit(); // transaccion exitosa
-<<<<<<< HEAD
-  
-      return { send:'La asociacion se creo exitosamente.', status: HttpStatus.CREATED, asociacion: asociacion };
-=======
 
       return {
         send: 'La asociacion se creo exitosamente.',
         status: HttpStatus.CREATED,
+        asociacion: asociacion,
       };
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
     } catch (error) {
       await transaction.rollback(); //transaccion erronea, no se crea el usuario
 
@@ -207,7 +199,6 @@ export class AsociacionesService {
     this.asociacionesProviders.bulkCreate(dataAso);
     return dataAso;
   }
-<<<<<<< HEAD
 
   async findByEmail(email:string):Promise<Asociaciones> {
     try {
@@ -227,6 +218,3 @@ export class AsociacionesService {
     }
   }
 }
-=======
-}
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c

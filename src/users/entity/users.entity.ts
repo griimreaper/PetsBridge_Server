@@ -49,18 +49,6 @@ export class Users extends Model {
   @Column
     isActive: boolean;
 
-<<<<<<< HEAD
-  @Column
-    reset:string;
-
-  @Column({
-    type:DataType.BOOLEAN,
-    defaultValue:false,
-  })
-    verified:boolean;
-  
-=======
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
   @HasMany(() => Publications)
     public: Publications[];
 
@@ -75,4 +63,13 @@ export class Users extends Model {
 
   @HasMany(() => Animal)
     animalUser: Animal[];
+
+  @Column
+    reset:string;
+
+  @Column({
+    type:DataType.BOOLEAN,
+    defaultValue:false,
+  })
+    verified:boolean;
 }

@@ -25,14 +25,10 @@ export class UsersService {
     }
   }
 
-<<<<<<< HEAD
-  async createUser(body:CreateUserDto): Promise<{ send: string; status: number, user?:Users }> { // funcion para crear usuario
-=======
   async createUser(
     body: CreateUserDto,
-  ): Promise<{ send: string; status: number }> {
+  ): Promise<{ send: string; status: number, user?:Users }> {
     // funcion para crear usuario
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
     const { email } = body;
     //verificamos que ese email no exista en la tabla asociaciones
     if (await Asociaciones.findOne({ where: { email } }))
@@ -52,14 +48,11 @@ export class UsersService {
         status: HttpStatus.BAD_REQUEST,
       };
     //status 201
-<<<<<<< HEAD
-    return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED, user:users };
-=======
     return {
       send: 'El usuario se creo exitosamente.',
       status: HttpStatus.CREATED,
+      user:users,
     };
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
   }
 
   async findById(id: string): Promise<Users> {
@@ -75,11 +68,7 @@ export class UsersService {
         ],
       });
 
-<<<<<<< HEAD
-      //console.log(user);  
-=======
       console.log(user);
->>>>>>> 6a1c7ac4d0ee5b24d3d86db36df2aaf42d1d994c
       if (!user) {
         throw new Error('No hay con ese id');
       }
