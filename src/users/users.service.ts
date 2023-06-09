@@ -25,7 +25,7 @@ export class UsersService {
     }
   }
 
-  async createUser(body:CreateUserDto): Promise<{ send: string; status: number }> { // funcion para crear usuario
+  async createUser(body:CreateUserDto): Promise<{ send: string; status: number, user?:Users }> { // funcion para crear usuario
     const { email } = body;
     //verificamos que ese email no exista en la tabla asociaciones
     if (await Asociaciones.findOne({ where: { email } })) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; 
@@ -34,7 +34,7 @@ export class UsersService {
     //condicion por si se encontro un email en uso
     if (!created) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
     //status 201
-    return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED };
+    return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED, user:users };
   }
 
   async findById(id: string): Promise<Users> {
