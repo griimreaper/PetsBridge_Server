@@ -11,7 +11,7 @@ export class RedSocial extends Model<RedSocial> {
     as_id: string;
   
   @BelongsTo(() => Asociaciones)
-    asociacion: Asociaciones;
+    redAsociacion: Asociaciones[];
   
   @Column({
     type: DataType.STRING,
