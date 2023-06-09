@@ -178,7 +178,7 @@ export class AuthService {
     }
   }
 
-  async createNewPasswordAdmin(newPassword:string, reset:string) {
+  async createAdminPassword(newPassword:string, reset:string | string[]) {
     try {
       if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
       let hashedPassword:string;
