@@ -19,8 +19,11 @@ export class Donations extends Model {
   @Column
     id_Asociations: string;
 
-    @ForeignKey(() => Users)
+  @ForeignKey(() => Users)
     id_Users: string;
+
+  @BelongsTo(() => Users)
+    userDonation: string;  
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
     mount: number;
@@ -28,6 +31,6 @@ export class Donations extends Model {
   @Column
     message: string;
 
-    @Column
+  @Column
     paymentId: string; // Nueva propiedad para almacenar el ID de pago
 }

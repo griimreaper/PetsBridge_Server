@@ -21,8 +21,8 @@ export class Comments extends Model {
     description: string;
 
   @BelongsTo(() => Publications)
-    publication: Publications;
+    publication: Publications[];
 
   @BelongsTo( () => Users)
-    commentsuser: Users;
+    commentsUser: Users[];
 }
