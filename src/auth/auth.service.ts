@@ -97,15 +97,16 @@ export class AuthService {
 
       if (!user && !asociacion) throw new NotFoundException('This user is not registered');
 
-      let token;
+      const date = new Date(); 
+      const token = await hash(`${date.getTime()}`);
 
       if (user) {
-        token = this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
+        //token = this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
         user.reset = token;
         user.save();
       }
       if (asociacion) {
-        token = this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
+        // token = this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
         asociacion.reset = token;
         asociacion.save();
       } 
