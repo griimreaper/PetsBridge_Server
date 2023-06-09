@@ -25,12 +25,11 @@ export class PublicationsUsersService {
       include: Users,
     });
     const newPub = publications.map((e) => {
-      const filtUser = e.dataValues.user.dataValues;
+      const filtUser = e.user;
       const { firstName, lastName, profilePic, email } = filtUser;
-      const filtro = e.dataValues.comments.map((x) => x.dataValues);
+      const filtro = e.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
-      
-      const filtComentUsers = filtComent.map((x) => x.user.dataValues);
+      const filtComentUsers = filtComent.map((x) => x.commentsuser);
       const filtDataComUser = filtComentUsers.map((x) => {
         
         const dataUser = {
@@ -43,7 +42,7 @@ export class PublicationsUsersService {
       });
       const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
         const combinar = { ...commentarios, ...filtDataComUser[i] };
-        console.log(combinar);
+
         return combinar;
       });
       return {
@@ -143,7 +142,8 @@ export class PublicationsUsersService {
       const comentario = await this.comments.findByPk(id);
       const publicacion = await this.servicePublications.findByPk(comentario.pubId);
 
-      if (!comentario) throw new HttpException('Este comentario no existe', 400); 
+      if (!comentario) throw new HttpException('Este comentario no existe', 400);
+      if (!publicacion) throw new HttpException('Esta publicacion no existe', 400); 
 
       if (idUser === publicacion.userId || idUser === comentario.userId) {
         await this.comments.destroy({ where: { id } });
