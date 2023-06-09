@@ -74,10 +74,16 @@ export class AuthService {
 
     switch (rol) {
       case 'user':
-        return this.usersService.createUser(body);
+        const date = new Date();
+        const code = await hash(`${date.getTime()}`);
+        const user = await this.usersService.createUser(body);
+        this.mailsService.sendMails({ ...user.user, code:code }, 'RESET_PASSWORD');
+        return user;
         break;
       case 'fundation':
-        return this.asociacionesService.create(body);
+        const asociacion = await this.asociacionesService.create(body);
+        this.mailsService.sendMails(asociacion.asociacion, 'RESET_PASSWORD');
+        return asociacion;
         break;
       default:
         return { send: 'No se ha recibido un rol', status: 400 };
