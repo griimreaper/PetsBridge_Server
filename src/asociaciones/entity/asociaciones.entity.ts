@@ -46,7 +46,7 @@ export class Asociaciones extends Model {
     address: string;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
   @Column
     reset:string;

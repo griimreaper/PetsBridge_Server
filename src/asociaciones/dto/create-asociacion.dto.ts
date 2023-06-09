@@ -22,7 +22,7 @@ export class CreateAsociacionDto {
 
   address:string;
 
-  status: boolean;
+  isActive: boolean;
 
   reds?: string;
 

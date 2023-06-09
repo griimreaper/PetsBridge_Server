@@ -47,9 +47,9 @@ export class Users extends Model {
     isGoogle: boolean;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
-  @Column
+    @Column
     reset:string;
   
   @HasMany(() => Publications)

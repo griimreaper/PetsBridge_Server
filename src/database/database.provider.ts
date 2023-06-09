@@ -17,12 +17,12 @@ export const databaseProviders = [
         dialectOptions: {
           concurrency: 1,
         },
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT),
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        logging: false,
+        host: process.env.DP_HOST,
+        port: parseInt(process.env.DP_PORT),
+        username: process.env.DP_USERNAME,
+        password: process.env.DP_PASSWORD,
+        database: process.env.DP_DATABASE,
+        logging: false, // Habilita los registros detallados en la consola
         native: false,
       });
       sequelize.addModels([
@@ -35,8 +35,13 @@ export const databaseProviders = [
         Comments,
         RedSocial,
       ]);
-      await sequelize.sync({ force: true });
+      try {
+        await sequelize.sync({ force: false });
+      } catch (error) {
+        console.error('Sequelize sync error:', error);
+      }
       return sequelize;
     },
   },
 ];
+//

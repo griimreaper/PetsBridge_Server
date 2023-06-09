@@ -48,7 +48,7 @@ export class AuthController {
     const user = await this.authService.validate(loginDto);
     const token = await this.authService.login(user);
 
-    response.setHeader('Authorization', `Bearer ${token.token}`).json(token);
+    response.setHeader('Authorization', token.token).json(token);
   }
 
   @Post('forgot-password')

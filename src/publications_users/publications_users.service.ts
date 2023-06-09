@@ -25,12 +25,11 @@ export class PublicationsUsersService {
       include: Users,
     });
     const newPub = publications.map((e) => {
-      const filtUser = e.dataValues.user.dataValues;
+      const filtUser = e.user;
       const { firstName, lastName, profilePic, email } = filtUser;
-      const filtro = e.dataValues.comments.map((x) => x.dataValues);
+      const filtro = e.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
-      
-      const filtComentUsers = filtComent.map((x) => x.user.dataValues);
+      const filtComentUsers = filtComent.map((x) => x.commentsuser);
       const filtDataComUser = filtComentUsers.map((x) => {
         
         const dataUser = {
@@ -43,7 +42,7 @@ export class PublicationsUsersService {
       });
       const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
         const combinar = { ...commentarios, ...filtDataComUser[i] };
-        console.log(combinar);
+
         return combinar;
       });
       return {
@@ -96,7 +95,7 @@ export class PublicationsUsersService {
         ...createUserDto,
         datePublication: allDate,
         likes: 0,
-        isActive: false,
+        isActive: true,
       });
       return newUser;
     } catch (error) {
@@ -121,6 +120,42 @@ export class PublicationsUsersService {
     }
   }
   
+  async updateComment(idUser: string, id: string, { description }) {
+    try {
+      const comentario = await this.comments.findByPk(id);
+
+      if (!comentario) throw new HttpException('Este comentario no existe', 400);
+      if (idUser !== comentario.userId) throw new HttpException('Forbidden resource', 403);
+      if (!description) throw new HttpException('Nada que actualizar', 400);
+
+      if (description) comentario.description = description;
+      await comentario.save();
+
+      return comentario;
+    } catch (error) {
+      throw new HttpException('Forbiden resource', 403);
+    }
+  }
+  
+  async deleteComment(idUser: string, id: string) {
+    try {
+      const comentario = await this.comments.findByPk(id);
+      const publicacion = await this.servicePublications.findByPk(comentario.pubId);
+
+      if (!comentario) throw new HttpException('Este comentario no existe', 400);
+      if (!publicacion) throw new HttpException('Esta publicacion no existe', 400); 
+
+      if (idUser === publicacion.userId || idUser === comentario.userId) {
+        await this.comments.destroy({ where: { id } });
+        return 'Comentario eliminado';
+      }
+
+      throw new HttpException('Forbidden resource', 403);
+    } catch (error) {
+      throw new HttpException(error.message, 403);
+    }
+  }
+
   async updateLike(like: CreatePublicationsDto) {
     try {
       const publicacion = await this.servicePublications.findByPk(like.id);
@@ -162,12 +197,15 @@ export class PublicationsUsersService {
 
   async delete(id: string): Promise<string> {
     try {
-      const user = await this.servicePublications.findByPk(parseInt(id));
+      const publication = await this.servicePublications.findByPk(id);
 
-      if (!user) {
+      if (!publication) {
         throw new HttpException('No se encuentra la publicacion', 404);
       }
-      await this.servicePublications.destroy({ where: { id: parseInt(id) } });
+      
+      publication.isActive = false;
+      await publication.save();
+
       return 'Eliminado';
     } catch (error) {
       throw new HttpException('Error al intentar remover la publicacion', 404);

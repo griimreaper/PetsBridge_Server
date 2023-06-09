@@ -83,7 +83,7 @@ export class UsersService {
       password,
       country,
       isGoogle,
-      status,
+      isActive,
     },
     profilePic?: any,
   ): Promise<string> {
@@ -96,8 +96,7 @@ export class UsersService {
         !password &&
         !profilePic &&
         !country &&
-        !isGoogle &&
-        !status
+        !isGoogle
       )
         return 'Nada que actualizar';
       const user = await this.serviceUsers.findByPk(id);
@@ -113,7 +112,6 @@ export class UsersService {
         if (profilePic) user.profilePic = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
-        if (status) user.status = status;
         await user.save();
         return 'Actualizado';
       } else {
