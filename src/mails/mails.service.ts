@@ -45,12 +45,12 @@ export class MailsService {
         await transporter.sendMail({
           from: this.AppEmail, // sender address
           to: data.email, // list of receivers
-          subject: 'Cambio de contraseña', // Subject line
+          subject: 'Verificación', // Subject line
           text:`¡Saludos!</n>
              Muchas gracias por elegir ser parte de nuestra comunidad</n>
              Pero antes que nada, verifiquemos tu cuenta.</n>
              Copia y pega la siguiente url en tu navegador</n>
-             ${mailConstants}${data.code}/${data.id}</n>
+             ${mailConstants.verificationLink}${data.code}/${data.id}</n>
              No responda a este remitente.</n>
              Att: Equipo de PetsBridge.
             `,
@@ -60,7 +60,7 @@ export class MailsService {
                 <p>Muchas gracias por elegir ser parte de nuestra comunidad</p>
                 <p>Pero antes que nada, verifiquemos tu cuenta haciendo click en el siguiente enlace.</p>
 
-                <a style='background-color:gray;' href=${mailConstants}${data.code}/${data.id}>
+                <a style='background-color:gray;' href=${mailConstants.verificationLink}${data.code}/${data.id}>
                 Link de verificación
                 </a>
 
