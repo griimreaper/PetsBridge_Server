@@ -77,12 +77,12 @@ export class AuthService {
         const date = new Date();
         const code = await hash(`${date.getTime()}`);
         const user = await this.usersService.createUser(body);
-        this.mailsService.sendMails({ ...user.user, code:code }, 'RESET_PASSWORD');
+        this.mailsService.sendMails({ ...user.user, code:code }, 'REGISTER');
         return user;
         break;
       case 'fundation':
         const asociacion = await this.asociacionesService.create(body);
-        this.mailsService.sendMails(asociacion.asociacion, 'RESET_PASSWORD');
+        this.mailsService.sendMails(asociacion.asociacion, 'REGISTER');
         return asociacion;
         break;
       default:
