@@ -140,24 +140,6 @@ export class AsociacionesService {
     }
   }
 
-<<<<<<< HEAD
-  async findByEmail(email:string):Promise<Asociaciones> {
-    try {
-      const asociacion = await this.asociacionesProviders.findOne({ where: { email } });
-      return asociacion;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async findByToken(token:string | string[]):Promise<Asociaciones> {
-    try {
-      const asociacion = await this.asociacionesProviders.findOne({ where:{ reset:token } });
-      return asociacion;
-    } catch (error) {
-      console.log(error);
-    }
-=======
   async generateData() {
     const dataAso = [];
     console.log(faker.internet.email());
@@ -177,6 +159,23 @@ export class AsociacionesService {
     }
     this.asociacionesProviders.bulkCreate(dataAso);
     return dataAso;
->>>>>>> 4deadfd252596df10614030ec6d43c13b86df06c
+  }
+
+  async findByEmail(email:string):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ email } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findByToken(token:string | string[]):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ reset:token } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
