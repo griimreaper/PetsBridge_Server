@@ -84,7 +84,7 @@ export class AuthService {
     }
   }
 
-  async forgotPassword(email:string) {
+  async forgotPassword(email:string, rol?:string) {
     try {
 
       if (!email) {
@@ -110,7 +110,6 @@ export class AuthService {
         asociacion.save();
       } 
 
-      //Proximamente lógica para el envío de emails
       this.mailsService.sendMails(user, 'RESET_PASSWORD');
       
       return { message:'Check your email for a token' };
@@ -119,7 +118,7 @@ export class AuthService {
     }
   }
 
-  async verifyToken(token:string):Promise<any> {
+  async verifyToken(token:string, rol?:string):Promise<any> {
     try {
       const user = await this.usersService.findByToken(token);
       const asociacion = await this.asociacionesService.findByToken(token);
@@ -128,7 +127,10 @@ export class AuthService {
 
       if (user) {
   
-        const payload = { email: user.email, sub: user.id, rol: 'user' };
+        const payload = rol === 'admin' 
+          ? { email: user.email, sub: user.id, rol: 'admin' }
+          : { email: user.email, sub: user.id, rol: 'user' };
+
         const newToken = this.jwtService.sign(payload, { expiresIn:'10min' });
         user.reset = newToken;
         user.save();
@@ -143,6 +145,7 @@ export class AuthService {
       }
     } catch (error) {
       console.log(error);
+      return error;
     }
   }
 
@@ -171,7 +174,35 @@ export class AuthService {
       return 'Changed password successfully';
     } catch (error) {
       console.log(error);
-      return error.message;
+      return error;
+    }
+  }
+
+  async createNewPasswordAdmin(newPassword:string, reset:string) {
+    try {
+      if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
+      let hashedPassword:string;
+      if (
+        newPassword.includes(SKP.K) && 
+        newPassword[0] === SKP.F && 
+        newPassword[newPassword.length - 1] === SKP.F
+      ) {
+        hashedPassword = await hash(newPassword, 15);
+      }
+
+      const admin = await this.usersService.findByToken(reset);
+
+      if (admin) {
+        admin.password = hashedPassword;
+        admin.reset = null;
+        admin.save();
+      } else {
+        throw new BadRequestException('Incorrect token!');
+      }
+
+    } catch (error) {
+      console.log(error.message);
+      return error;
     }
   }
 }
