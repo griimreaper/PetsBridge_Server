@@ -7,6 +7,7 @@ import { Animal } from 'src/animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { faker } from '@faker-js/faker';
+import { IDataFake } from './interface/Iservice.interface';
 
 @Injectable()
 export class AsociacionesService {
@@ -176,20 +177,21 @@ export class AsociacionesService {
     }
   }
 
-  async generateData() {
+  async generateData(): Promise<IDataFake[]> {
     const dataAso = [];
     console.log(faker.internet.email());
     for (let i = 0; i < 20; i++) {
-      const asociacion = {
+      const asociacion: IDataFake = {
         email: faker.internet.email(),
         password: faker.internet.password(),
         nameOfFoundation: faker.company.name(),
-        img_profile: faker.image.url(),
+        image: faker.image.url(),
         dateStart: faker.date.past().toISOString().split('T')[0],
         description: faker.lorem.sentence(),
         phone: faker.phone.number(),
         country: faker.location.country(),
         address: faker.location.streetAddress(),
+        isActive: true,
       };
       dataAso.push(asociacion);
     }
