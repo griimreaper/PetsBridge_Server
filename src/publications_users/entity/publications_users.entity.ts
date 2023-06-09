@@ -10,7 +10,7 @@ import {
 import { Comments } from 'src/coments/entity/comments.entity';
 import { Users } from 'src/users/entity/users.entity';
 
-@Table({ timestamps: false })
+@Table({ timestamps: false, tableName: 'publications' })
 export class Publications extends Model {
   @Column({
     type: DataType.UUID,

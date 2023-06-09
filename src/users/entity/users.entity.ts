@@ -10,8 +10,9 @@ import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Animal } from 'src/animals/animals.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
 
-@Table
+@Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
   
   @Column({
@@ -34,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    img_profile: string;
+    profilePic: string;
 
   @Column
     country: string;
@@ -57,6 +58,12 @@ export class Users extends Model {
   @HasMany( () => Comments)
     comments: Comments[];  
 
+  @HasMany( () => Donations)
+    donations: Donations[];
+
   @BelongsToMany(() => Animal, () => Adoption)
     animals: Animal;
+
+  @HasMany(() => Animal)
+    animalUser: Animal[]; 
 }

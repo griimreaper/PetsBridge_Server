@@ -44,10 +44,11 @@ export class AuthController {
   }
 
   @Post('login')
-  async loginAc(@Body() loginDto: LoginDto) {
+  async loginAc(@Body() loginDto: LoginDto, @Res() response: Response) {
     const user = await this.authService.validate(loginDto);
     const token = await this.authService.login(user);
-    return token;
+
+    response.setHeader('Authorization', `Bearer ${token.token}`).json(token);
   }
 
   @Post('forgot-password')

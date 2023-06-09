@@ -13,6 +13,7 @@ import { PublicationsUsersModule } from './publications_users/publications_users
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
 import { AdoptionsModule } from './adoptions/adoptions.module';
+import { StripeModule } from './stripe/stripe.module';
 import { MailsModule } from './mails/mails.module';
 
 @Module({
@@ -21,16 +22,17 @@ import { MailsModule } from './mails/mails.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    FileModule,
-    MulterModule.register(multerConfig),
+    DatabaseModule,
     UsersModule,
     AsociacionesModule,
-    DatabaseModule,
     AnimalsModule,
+    FileModule,
+    MulterModule.register(multerConfig),
     PublicationsUsersModule,
     DonationsModule,
     AdoptionsModule,
     AuthModule,
+    StripeModule,
     MailsModule,
   ],
   controllers: [AppController],

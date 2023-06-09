@@ -1,14 +1,15 @@
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
-import { Op } from 'sequelize';
 import { FileService } from 'src/file/file.service';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Injectable()
 export class AnimalsService {
   constructor(
-    @Inject('ANIMALS_REPOSITORY') private readonly animalsRepository:typeof Animal,
-    private readonly filesService:FileService,
+    @Inject('ANIMALS_REPOSITORY') 
+    private readonly animalsRepository:typeof Animal,
+    private readonly fileService: FileService,
   ) {}
 
   async getPets(): Promise<Animal[]> {
@@ -20,21 +21,13 @@ export class AnimalsService {
     }
   }
 
-  async postPet(pet:AnimalDto, file:Express.Multer.File[]):Promise<string> {
+  async postPet(pet:AnimalDto, file: Express.Multer.File[]):Promise<string> {
     try {
-      if (Array.isArray(file)) {
-        const urls: any = await this.filesService.createFiles(file) ;
-        await this.animalsRepository.create<Animal>({ ...pet, images:urls });
-        return 'Posted successfully';
-      }
-
-      console.log(pet, 'PEEEEEEEEEEEEEEETTTTTT');
-      if (file.length) {
-        const URLS = await this.fileService.createFiles(file);
-        if (Array.isArray(URLS))
-          pet.imagen = URLS;
-      }
-      await this.animalsRepository.create<Animal>(pet);
+      const urls:any = Array.isArray(file) ? await this.fileService.createFiles(file) : null;
+      await this.animalsRepository.create({
+        ...pet,
+        image: urls,
+      });
 
       return 'Posted successfully';
     } catch (error) {
@@ -44,13 +37,7 @@ export class AnimalsService {
 
   async getAllPets():Promise<Animal[]> {
     try {
-      const animals = await this.animalsRepository.findAll({
-        where:{
-          status:{
-            [Op.or]:['homeless', 'pending'],
-          },
-        },
-      });
+      const animals = await this.animalsRepository.findAll();
       return animals;
     } catch (error) {
       throw new HttpException(error.message, 404);
@@ -59,7 +46,9 @@ export class AnimalsService {
 
   async getPet(id:string):Promise<Animal> {
     try {
-      const animal = await this.animalsRepository.findByPk(id);
+      const animal = await this.animalsRepository.findByPk(id, {
+        include: Asociaciones,
+      } );
       return animal;
     } catch (error) {
       throw new HttpException(error.message, 404);

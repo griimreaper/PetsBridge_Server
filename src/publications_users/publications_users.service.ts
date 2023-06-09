@@ -26,12 +26,11 @@ export class PublicationsUsersService {
     });
     const newPub = publications.map((e) => {
       const filtUser = e.dataValues.user.dataValues;
-      const { firstName, lastName, imgProf, email } = filtUser;
+      const { firstName, lastName, profilePic, email } = filtUser;
       const filtro = e.dataValues.comments.map((x) => x.dataValues);
       const filtComent = comentarys.map((x) => x.dataValues);
       
       const filtComentUsers = filtComent.map((x) => x.user.dataValues);
-      // console.log(filtComentUsers, 'FILTUSERRRRR');
       const filtDataComUser = filtComentUsers.map((x) => {
         
         const dataUser = {
@@ -40,33 +39,29 @@ export class PublicationsUsersService {
           lastName: x.lastName,
           imgProf: x.img_profile,
         };
-        console.log(dataUser);
         return dataUser;
       });
-      // console.log(filtDataComUser);
       const filtro2 = filtro.map(({ pubId, ...commentarios }, i: number) => { 
         const combinar = { ...commentarios, ...filtDataComUser[i] };
         console.log(combinar);
         return combinar;
       });
-      // console.log(filtro2);
       return {
         ...e.dataValues,
         comments: filtro2, 
-        user: { firstName, lastName, imgProf, email },
+        user: { firstName, lastName, profilePic, email },
       };
     } );
-    // console.log(newPub);
     return newPub;
   }
 
   async findOne(id: string): Promise<Publications[]> {
     try {
       const publications = await this.servicePublications.findAll({
-        include: Comments,
         where: {
-          userId: id,
+          id,
         },
+        include: Comments,
       });
       const newPub = publications.map((e) => {
         const filtro = e.dataValues.comments.map((x) => x.dataValues);
@@ -125,6 +120,7 @@ export class PublicationsUsersService {
       throw new HttpException('Error al añadir comentario', 404);
     }
   }
+  
   async updateLike(like: CreatePublicationsDto) {
     try {
       const publicacion = await this.servicePublications.findByPk(like.id);
@@ -143,12 +139,13 @@ export class PublicationsUsersService {
     }
   }
 
-  async update(id: string, { description }): Promise<string> {
+  async update(id: string, body: CreatePublicationsDto): Promise<string> {
+    const { description } = body;
     try {
       if (!description) {
         return 'Nada que actualizar';
       }
-      const publicacion = await this.servicePublications.findByPk(parseInt(id));
+      const publicacion = await this.servicePublications.findByPk(id);
       if (publicacion) {
         if (description) {
           publicacion.description = description;

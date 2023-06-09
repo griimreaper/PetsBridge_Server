@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, HttpCode, Param, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseInterceptors, UploadedFiles, Param } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalDto } from './dto/animals.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -10,15 +10,20 @@ import { multerConfig } from 'src/file/multer.config';
 export class AnimalsController {
   constructor(private animalsService: AnimalsService) {}
 
-  @Get()
-  allPets() {
-    return this.animalsService.getPets();
+  @Get(':id')
+  detail(@Param('id') id: string) {
+    return this.animalsService.getPet(id);
   }
 
-  @HttpCode(201)
+  @Get()
+  allPets() {
+    return this.animalsService.getAllPets();
+  }
+
+
   @Post()
   @UseInterceptors(FilesInterceptor('file', undefined, multerConfig))
-  createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]):Promise<string> {
+  createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]) {
     return this.animalsService.postPet(pet, file);
   }
 

@@ -1,8 +1,8 @@
-import { Table, Column, Model, DataType, HasMany, BelongsToMany, AllowNull } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
 
-@Table
+@Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
   @Column({
     type: DataType.UUID,
@@ -25,16 +25,19 @@ export class Asociaciones extends Model {
   @Column({
     allowNull: false,
   })
-    name: string;
+    nameOfFoundation: string;
 
   @Column
-    img_profile: string;
+    profilePic: string;
 
   @Column
-    date_created: Date;
+    dateStart: Date;
 
   @Column
     description: string;
+
+  @Column
+    phone: string;
 
   @Column
     country: string;

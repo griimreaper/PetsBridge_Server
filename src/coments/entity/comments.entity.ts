@@ -2,7 +2,7 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Users } from 'src/users/entity/users.entity';
 
-@Table
+@Table({ tableName: 'comments' })
 export class Comments extends Model {
   @Column({
     type: DataType.UUID,
@@ -12,15 +12,9 @@ export class Comments extends Model {
     id: string;
 
   @ForeignKey( () => Users) 
-  @Column({
-    type: DataType.UUID,
-  })
     userId: string;
   
   @ForeignKey( ()=> Publications)
-  @Column({
-    type: DataType.UUID,
-  })
     pubId: string;
 
   @Column
@@ -30,5 +24,5 @@ export class Comments extends Model {
     publication: Publications;
 
   @BelongsTo( () => Users)
-    user: Users;
+    commentsuser: Users;
 }
