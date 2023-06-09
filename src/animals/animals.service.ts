@@ -51,7 +51,7 @@ export class AnimalsService {
   async getAllPets():Promise<Animal[]> {
     try {
       const animals = await this.animalsRepository.findAll({
-        attributes: ['id', 'name', 'as_id', 'image', 'userId', 'country', 'gender', 'state', 'city', 'status', 'descripcion' ],
+        attributes: ['id', 'name', 'as_id', 'image', 'userId', 'country', 'gender', 'state', 'city', 'status', 'description' ],
       });
       return animals;
     } catch (error) {
