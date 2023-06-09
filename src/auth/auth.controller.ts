@@ -1,10 +1,12 @@
-import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put, Patch, Headers, Req } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, UseInterceptors, UploadedFile, Put, Patch, Headers, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 
 
@@ -56,9 +58,26 @@ export class AuthController {
     return this.authService.forgotPassword(email.email);
   }
 
+  @Post('verify-token')
+  async veriftToken(@Body() body, @Res() response: Response) {
+    const { code, rol } = body;
+    const newtoken = await this.authService.verifyToken( code, rol );
+
+    response.setHeader('Authorization', newtoken.token).json(newtoken);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch('create-password')
   async createNewPassword(@Body() newPassword, @Req() request:Request) {
     return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
   } 
   
+  @UseGuards(AuthGuard('admin'))
+  @Patch('create-admin-password')
+  async createAdminPassword(@Body() body, @Req() request:Request) {
+    const { newPassword } = body;
+    const { reset } = request.headers;
+
+    return this.authService.createAdminPassword(newPassword, reset);
+  }
 }
