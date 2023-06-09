@@ -4,7 +4,6 @@ import { AsociacionesService } from './asociaciones.service';
 import { asociacionesProviders } from './providers/asociaciones.provider';
 import { FileService } from 'src/file/file.service';
 import { databaseProviders } from 'src/database/database.provider';
-import { DatabaseModule } from 'src/database/database.module';
 
 
 @Module({

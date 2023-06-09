@@ -10,7 +10,7 @@ export class CreateAsociacionDto {
 
   nameOfFoundation: string;
 
-  img_profile?: string;
+  profilePic?: string;
 
   phone: string;
 
@@ -22,7 +22,7 @@ export class CreateAsociacionDto {
 
   address:string;
 
-  status: boolean;
+  isActive: boolean;
 
   reds?: string;
 
