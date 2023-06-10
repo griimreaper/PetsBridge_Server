@@ -15,7 +15,9 @@ export class MailsService {
     let html;
     switch (topic) {
       case 'RESET_PASSWORD':
-        html = await email.render('password/resetPassword', { username:data.firstName, token: data.reset });
+        html = await email.render('password/resetPassword', { 
+          username: data.firstName ? data.firstName : data.nameOfFoundation, 
+          token: data.reset });
         await transporter.sendMail({
           to:data.email,
           subject:'Cambio de contraseña',
@@ -23,7 +25,9 @@ export class MailsService {
         });
         break;
       case 'VERIFY_USER':
-        html = await email.render('user/verifyUser', { username:data.firstName, link: `https://localhost:3001/${data.code}/${data.id}` });
+        html = await email.render('user/verifyUser', { 
+          username:data.firstName ? data.firstName : data.nameOfFoundation,
+          link: `https://localhost:3001/${data.code}/${data.id}` });
         await transporter.sendMail({
           to:data.email,
           subject:'Verificación de correo electrónico',
