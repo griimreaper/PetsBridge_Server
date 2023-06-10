@@ -3,12 +3,15 @@ import { Adoption } from './adoptions.entity';
 import { AdoptionDto } from './dto/adoptions.dto';
 import { Users } from 'src/users/entity/users.entity';
 import { Animal } from 'src/animals/animals.entity';
+import { MailsService } from 'src/mails/mails.service';
+
 @Injectable()
 export class AdoptionsService {
   constructor(
     @Inject('ADOPTIONS_REPOSITORY') private readonly adoptionsRepository: typeof Adoption,
     @Inject('USERS_REPOSITORY') private readonly usersRepository: typeof Users,
     @Inject('ANIMALS_REPOSITORY') private readonly animalsRepository: typeof Animal,
+    private readonly mailsService:MailsService,
   ) {}
 
   async adopt(IDS: AdoptionDto): Promise<string> { 
@@ -16,11 +19,11 @@ export class AdoptionsService {
       const user = await this.usersRepository.findByPk(IDS.userID);
       const animal = await this.animalsRepository.findOne({ where: { id: IDS.animalID } });
       if (user && animal) {
-        await this.adoptionsRepository.create({
+        const adoption = await this.adoptionsRepository.create({
           userID: user.id,
           animalID: animal.id,
         });
-
+        this.mailsService.sendMails(adoption, 'ADOPT');
         return 'Adopted successfully';
       } else {
         throw new HttpException('User or animal not found', HttpStatus.NOT_FOUND);
