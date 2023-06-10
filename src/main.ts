@@ -30,15 +30,6 @@ async function bootstrap() {
     },
   });
 
-  //Configuring pug for email templates
-  /* Telling nest we will use ../public folder for storing static assets (e.g. images) */
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  /* Telling nest we will use ../views folder for storing templates */
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  /* Telling nest we will use 'pug' as our template engine*/
-  app.setViewEngine('pug');
-
-
   await app.listen(port);
   console.log(`Application running on: ${port}`);
 }
