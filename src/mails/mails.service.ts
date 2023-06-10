@@ -12,13 +12,21 @@ export class MailsService {
   AppEmail = this.configService.get('APP_EMAIL');
 
   async sendMails(data, topic:string) {
-    console.log(data);
+    let html;
     switch (topic) {
       case 'RESET_PASSWORD':
-        const html = await email.render('password/resetPassword', { username:data.firstName, token: data.reset });
+        html = await email.render('password/resetPassword', { username:data.firstName, token: data.reset });
         await transporter.sendMail({
           to:data.email,
           subject:'Cambio de contraseña',
+          html:html,
+        });
+        break;
+      case 'VERIFY_USER':
+        html = await email.render('user/verifyUser', { username:data.firstName, link: `https://localhost:3001/${data.code}/${data.id}` });
+        await transporter.sendMail({
+          to:data.email,
+          subject:'Verificación de correo electrónico',
           html:html,
         });
         break;
