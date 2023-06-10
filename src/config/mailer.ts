@@ -15,6 +15,7 @@ export const transporter = nodemailer.createTransport({
     user: APP_EMAIL, // generated ethereal user
     pass: APP_PASSWORD, // generated ethereal password
   },
+  from:APP_EMAIL,
 });
 transporter.verify().then(() => {
   console.log('Server is ready to take our messages');
@@ -25,5 +26,7 @@ export const email = new Email({
   message : {
     from:APP_EMAIL,
   },
+  send:true,
   transport:transporter,
+  preview:false,
 });
