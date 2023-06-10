@@ -40,15 +40,20 @@ export class PublicationsUsersController {
   @Post('/publication')
   @UseInterceptors(
     FilesInterceptor('file', undefined, multerConfig))
-  async createPub(@Body() newUser: CreatePublicationsDto, @UploadedFiles() file: Express.Multer.File[]) {
-    return this.publicationsService.createPub(newUser, file);
+  async createPub(
+  @GetUser() user: any,
+    @Body() newUser: CreatePublicationsDto, 
+    @UploadedFiles() file: Express.Multer.File[],
+  ) {
+    return this.publicationsService.createPub({ ...newUser, userId: user.id }, file);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/comment')
   async userComment(
-  @Body() newComment: CreateCommentDto) {
-    return this.publicationsService.comment(newComment);
+  @GetUser() user: any,
+    @Body() newComment: CreateCommentDto) {
+    return this.publicationsService.comment({ ...newComment, userId: user.id });
   }
 
   @UseGuards(JwtAuthGuard)

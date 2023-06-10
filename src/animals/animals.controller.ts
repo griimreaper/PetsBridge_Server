@@ -21,9 +21,9 @@ export class AnimalsController {
     return this.animalsService.generateAnimal();
   }  
 
-  @Get('/specie')
-  filtSpecie( @Query('specie') specie: string) {
-    return this.animalsService.filtSpecie(specie);
+  @Get('/filtro')
+  filtSpecie( @Query('filtro') filtro: string) {
+    return this.animalsService.filtSpecie(filtro);
   }
   
   @Get(':id')

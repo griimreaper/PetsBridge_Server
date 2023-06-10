@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Delete, Put, UseGuards, UploadedFile, UseInterceptors, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Delete,
+  Put,
+  UseGuards,
+  UploadedFile,
+  UseInterceptors,
+  HttpStatus,
+} from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -9,15 +20,14 @@ import { multerConfig } from 'src/file/multer.config';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 
-
 @ApiBearerAuth()
 @ApiTags('Asociaciones')
 @Controller('asociaciones')
 export class AsociacionesController {
-  constructor(private readonly asociacionesService: AsociacionesService,
-    private readonly fileService:FileService,
-  ) { }
-
+  constructor(
+    private readonly asociacionesService: AsociacionesService,
+    private readonly fileService: FileService,
+  ) {}
 
   @Get()
   async getAll() {
@@ -30,35 +40,30 @@ export class AsociacionesController {
   }
 
   @Get(':id')
-  async getOne(
-  @Param('id') idAsociacion: string,
-  ) {
+  async getOne(@Param('id') idAsociacion: string) {
     return this.asociacionesService.findOne(idAsociacion);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
-  async deleteById(
-  @GetUser() user: any,
-    @Param('id') idAsociacion: string, 
-  ) {
-    if (user.id !== idAsociacion) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
-    
+  async deleteById(@GetUser() user: any, @Param('id') idAsociacion: string) {
+    if (user.id !== idAsociacion)
+      return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
+
     return this.asociacionesService.delete(idAsociacion);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('update/:id')
-  @UseInterceptors(
-    FileInterceptor('profilePic', multerConfig),
-  )
+  @UseInterceptors(FileInterceptor('profilePic', multerConfig))
   async updateAsociation(
   @GetUser() user: any,
-    @Param('id') idAsociacion: string, 
-    @Body() body: CreateAsociacionDto, 
+    @Param('id') idAsociacion: string,
+    @Body() body: CreateAsociacionDto,
     @UploadedFile() profilePic?: Express.Multer.File,
   ) {
-    if (user.id !== idAsociacion) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
+    if (user.id !== idAsociacion)
+      return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.asociacionesService.update(idAsociacion, body, url);

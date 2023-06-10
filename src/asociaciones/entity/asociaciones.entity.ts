@@ -28,10 +28,10 @@ export class Asociaciones extends Model {
     nameOfFoundation: string;
 
   @Column
-    profilePic: string;
+    image: string;
 
   @Column
-    dateStart: Date;
+    dateStart: string;
 
   @Column
     description: string;
