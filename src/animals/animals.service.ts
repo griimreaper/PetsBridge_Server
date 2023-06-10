@@ -50,9 +50,7 @@ export class AnimalsService {
 
   async getAllPets():Promise<Animal[]> {
     try {
-      const animals = await this.animalsRepository.findAll({
-        attributes: ['id', 'name', 'as_id', 'image', 'userId', 'country', 'gender', 'state', 'city', 'status', 'description' ],
-      });
+      const animals = await this.animalsRepository.findAll();
       return animals;
     } catch (error) {
       throw new HttpException(error.message, 404);
@@ -108,11 +106,11 @@ export class AnimalsService {
     
   }
 
-  async filtSpecie(specie: string) {
-    console.log(specie);
+  async filtSpecie(filtro: string) {
+   
     const filtAnimal = await this.animalsRepository.findAll({
       where:{
-        specie: specie,
+        specie: filtro,
       },
     });
     const dataAnimal = filtAnimal.map((e) => e.dataValues);
