@@ -96,19 +96,20 @@ export class AuthService {
     switch (rol) {
       case 'user':
         const user = await this.usersService.createUser(body);
-        this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'REGISTER');
+        this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'VERIFY_USER');
         console.log(user.user.dataValues.id);
         return user;
       case 'fundation':
         const asociacion = await this.asociacionesService.create(body);
-        this.mailsService.sendMails(asociacion.asociacion, 'REGISTER');
+        this.mailsService.sendMails(asociacion.asociacion.dataValues, 'VERIFY_USER');
+        console.log(asociacion.asociacion.dataValues.id);
         return asociacion;
       default:
         return { send: 'No se ha recibido un rol', status: 400 };
     }
   }
 
-  async forgotPassword(email:string, rol?:string) {
+  async forgotPassword(email:string) {
     try {
 
       if (!email) {
@@ -116,37 +117,51 @@ export class AuthService {
       }
 
       //Checking if email is registered
-      const user = await this.usersService.findByEmail(email);
       const asociacion =  await this.asociacionesService.findByEmail(email);
+      const user = await this.usersService.findByEmail(email);
+      
 
       if (!user && !asociacion) throw new NotFoundException('This user is not registered');
 
-      const date = new Date(); 
-      const token = await hash(`${date.getTime()}`);
+      /*       const date = new Date();
+      const token = await hash(`${date.getTime()}`, 10); */
+      let token;
 
       if (user) {
-        //token = this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
+        token = await this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
         user.reset = token;
-        user.save();
+        await user.save();
+        await this.mailsService.sendMails(user.dataValues, 'RESET_PASSWORD');
       }
       if (asociacion) {
-        // token = this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
+        token = await this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
         asociacion.reset = token;
-        asociacion.save();
+        await asociacion.save();
+        await this.mailsService.sendMails(asociacion.dataValues, 'RESET_PASSWORD');
       } 
-
-      this.mailsService.sendMails(user, 'RESET_PASSWORD');
       
       return { message:'Check your email for a token' };
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }
 
-  async verifyToken(token:string, rol?:string):Promise<any> {
+  async verifyToken( token?:string | string[], rol?:string):Promise<any> {
     try {
-      const user = await this.usersService.findByToken(token);
-      const asociacion = await this.asociacionesService.findByToken(token);
+      let user;
+      let asociacion;
+      try {
+        user = await this.usersService.findByToken(token);
+      } catch (error) {
+        console.log(user);
+      }
+      try {
+        asociacion = await this.asociacionesService.findByToken(token);
+      } catch (error) {
+        console.log(asociacion);
+      }
+      
+      
 
       if (!user && !asociacion) throw new NotFoundException('Token erróneo');
 
@@ -233,8 +248,19 @@ export class AuthService {
 
   async verifyUser(id:string) {
     try {
-      const user = await this.usersService.findById(id);
-      const asociacion = await this.asociacionesService.findOne(id);
+      let user;
+      let asociacion;
+      try {
+        user = await this.usersService.findById(id);
+      } catch (error) {
+        console.log(error.message);
+      }
+      try {
+        asociacion = await this.asociacionesService.findOne(id);
+      } catch (error) {
+        console.log(asociacion);
+      }
+      
 
       if (user) {
         if (user.verified) return 'Ya está verificado';
