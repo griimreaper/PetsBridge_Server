@@ -146,7 +146,7 @@ export class AuthService {
     }
   }
 
-  async verifyToken( token?:string | string[], rol?:string):Promise<any> {
+  async verifyToken( token:string | string[], rol?:string):Promise<any> {
     try {
       let user;
       let asociacion;
@@ -161,13 +161,11 @@ export class AuthService {
         console.log(asociacion);
       }
       
-      
-
       if (!user && !asociacion) throw new NotFoundException('Token erróneo');
 
       if (user) {
   
-        const payload = rol === 'admin' 
+        const payload = rol === 'admin'
           ? { email: user.email, sub: user.id, rol: 'admin' }
           : { email: user.email, sub: user.id, rol: 'user' };
 
