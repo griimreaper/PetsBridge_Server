@@ -64,7 +64,9 @@ export class Users extends Model {
   @HasMany(() => Animal)
     animalUser: Animal[];
 
-  @Column
+  @Column({
+    type:DataType.STRING(1000),
+  })
     reset:string;
 
   @Column({

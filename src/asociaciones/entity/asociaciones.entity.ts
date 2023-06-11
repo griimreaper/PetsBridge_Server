@@ -48,7 +48,9 @@ export class Asociaciones extends Model {
   @Column
     isActive: boolean;
 
-  @Column
+  @Column({
+    type:DataType.STRING(1000),
+  })
     reset:string;
 
   @Column({
