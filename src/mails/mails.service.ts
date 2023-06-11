@@ -13,7 +13,6 @@ export class MailsService {
     let html;
     switch (topic) {
       case 'RESET_PASSWORD':
-        const codes = data.reset.split('.');
         html = await templates.resetPassword({
           username: data.firstName ? data.firstName : data.nameOfFoundation, 
           token:data.reset,
