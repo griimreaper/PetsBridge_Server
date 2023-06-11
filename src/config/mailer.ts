@@ -23,6 +23,6 @@ transporter.verify().then(() => {
 
 //Compilers
 export const templates = {
-  resetPassword: pug.compileFile('view/password/resetPassword.pug'),
-  verifyUser: pug.compileFile('view/user/verifyUser.pug'),
+  resetPassword: pug.compileFile('views/password/resetPassword.pug'),
+  verifyUser: pug.compileFile('views/user/verifyUser.pug'),
 };
