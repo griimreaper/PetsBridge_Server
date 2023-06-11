@@ -17,25 +17,32 @@ export class AdoptionsService {
 
   async adopt(IDS: AdoptionDto): Promise<string> { 
     try {
-      const user = await this.usersRepository.findByPk(IDS.userID);
-      const animal = await this.animalsRepository.findOne({ where: { id: IDS.animalID } });
-      if (user && animal) {
+      const userData = await this.usersRepository.findByPk(IDS.userID);
+      const animalData = await this.animalsRepository.findOne({ where: { id: IDS.animalID } });
+      if (userData && animalData) {
         const adoption = await this.adoptionsRepository.create({
-          userID: user.id,
-          animalID: animal.id,
+          userID: userData.id,
+          animalID: animalData.id,
         });
         const adoptionData = await this.findById(adoption.dataValues.id);
-        this.mailsService.sendMails(adoptionData, 'ADOPT');
+        const { animal, user } = adoptionData.dataValues;
+        this.mailsService.sendMails({
+          petName:animal.dataValues.name, 
+          username:user.dataValues.firstName,
+          email:user.dataValues.email,
+        },
+        'ADOPT');
         return 'Adopted successfully';
       } else {
         throw new HttpException('User or animal not found', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
+      console.log(error.message);
       throw new HttpException('Adoption failed', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async findById(id:string):Promise<Adoption | NotFoundException> {
+  async findById(id:string):Promise<any> {
     try {
       const adoption = await this.adoptionsRepository.findOne({
         where: {
