@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Email = require('email-templates');
+import pug = require('pug');
 import nodemailer = require('nodemailer');
 import * as dotenv from 'dotenv';
 
@@ -21,12 +21,8 @@ transporter.verify().then(() => {
   console.log('Server is ready to take our messages');
 }).catch(error => console.log(error));
 
-//Create an Email instance with a SMTP transport
-export const email = new Email({
-  message : {
-    from:APP_EMAIL,
-  },
-  send:true,
-  transport:transporter,
-  preview:false,
-});
+//Compilers
+export const templates = {
+  resetPassword: pug.compileFile('view/password/resetPassword.pug'),
+  verifyUser: pug.compileFile('view/user/verifyUser.pug'),
+};
