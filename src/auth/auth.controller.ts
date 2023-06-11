@@ -83,7 +83,7 @@ export class AuthController {
     response.setHeader('Authorization', newtoken.token).json(newtoken);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Patch('create-password')
   async createNewPassword(@Body() newPassword, @Req() request:Request) {
     return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
