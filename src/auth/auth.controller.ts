@@ -67,14 +67,17 @@ export class AuthController {
     const token = await this.authService.login(user);
     return { ...token, id: user.id };
   }
+  
   @Post('forgot-password')
   async forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email.email);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('verify-token')
-  async veriftToken(@Body() body, @Res() response: Response) {
-    const { code, rol } = body;
+  async veriftToken(@Body() body, @Res() response: Response, @Req() request:Request) {
+    const { rol } = body;
+    const { code } = request.headers;
     const newtoken = await this.authService.verifyToken( code, rol );
 
     response.setHeader('Authorization', newtoken.token).json(newtoken);
