@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { Injectable } from '@nestjs/common';
-import { transporter, email } from 'src/config/mailer';
+import { transporter, templates } from 'src/config/mailer';
 import { ConfigService } from '@nestjs/config';
-import { Users } from 'src/users/entity/users.entity';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Injectable()
 export class MailsService {
@@ -15,19 +13,22 @@ export class MailsService {
     let html;
     switch (topic) {
       case 'RESET_PASSWORD':
-        html = await email.render('password/resetPassword', { 
+        const codes = data.reset.split('.');
+        html = await templates.resetPassword({
           username: data.firstName ? data.firstName : data.nameOfFoundation, 
-          token: data.reset });
-        await transporter.sendMail({
-          to:data.email,
-          subject:'Cambio de contraseña',
-          html:html,
+          token:data.reset,
+        });
+        transporter.sendMail({
+          to: data.email,
+          subject: 'Cambio de contraseña',
+          html: html,
         });
         break;
       case 'VERIFY_USER':
-        html = await email.render('user/verifyUser', { 
+        html = await templates.verifyUser({
           username:data.firstName ? data.firstName : data.nameOfFoundation,
-          link: `https://localhost:3001/${data.code}/${data.id}` });
+          link: `https://localhost:3001/${data.code}/${data.id}`,
+        });
         await transporter.sendMail({
           to:data.email,
           subject:'Verificación de correo electrónico',
