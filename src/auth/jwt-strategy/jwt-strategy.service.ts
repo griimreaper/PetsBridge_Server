@@ -24,11 +24,24 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let admin;
     switch (payload.rol) {
       case 'user':
-        user = await this.usersService.findById(payload.id);
+        try {
+          user = await this.usersService.findById(payload.sub);
+        } catch (error) {
+          console.log(error.message);
+        }
       case 'fundation':
-        asociacion = await this.asociacionesService.findOne(payload.id);
+        try {
+          asociacion = await this.asociacionesService.findOne(payload.sub);
+        } catch (error) {
+          console.log(error.message);
+        }
       case 'admin':
-        admin = await this.usersService.findById(payload.id);
+        try {
+          admin = await this.usersService.findById(payload.sub);
+        } catch (error) {
+          console.log(error.message);
+        }
+        
     }
     if (!user && !asociacion && !admin) throw new UnauthorizedException('You are not authorized to perform the operation');
     return payload;
