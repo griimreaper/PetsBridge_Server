@@ -34,6 +34,16 @@ export class MailsService {
           html:html,
         });
         break;
+      case 'ADOPT':
+        html = await templates.adoptPet({
+          username: data.firstName,
+          petName: data.petName,
+        });
+        await transporter.sendMail({
+          to:data.email,
+          subject:'Agradecimiento',
+          html:html,
+        });
       default:
         return;
     }
