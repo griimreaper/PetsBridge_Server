@@ -36,7 +36,7 @@ export class MailsService {
         break;
       case 'ADOPT':
         html = await templates.adoptPet({
-          username: data.firstName,
+          username: data.username,
           petName: data.petName,
         });
         await transporter.sendMail({
