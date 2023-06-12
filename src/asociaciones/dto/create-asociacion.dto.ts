@@ -1,14 +1,23 @@
 import { UserRole } from 'src/auth/dto/login.dto';
-import { RedSocialDto } from './create-RedSocial.dto';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { IsEmail, IsMobilePhone, IsNotEmpty, IsStrongPassword, MinLength } from 'class-validator';
 
 export class CreateAsociacionDto {
-  id?: string;
 
-  email: string;
+  @IsEmail()
+    email: string;
 
-  password: string;
+  @IsStrongPassword({
+    minLength:8,
+    minUppercase:1,
+    minNumbers:1,
+    minSymbols:1,
+  })
+    password: string;
 
-  nameOfFoundation: string;
+  @IsNotEmpty()
+  @MinLength(5)
+    nameOfFoundation: string;
 
   profilePic?: string;
 
