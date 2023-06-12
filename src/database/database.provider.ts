@@ -18,7 +18,7 @@ export const databaseProviders = [
         host: process.env.DP_HOST,
         port: parseInt(process.env.DP_PORT),
         username: process.env.DP_USERNAME,
-        password: process.env.DB_PASSWORD,
+        password: process.env.DP_PASSWORD,
         database: process.env.DP_DATABASE,
         logging: false,
         native: false,
