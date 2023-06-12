@@ -19,7 +19,7 @@ export class MailsService {
         });
         transporter.sendMail({
           to: data.email,
-          subject: 'Cambio de contraseña',
+          subject: 'Cambio de contraseña.',
           html: html,
         });
         break;
@@ -30,7 +30,7 @@ export class MailsService {
         });
         await transporter.sendMail({
           to:data.email,
-          subject:'Verificación de correo electrónico',
+          subject:'Verificación de correo electrónico.',
           html:html,
         });
         break;
@@ -41,7 +41,18 @@ export class MailsService {
         });
         await transporter.sendMail({
           to:data.email,
-          subject:'Agradecimiento',
+          subject:'Hiciste una adopción.',
+          html:html,
+        });
+        break;
+      case "DONATE":
+        html = await templates.adoptPet({
+          username: data.username,
+          petName: data.petName,
+        });
+        await transporter.sendMail({
+          to:data.email,
+          subject:'Agradecimiento.',
           html:html,
         });
       default:
