@@ -1,10 +1,10 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Publications } from './entity/publications_users.entity';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
-import { FileService } from 'src/file/file.service';
-import { Comments } from 'src/coments/entity/comments.entity';
-import { CreateCommentDto } from 'src/coments/comments.dto';
-import { Users } from 'src/users/entity/users.entity';
+import { FileService } from '../file/file.service';
+import { Comments } from '../coments/entity/comments.entity';
+import { CreateCommentDto } from '../coments/comments.dto';
+import { Users } from '../users/entity/users.entity';
 
 @Injectable()
 export class PublicationsUsersService {

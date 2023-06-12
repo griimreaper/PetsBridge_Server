@@ -4,7 +4,7 @@ import { LoginDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from 'src/file/multer.config';
+import { multerConfig } from '../file/multer.config';
 
 
 

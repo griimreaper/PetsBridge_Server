@@ -2,10 +2,10 @@ import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { hash } from 'bcrypt';
-import { Publications } from 'src/publications_users/entity/publications_users.entity';
-import { Animal } from 'src/animals/animals.entity';
+import { Publications } from '../publications_users/entity/publications_users.entity';
+import { Animal } from '../animals/animals.entity';
 
 @Injectable()
 export class UsersService {
@@ -108,7 +108,7 @@ export class UsersService {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (profilePic) user.profilePic = profilePic;
+        if (profilePic) user.image = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
         await user.save();

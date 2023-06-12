@@ -6,11 +6,11 @@ import {
   Table,
   DataType,
 } from 'sequelize-typescript';
-import { Adoption } from 'src/adoptions/adoptions.entity';
-import { Animal } from 'src/animals/animals.entity';
-import { Publications } from 'src/publications_users/entity/publications_users.entity';
-import { Comments } from 'src/coments/entity/comments.entity';
-import { Donations } from 'src/donations/entity/donations.entity';
+import { Adoption } from '../../adoptions/adoptions.entity';
+import { Animal } from '../../animals/animals.entity';
+import { Publications } from '../../publications_users/entity/publications_users.entity';
+import { Comments } from '../../coments/entity/comments.entity';
+import { Donations } from '../../donations/entity/donations.entity';
 
 @Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
@@ -35,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    profilePic: string;
+    image: string;
 
   @Column
     country: string;

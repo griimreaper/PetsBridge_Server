@@ -2,8 +2,8 @@ import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { hash } from 'bcrypt';
-import { Users } from 'src/users/entity/users.entity';
-import { Animal } from 'src/animals/animals.entity';
+import { Users } from '../users/entity/users.entity';
+import { Animal } from '../animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
 
@@ -122,7 +122,7 @@ export class AsociacionesService {
       if (asociacion) {
         if (nameOfFoundation) asociacion.nameOfFoundation = nameOfFoundation;
         if (country) asociacion.country = country;
-        if (profilePic) asociacion.profilePic = profilePic;
+        if (profilePic) asociacion.image = profilePic;
         if (description) asociacion.description = description;
         if (address) asociacion.address = address;
         if (password) {

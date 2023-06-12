@@ -3,10 +3,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt-strategy/jwt-strategy.service';
-import { AsociacionesModule } from 'src/asociaciones/asociaciones.module';
+import { AsociacionesModule } from '../asociaciones/asociaciones.module';
 import { jwtConstanst } from '../constants/jwt.constants';
-import { UsersModule } from 'src/users/users.module';
-import { FileService } from 'src/file/file.service';
+import { UsersModule } from '../users/users.module';
+import { FileService } from '../file/file.service';
 
 @Module({
   imports: [

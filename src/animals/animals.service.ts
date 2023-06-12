@@ -1,8 +1,8 @@
 import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
-import { FileService } from 'src/file/file.service';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { FileService } from '../file/file.service';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 
 @Injectable()
 export class AnimalsService {

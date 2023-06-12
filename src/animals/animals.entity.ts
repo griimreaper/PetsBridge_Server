@@ -1,7 +1,7 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { Users } from 'src/users/entity/users.entity';
-// import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
+import { Users } from '../users/entity/users.entity';
+// import { Adoption } from '../adoptions/adoptions.entity';
 
 @Table({
   timestamps:false,

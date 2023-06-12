@@ -7,8 +7,8 @@ import {
   DataType,
   HasMany,
 } from 'sequelize-typescript';
-import { Comments } from 'src/coments/entity/comments.entity';
-import { Users } from 'src/users/entity/users.entity';
+import { Comments } from '../../coments/entity/comments.entity';
+import { Users } from '../../users/entity/users.entity';
 
 @Table({ timestamps: false, tableName: 'publications' })
 export class Publications extends Model {

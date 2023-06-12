@@ -1,6 +1,6 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
-import { Animal } from 'src/animals/animals.entity';
-import { Users } from 'src/users/entity/users.entity';
+import { Animal } from '../animals/animals.entity';
+import { Users } from '../users/entity/users.entity';
 
 @Table({
   timestamps:true,
