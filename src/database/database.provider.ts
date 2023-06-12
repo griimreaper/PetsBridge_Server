@@ -14,15 +14,15 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT),
-        username: process.env.DB_USERNAME,
+        host: process.env.DP_HOST,
+        port: parseInt(process.env.DP_PORT),
+        username: process.env.DP_USERNAME,
         password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
+        database: process.env.DP_DATABASE,
         logging: false,
         native: false,
       });
-      sequelize.addModels( [ 
+      sequelize.addModels( [
         Users,
         Asociaciones,
         Animal,
