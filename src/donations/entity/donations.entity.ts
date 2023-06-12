@@ -30,7 +30,7 @@ export class Donations extends Model {
 
   @Column({
     type: DataType.ENUM,
-    values: ['pending', 'cancel', 'success'],
+    values: ['open', 'pending', 'cancel', 'success'],
   })
     status: string;
 

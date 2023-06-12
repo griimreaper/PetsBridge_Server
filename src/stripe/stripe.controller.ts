@@ -63,7 +63,7 @@ export class StripeController {
         mount: body.donation,
         urlDonation: donationLink.url,
       };
-
+      console.log('dasdasdadad', donations);
       const donationsDb = await this.donationRepository.create({ ...donations });
 
       response.status(HttpStatus.CREATED).json({ link: donationsDb });
