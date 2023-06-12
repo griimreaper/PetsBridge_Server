@@ -56,8 +56,9 @@ export class AuthService {
     throw new HttpException('PASSWORD INCORRECT', 403);
   }
 
-  async login(usuario: any): Promise<{ token: string }> {
-    const payload = { email: usuario.email, sub: usuario.id, rol: usuario.rol };
+  async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string }> {
+    const { isActive, isGoogle, password, id, ...toPayload } = usuario;
+    const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
     return { token };
