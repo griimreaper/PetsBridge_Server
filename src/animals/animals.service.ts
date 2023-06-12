@@ -40,7 +40,7 @@ export class AnimalsService {
       await this.animalsRepository.create({
         ...pet,
         status: 'homeless',
-        image: urls,
+        image: urls,  
       });
       return 'La mascota se ha registrado!';
     } catch (error) {
