@@ -13,12 +13,11 @@ import {
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { FileService } from 'src/file/file.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiBearerAuth()
 @ApiTags('Asociaciones')
@@ -29,6 +28,7 @@ export class AsociacionesController {
     private readonly fileService: FileService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll() {
     return this.asociacionesService.findAll();
@@ -39,6 +39,7 @@ export class AsociacionesController {
     return this.asociacionesService.generateData();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Param('id') idAsociacion: string) {
     return this.asociacionesService.findOne(idAsociacion);

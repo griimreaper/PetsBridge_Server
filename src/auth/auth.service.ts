@@ -1,11 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AsociacionesService } from 'src/asociaciones/asociaciones.service';
+import { AsociacionesService } from '../asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
-import { FileService } from 'src/file/file.service';
-import { SKP } from 'src/constants/jwt.constants';
+import { FileService } from '../file/file.service';
+import { SKP } from '../constants/jwt.constants';
 import {
   IValidateUser,
   IValidateAsociaciones,

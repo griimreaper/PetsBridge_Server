@@ -15,7 +15,7 @@ async function bootstrap() {
     .build();
 
   app.use(morgan('dev'));
-  
+
   app.enableCors(CORS);
 
   const document = SwaggerModule.createDocument(app, options);
