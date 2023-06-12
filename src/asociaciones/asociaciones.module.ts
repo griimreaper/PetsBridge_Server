@@ -9,7 +9,7 @@ import { databaseProviders } from 'src/database/database.provider';
 @Module({
   controllers: [AsociacionesController],
   providers: [
-    AsociacionesService, 
+    AsociacionesService,
     ...asociacionesProviders,
     ...databaseProviders,
     FileService],
