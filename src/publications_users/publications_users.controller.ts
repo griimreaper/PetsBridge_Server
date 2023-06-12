@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { PublicationsUsersService } from './publications_users.service';
 import { CreatePublicationsDto } from './dto/publications_users.dto';
-import { multerConfig } from 'src/file/multer.config';
+import { multerConfig } from '../file/multer.config';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto } from '../coments/comments.dto';
@@ -27,9 +27,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class PublicationsUsersController {
   constructor(private readonly publicationsService: PublicationsUsersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id?')
   async getall(@Param('id') id: string) {
-    
     if (id) {
       return this.publicationsService.findOne(id);
     }
@@ -42,7 +42,7 @@ export class PublicationsUsersController {
     FilesInterceptor('file', undefined, multerConfig))
   async createPub(
   @GetUser() user: any,
-    @Body() newUser: CreatePublicationsDto, 
+    @Body() newUser: CreatePublicationsDto,
     @UploadedFiles() file: Express.Multer.File[],
   ) {
     return this.publicationsService.createPub({ ...newUser, userId: user.id }, file);

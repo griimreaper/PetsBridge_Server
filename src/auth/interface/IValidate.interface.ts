@@ -1,5 +1,5 @@
-import { Users } from 'src/users/entity/users.entity';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Users } from '../../users/entity/users.entity';
+import { Asociaciones } from '../../asociaciones/entity/asociaciones.entity';
 
 export interface IValidateUser extends Users {
   rol: string;

@@ -18,7 +18,6 @@ import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { GetUser } from '../auth/decorator/get-user.decorator';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiBearerAuth()
 @ApiTags('Asociaciones')
@@ -29,6 +28,7 @@ export class AsociacionesController {
     private readonly fileService: FileService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll() {
     return this.asociacionesService.findAll();
@@ -39,6 +39,7 @@ export class AsociacionesController {
     return this.asociacionesService.generateData();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Param('id') idAsociacion: string) {
     return this.asociacionesService.findOne(idAsociacion);

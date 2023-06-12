@@ -3,8 +3,8 @@ import { AnimalsService } from './animals.service';
 import { AnimalDto } from './dto/animals.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from 'src/file/multer.config';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { multerConfig } from '../file/multer.config';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 
 @ApiTags('Animals')
 @Controller('animals')
