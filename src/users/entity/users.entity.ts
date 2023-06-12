@@ -35,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    img_profile: string;
+    image: string;
 
   @Column
     country: string;
@@ -59,7 +59,7 @@ export class Users extends Model {
     donations: Donations[];
 
   @BelongsToMany(() => Animal, () => Adoption)
-    animals: Animal;
+    animalsAdopt: Animal[];
 
   @HasMany(() => Animal)
     animalUser: Animal[];

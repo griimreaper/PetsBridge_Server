@@ -24,30 +24,49 @@ export class UsersService {
     }
   }
 
-  async createUser(body:CreateUserDto): Promise<{ send: string; status: number }> { // funcion para crear usuario
+  async createUser(
+    body: CreateUserDto,
+  ): Promise<{ send: string; status: number }> {
+    // funcion para crear usuario
     const { email } = body;
     //verificamos que ese email no exista en la tabla asociaciones
-    if (await Asociaciones.findOne({ where: { email } })) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST }; 
+    if (await Asociaciones.findOne({ where: { email } }))
+      return {
+        send: 'El email ya esta en uso.',
+        status: HttpStatus.BAD_REQUEST,
+      };
     //findOrCreate para que no se duplique el email
-    const [users, created] = await this.serviceUsers.findOrCreate({ where: { email }, defaults: { ...body } }); 
+    const [users, created] = await this.serviceUsers.findOrCreate({
+      where: { email },
+      defaults: { ...body },
+    });
     //condicion por si se encontro un email en uso
-    if (!created) return { send:'El email ya esta en uso.', status: HttpStatus.BAD_REQUEST };
+    if (!created)
+      return {
+        send: 'El email ya esta en uso.',
+        status: HttpStatus.BAD_REQUEST,
+      };
     //status 201
-    return { send:'El usuario se creo exitosamente.', status: HttpStatus.CREATED };
+    return {
+      send: 'El usuario se creo exitosamente.',
+      status: HttpStatus.CREATED,
+    };
   }
 
   async findById(id: string): Promise<Users> {
     try {
       const user = await this.serviceUsers.findByPk(id, {
-        include: [{
-          model: Publications,
-          attributes: {
-            exclude: ['userId'],
+        include: [
+          {
+            model: Publications,
+            attributes: {
+              exclude: ['userId'],
+            },
           },
-        }],
+        ],
       });
 
-      console.log(user);  
+      console.log(user);
       if (!user) {
         throw new Error('No hay con ese id');
       }
@@ -82,7 +101,7 @@ export class UsersService {
       password,
       country,
       isGoogle,
-      status,
+      isActive,
     },
     profilePic?: any,
   ): Promise<string> {
@@ -95,8 +114,7 @@ export class UsersService {
         !password &&
         !profilePic &&
         !country &&
-        !isGoogle &&
-        !status
+        !isGoogle
       )
         return 'Nada que actualizar';
       const user = await this.serviceUsers.findByPk(id);
@@ -109,10 +127,9 @@ export class UsersService {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (profilePic) user.img_profile = profilePic;
+        if (profilePic) user.image = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
-        if (status) user.status = status;
         await user.save();
         return 'Actualizado';
       } else {

@@ -28,10 +28,10 @@ export class Asociaciones extends Model {
     nameOfFoundation: string;
 
   @Column
-    img_profile: string;
+    image: string;
 
   @Column
-    dateStart: Date;
+    dateStart: string;
 
   @Column
     description: string;
@@ -46,7 +46,7 @@ export class Asociaciones extends Model {
     address: string;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
   @HasMany(()=> Animal)
     pets: Animal[];

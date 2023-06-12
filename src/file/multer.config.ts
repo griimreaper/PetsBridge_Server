@@ -3,7 +3,7 @@ import { extname } from 'path';
 
 export const multerConfig = {
   storage: diskStorage({
-    destination: './uploads',
+    destination: '/tmp/',
     filename: (req, file, callback) => {
       const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
       callback(null, `${randomName}${extname(file.originalname)}`);
@@ -11,7 +11,7 @@ export const multerConfig = {
   }),
   fileFilter: (req, file, callback) => {
     // Aquí puedes realizar la validación para permitir solo ciertos tipos de archivos
-    const allowedFormats = ['.jpg', '.png', '.jpeg'];
+    const allowedFormats = ['.jpg', '.png', '.jpeg', '.pdf'];
     const ext = extname(file.originalname).toLowerCase();
     if (allowedFormats.includes(ext)) {
       callback(null, true);
