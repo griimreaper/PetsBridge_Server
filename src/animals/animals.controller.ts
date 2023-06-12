@@ -1,9 +1,10 @@
-import { Controller, Post, Body, Get, UseInterceptors, UploadedFiles, Param, HttpCode, HttpException, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseInterceptors, UploadedFiles, Param, HttpCode, HttpException, HttpStatus, Query, Patch, Put, Delete } from '@nestjs/common';
 import { AnimalsService } from './animals.service';
 import { AnimalDto } from './dto/animals.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/file/multer.config';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @ApiTags('Animals')
 @Controller('animals')
@@ -14,7 +15,6 @@ export class AnimalsController {
   animalPaginate(@Query('currentPage') currentPage: string, @Query('slicePage') slicePage: string) {
     return this.animalsService.paginate(Number(currentPage), Number(slicePage));
   }
-
   
   @Get('/animalsFake') 
   fakeAnimal() {
@@ -28,7 +28,6 @@ export class AnimalsController {
   
   @Get(':id')
   detail(@Param('id') id: string) {
-    console.log('hola detail');
     return this.animalsService.getPet(id);
   }
 
@@ -37,7 +36,6 @@ export class AnimalsController {
     return this.animalsService.getAllPets();
   }
 
-
   @Post()
   @UseInterceptors(FilesInterceptor('file', undefined, multerConfig))
   createPet(@Body() pet:AnimalDto, @UploadedFiles() file:Express.Multer.File[]): Promise<string> {
@@ -45,9 +43,19 @@ export class AnimalsController {
   }
 
   @Get('/animalAsoc/:id')
-  animalByAssoc(@Param('id') id: string) {
+  animalByAssoc(@Param('id') id: string): Promise<Asociaciones> {
     return this.animalsService.animalAssoc(id);
   }
 
+  @Put('/editAnimal/:id')
+  @UseInterceptors(FilesInterceptor('file', 5, multerConfig))
+  editAnimal(@Param('id') id: string, @Body() pet: AnimalDto, @UploadedFiles() file:Express.Multer.File[]) {
+    
+    return this.animalsService.editAnimals(id, pet, file);
+  }
 
+  @Delete(':id')
+  deletePet(@Param('id') id:string) {
+    return this.animalsService.deletePet(id);
+  }
 }

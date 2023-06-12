@@ -61,17 +61,19 @@ export class AnimalsService {
     try {
       const animal = await this.animalsRepository.findByPk(id,  {
         include: [
-          { model: Asociaciones, as: 'asociacion', attributes: ['id', 'email', 'phone', 'nameOfFoundation', 'profilePic'] },
+          { model: Asociaciones, as: 'asociacion', attributes: ['id', 'email', 'phone', 'nameOfFoundation', 'image'] },
         ],
       });
+      if (!animal) {
+        throw new HttpException('No existe esta mascota!', 404);
+      }
       return animal;
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
   }
 
-  async animalAssoc(id: string) {
-    console.log('detal animal');
+  async animalAssoc(id: string): Promise<Asociaciones> {
     const AsocAnimal = await this.asociationRepository.findByPk(id, {
       include: [Animal],
     });
@@ -86,6 +88,37 @@ export class AnimalsService {
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
+  }
+
+  async editAnimals(id:string, pet:AnimalDto, file: Express.Multer.File[]) {
+    try {
+      const urls: any = Array.isArray(file) ? await this.fileService.createFiles(file) : null;
+      const animal = await this.animalsRepository.findByPk(id);
+      if (!animal) {
+        throw new HttpException('Este animal no existe', 404);
+      }
+      const updateAnimal = {
+        name : pet.name,
+        gender: pet.gender,
+        city: pet.city,
+        as_id: pet.as_id,
+        userId: pet.userId,
+        specie: pet.specie,
+        status: 'homeless',
+        description: pet.description,
+        image: urls,
+        country: pet.country,
+        state: pet.state,
+        age_M: pet.age_M,
+        age_Y: pet.age_Y,
+        weight: pet.weight,
+      };
+      await animal.update( { ...updateAnimal } );
+      return 'Mascota actualizada con exito!';
+    } catch (error) {
+      throw new HttpException(error.message, 404);
+    }
+    
   }
 
   async paginate(currentPage:number, slicePage: number):Promise<Array < { object: Animal } >> {
@@ -142,7 +175,6 @@ export class AnimalsService {
         };
         fakeAnimal.push(animals);
       }
-      console.log(fakeAnimal);
       await this.animalsRepository.bulkCreate(fakeAnimal);
       return fakeAnimal;
     } catch (error) {
