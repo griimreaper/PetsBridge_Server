@@ -1,8 +1,8 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Adoption } from './adoptions.entity';
 import { AdoptionDto } from './dto/adoptions.dto';
-import { Users } from 'src/users/entity/users.entity';
-import { Animal } from 'src/animals/animals.entity';
+import { Users } from '../users/entity/users.entity';
+import { Animal } from '../animals/animals.entity';
 @Injectable()
 export class AdoptionsService {
   constructor(

@@ -1,12 +1,12 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Users } from 'src/users/entity/users.entity';
-import { Publications } from 'src/publications_users/entity/publications_users.entity';
-import { Animal } from 'src/animals/animals.entity';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { Adoption } from 'src/adoptions/adoptions.entity';
-import { Donations } from 'src/donations/entity/donations.entity';
-import { Comments } from 'src/coments/entity/comments.entity';
-import { RedSocial } from 'src/asociaciones/entity/redSocial.entity';
+import { Users } from '../users/entity/users.entity';
+import { Publications } from '../publications_users/entity/publications_users.entity';
+import { Animal } from '../animals/animals.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
+import { Adoption } from '../adoptions/adoptions.entity';
+import { Donations } from '../donations/entity/donations.entity';
+import { Comments } from '../coments/entity/comments.entity';
+import { RedSocial } from '../asociaciones/entity/redSocial.entity';
 
 export const databaseProviders = [
   {

@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
-import { Animal } from 'src/animals/animals.entity';
+import { Animal } from '../../animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
 
 @Table({ tableName: 'asociaciones', timestamps: false })
