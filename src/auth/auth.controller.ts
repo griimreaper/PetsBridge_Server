@@ -18,7 +18,7 @@ import { LoginDto, RegisterDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from 'src/file/multer.config';
+import { multerConfig } from '../file/multer.config';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 

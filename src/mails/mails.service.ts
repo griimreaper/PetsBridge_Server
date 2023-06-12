@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { Injectable } from '@nestjs/common';
-import { transporter, templates } from 'src/config/mailer';
+import { transporter, templates } from '../config/mailer';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailsService {
   constructor(private readonly configService:ConfigService) {}
-
-  AppEmail = this.configService.get('APP_EMAIL');
 
   async sendMails(data, topic:string) {
     let html;

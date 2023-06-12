@@ -1,10 +1,9 @@
 import { Injectable, Inject, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { Adoption } from './adoptions.entity';
 import { AdoptionDto } from './dto/adoptions.dto';
-import { Users } from 'src/users/entity/users.entity';
-import { Animal } from 'src/animals/animals.entity';
-import { MailsService } from 'src/mails/mails.service';
-import { NotFoundError } from 'rxjs';
+import { Users } from '../users/entity/users.entity';
+import { Animal } from '../animals/animals.entity';
+import { MailsService } from '../mails/mails.service';
 
 @Injectable()
 export class AdoptionsService {
