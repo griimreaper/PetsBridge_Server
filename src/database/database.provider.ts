@@ -14,6 +14,7 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'postgres',
+        dialectModule: require('pg'),
         host: process.env.DP_HOST,
         port: parseInt(process.env.DP_PORT),
         username: process.env.DP_USERNAME,
