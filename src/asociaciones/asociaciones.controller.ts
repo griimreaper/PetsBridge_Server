@@ -16,8 +16,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from 'src/file/multer.config';
-import { GetUser } from 'src/auth/decorator/get-user.decorator';
+import { multerConfig } from '../file/multer.config';
+import { GetUser } from '../auth/decorator/get-user.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Asociaciones')
