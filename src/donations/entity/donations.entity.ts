@@ -1,7 +1,7 @@
 import {
   AutoIncrement,
-  BelongsTo,
   Column,
+  DataType,
   ForeignKey,
   Model,
   PrimaryKey,
@@ -19,15 +19,24 @@ export class Donations extends Model {
   @Column
     id_Asociations: string;
 
-    @ForeignKey(() => Users)
+  @ForeignKey(() => Users)
     id_Users: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
     mount: number;
 
   @Column
-    message: string;
+    message?: string;
 
-    @Column
+  @Column({
+    type: DataType.ENUM,
+    values: ['pending', 'cancel', 'success'],
+  })
+    status: string;
+
+  @Column
     paymentId: string; // Nueva propiedad para almacenar el ID de pago
+
+  @Column
+    urlDonation: string;
 }

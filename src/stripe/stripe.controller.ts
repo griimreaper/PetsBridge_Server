@@ -1,12 +1,24 @@
-import { Body, Controller, Get, HttpStatus, Post, Render, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Param, Post, Render, Res } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { Response } from 'express';
 import { DonationsPay } from './dto/donationsPay.dto';
+import { Donations } from 'src/donations/entity/donations.entity';
+
+interface DonationProperties {
+  paymentId: string;
+  amount_total: number;
+  status: string;
+  success_url: string;
+  url: string;
+}
 
 @Controller('stripe')
 export class StripeController {
-  constructor(private stripeService: StripeService) {}
+  constructor(private stripeService: StripeService,
+    @Inject('DONATIONS_REPOSITORY')
+    private readonly donationRepository: typeof Donations,
+  ) { }
 
 
   @Post('checkout')
@@ -30,29 +42,47 @@ export class StripeController {
   @Post('/create-donations')
   async createDontationsStripe(
   @Body() body: DonationsPay,
+    @Res() response: Response,
   ) {
-    const info = await this.stripeService.createPrueba(body);
-    return info;
+    try {
+      const donationLink = await this.stripeService.createPrueba(body);
+
+      const donationProperties: DonationProperties = {
+        paymentId: donationLink.id,
+        amount_total: donationLink.amount_total,
+        status: donationLink.status,
+        success_url: donationLink.success_url,
+        url: donationLink.url,
+      };
+
+      const donations = {
+        paymentId: donationLink.id, // Asigna el id de donación
+        id_Users: body.idUser, // Asigna el idUser
+        id_Asociations: body.idAsociations,
+        status: donationLink.status,
+        mount: body.donation,
+        urlDonation: donationLink.url,
+      };
+
+      const donationsDb = await this.donationRepository.create({ ...donations });
+
+      response.status(HttpStatus.CREATED).json({ link: donationsDb });
+    } catch (error) {
+      response.status(HttpStatus.BAD_REQUEST).json(error);
+    }
   }
 
-
-  // @Get('checkout')
-  // @Render('checkout') // Renderiza la plantilla 'checkout.hbs' (o el nombre de tu plantilla) al acceder a '/stripe/checkout'
-  // showCheckoutPage() {
-  //   return;
-  // }
-  // @Post()
-  // createPayments(
-  // @Res() response: Response,
-  //   @Body() stripeRequestBody: StripeRequestBody,
-  // ) {
-  //   this.stripeService
-  //     .createPayment(stripeRequestBody)
-  //     .then((res) => {
-  //       response.status(HttpStatus.CREATED).json(res);
-  //     })
-  //     .catch((err) => {
-  //       response.status(HttpStatus.BAD_REQUEST).json(err);
-  //     });
-  // }
+  @Get('/donations/:userId')
+  async getDonationsByUser(
+  @Param('userId') userId: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const donations = await this.stripeService.getDonationsByUser(userId);
+      response.status(HttpStatus.OK).json(donations);
+    } catch (error) {
+      response.status(HttpStatus.BAD_REQUEST).json(error);
+    }
+  }
 }
+
