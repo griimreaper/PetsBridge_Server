@@ -3,7 +3,9 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as morgan from 'morgan';
 import { CORS } from './constants';
+import { ValidationPipe } from '@nestjs/common';
 const port = process.env.SERVER_PORT || 3001;
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +17,7 @@ async function bootstrap() {
     .build();
 
   app.use(morgan('dev'));
-  
+  app.useGlobalPipes(new ValidationPipe());
   app.enableCors(CORS);
 
   const document = SwaggerModule.createDocument(app, options);
