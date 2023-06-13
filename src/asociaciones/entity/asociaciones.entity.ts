@@ -48,6 +48,17 @@ export class Asociaciones extends Model {
   @Column
     isActive: boolean;
 
+  @Column({
+    type:DataType.STRING(1000),
+  })
+    reset:string;
+
+  @Column({
+    type:DataType.BOOLEAN,
+    defaultValue:false,
+  })
+    verified:boolean;
+
   @HasMany(()=> Animal)
     pets: Animal[];
 
