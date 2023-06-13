@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtConstanst } from '../../constants/jwt.constants';
@@ -14,6 +14,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { id: payload.sub, email: payload.email, rol: payload.rol };
+    const rol = payload.rol;
+    if (!rol || rol !== 'admin') {
+      throw new UnauthorizedException('You are not authorized to perform the operation');
+    }
+    return payload;
   }
 }
