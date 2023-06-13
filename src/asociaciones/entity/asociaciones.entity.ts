@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
-import { Animal } from 'src/animals/animals.entity';
+import { Animal } from '../../animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 
@@ -49,7 +49,18 @@ export class Asociaciones extends Model {
   @Column
     isActive: boolean;
 
-  @HasMany(() => Animal)
+  @Column({
+    type:DataType.STRING(1000),
+  })
+    reset:string;
+
+  @Column({
+    type:DataType.BOOLEAN,
+    defaultValue:false,
+  })
+    verified:boolean;
+
+  @HasMany(()=> Animal)
     pets: Animal[];
 
   @HasMany(() => Donations)
