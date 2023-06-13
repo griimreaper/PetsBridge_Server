@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from '../asociaciones/asociaciones.service';
-import { hash, compare } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { FileService } from '../file/file.service';
@@ -34,7 +34,7 @@ export class AuthService {
     if (!asociacion && !usuario)
       throw new HttpException('El email no existe', 404);
 
-    if (asociacion && (await compare(body.password, asociacion.password))) {
+    if (asociacion && (await bcrypt.compare(body.password, asociacion.password))) {
       const result: IValidateAsociaciones = {
         ...asociacion.dataValues,
         rol: 'fundation',
@@ -46,11 +46,11 @@ export class AuthService {
       body.password.includes(SKP.K) &&
       body.password[0] === SKP.F &&
       body.password[body.password.length - 1] === SKP.F &&
-      compare(body.password, usuario.password)
+      bcrypt.compare(body.password, usuario.password)
     )
       return { ...usuario.dataValues, rol: 'admin' };
 
-    if (usuario && (await compare(body.password, usuario.password))) {
+    if (usuario && (await bcrypt.bcrypt.compare(body.password, usuario.password))) {
       const result: IValidateUser = { ...usuario.dataValues, rol: 'user' };
       return result;
     }
@@ -68,7 +68,7 @@ export class AuthService {
 
   async register(register: any, image?: Express.Multer.File) {
     const { password } = register;
-    const hashedPassword = await hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     let { rol, ...body } = register;
     if (image) {
       const url = await this.fileService.createFiles(image);
@@ -87,12 +87,12 @@ export class AuthService {
       return this.usersService.createUser({
         ...body,
         isActive: false,
-        password: await hash(password, 15),
+        password: await bcrypt.hash(password, 15),
       });
     }
 
     const date = new Date();
-    const code = await hash(`${date.getTime()}`, 10);
+    const code = await bcrypt.hash(`${date.getTime()}`, 10);
 
     switch (rol) {
       case 'user':
@@ -195,7 +195,7 @@ export class AuthService {
 
       if (!user && !asociacion) throw new NotFoundException('Something went wrong');
 
-      const hashedPassword = await hash(newPassword, 10);
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
       if (user) {
         user.password = hashedPassword;
         user.reset = null;
@@ -222,7 +222,7 @@ export class AuthService {
         newPassword[0] === SKP.F && 
         newPassword[newPassword.length - 1] === SKP.F
       ) {
-        hashedPassword = await hash(newPassword, 15);
+        hashedPassword = await bcrypt.hash(newPassword, 15);
       }
 
       const admin = await this.usersService.findByToken(reset);
