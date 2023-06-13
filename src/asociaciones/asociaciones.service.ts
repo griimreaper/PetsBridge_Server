@@ -2,8 +2,8 @@ import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { hash } from 'bcrypt';
-import { Users } from 'src/users/entity/users.entity';
-import { Animal } from 'src/animals/animals.entity';
+import { Users } from '../users/entity/users.entity';
+import { Animal } from '../animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { faker } from '@faker-js/faker';
@@ -52,7 +52,7 @@ export class AsociacionesService {
 
   async create(
     body: CreateAsociacionDto,
-  ): Promise<{ send: string; status: number }> {
+  ): Promise<{ send: string; status: number, asociacion?:Asociaciones }> {
     // funcion para crear asociacion
     const { email } = body;
     let { reds } = body;
@@ -94,6 +94,7 @@ export class AsociacionesService {
       return {
         send: 'La asociacion se creo exitosamente.',
         status: HttpStatus.CREATED,
+        asociacion: asociacion,
       };
     } catch (error) {
       await transaction.rollback(); //transaccion erronea, no se crea el usuario
@@ -197,5 +198,23 @@ export class AsociacionesService {
     }
     this.asociacionesProviders.bulkCreate(dataAso);
     return dataAso;
+  }
+
+  async findByEmail(email:string):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ email } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findByToken(token:string | string[]):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ reset:token } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

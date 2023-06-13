@@ -18,7 +18,6 @@ import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { GetUser } from '../auth/decorator/get-user.decorator';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiBearerAuth()
 @ApiTags('Asociaciones')

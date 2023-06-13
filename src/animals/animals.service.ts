@@ -1,10 +1,8 @@
 import { Injectable, Inject, HttpException, NotFoundException, HttpStatus } from '@nestjs/common';
 import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
-import { FileService } from 'src/file/file.service';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { Users } from 'src/users/entity/users.entity';
-import { asociacionesProviders } from 'src/asociaciones/providers/asociaciones.provider';
+import { FileService } from '../file/file.service';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { faker } from '@faker-js/faker';
 
 export const AnimalSpecie = {
