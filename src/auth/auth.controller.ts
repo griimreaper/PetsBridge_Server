@@ -67,7 +67,7 @@ export class AuthController {
     const token = await this.authService.login(user);
     return { ...token, id: user.id };
   }
-  
+
   @Post('forgot-password')
   async forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email.email);
@@ -87,8 +87,8 @@ export class AuthController {
   @Patch('create-password')
   async createNewPassword(@Body() newPassword, @Req() request:Request) {
     return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
-  } 
-  
+  }
+
   @UseGuards(AuthGuard('admin'))
   @Patch('create-admin-password')
   async createAdminPassword(@Body() body, @Req() request:Request) {

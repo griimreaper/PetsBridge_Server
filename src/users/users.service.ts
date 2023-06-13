@@ -18,7 +18,11 @@ export class UsersService {
   async findAll(): Promise<Users[]> {
     try {
       const api = this.configureService.get('DB_HOST');
-      const allUsers = await this.serviceUsers.findAll(api);
+      let allUsers = await this.serviceUsers.findAll(api);
+      allUsers = allUsers.map(u => {
+        const { password, ...attributes } = u.dataValues;
+        return attributes;
+      });
       return allUsers;
     } catch (error) {
       throw new HttpException('Error al intentar buscar los usuarios', 404);
@@ -66,6 +70,9 @@ export class UsersService {
             },
           },
         ],
+        attributes: {
+          exclude: ['password'],
+        },
       });
 
       if (!user) {
@@ -74,7 +81,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      throw new HttpException('No se enontro el usuario', 404);
+      throw new HttpException('No se encontro el usuario.', 404);
     }
   }
 
@@ -157,7 +164,7 @@ export class UsersService {
       const user = await this.serviceUsers.findOne({ where:{ email } });
       return user;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -166,7 +173,7 @@ export class UsersService {
       const user = await this.serviceUsers.findOne({ where:{ reset:token } });
       return user;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

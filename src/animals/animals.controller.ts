@@ -21,7 +21,7 @@ export class AnimalsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/animalsFake') 
+  @Get('/animalsFake')
   fakeAnimal() {
     return this.animalsService.generateAnimal();
   }
@@ -52,7 +52,8 @@ export class AnimalsController {
       @Body() pet:AnimalDto,
       @UploadedFiles() file:Express.Multer.File[],
   ): Promise<string> {
-    pet = { ...pet, userId: user.id };
+    if (user.rol === 'user') pet = { ...pet, userId: user.sub };
+    if (user.rol === 'fundation') pet = { ...pet, as_id: user.sub };
     return  this.animalsService.postPet(pet, file);
   }
 
@@ -73,8 +74,14 @@ export class AnimalsController {
   ) {
     try {
       const userDog = await Animal.findByPk(id);
-      if (userDog.userId !== user.id) throw new HttpException('Forbidden resource', 403);
-      return await this.animalsService.editAnimals(id, pet, file);
+      switch (user.rol) {
+        case 'user':
+          if (userDog.userId !== user.sub) throw new HttpException('Forbidden resource', 403);
+          return await this.animalsService.editAnimals(id, pet, file);
+        case 'fundation':
+          if (userDog.as_id !== user.sub) throw new HttpException('Forbidden resource', 403);
+          return await this.animalsService.editAnimals(id, pet, file);
+      }
     } catch (error) {
       throw new HttpException('Este animal no existe.', 400);
     }
@@ -88,8 +95,14 @@ export class AnimalsController {
   ) {
     try {
       const userDog = await Animal.findByPk(id);
-      if (userDog.userId !== user.id) throw new HttpException('Forbidden resource', 403);
-      return await this.animalsService.deletePet(id);
+      switch (user.rol) {
+        case 'user':
+          if (userDog.userId !== user.sub) throw new HttpException('Forbidden resource', 403);
+          return await this.animalsService.deletePet(id);
+        case 'fundation':
+          if (userDog.as_id !== user.sub) throw new HttpException('Forbidden resource', 403);
+          return await this.animalsService.deletePet(id);
+      }
     } catch (error) {
       throw new HttpException('Este animal no existe.', 400);
     }

@@ -20,7 +20,12 @@ export class AsociacionesService {
 
   async findAll(): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
-    return this.asociacionesProviders.findAll({});
+    let allAsociations = await this.asociacionesProviders.findAll();
+    allAsociations = allAsociations.map(a =>{
+      const { password, ...attributes } = a.dataValues;
+      return attributes;
+    });
+    return allAsociations;
   }
 
   async findOne(id: string): Promise<Asociaciones> {
@@ -41,6 +46,9 @@ export class AsociacionesService {
             },
           },
         ],
+        attributes: {
+          exclude: ['password'],
+        },
       });
 
       return asociacion;
@@ -118,7 +126,7 @@ export class AsociacionesService {
         { where: { id } },
       );
 
-      if (asociacion) {
+      if (asociacion && asociacion.isActive) {
         asociacion.isActive = false; // BORRADO LOGICO
         asociacion.email = `_${asociacion.email}_${resultado}`; //cambio de valor de email para que no hayan colisiones
         await asociacion.save(); //al momento de volver a registrarse
