@@ -50,6 +50,7 @@ export class Asociaciones extends Model {
 
   @Column({
     type:DataType.STRING(1000),
+    allowNull:true,
   })
     reset:string;
 
