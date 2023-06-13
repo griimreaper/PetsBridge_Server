@@ -1,5 +1,5 @@
 import { Column, Model, Table, DataType, ForeignKey, BelongsTo, HasOne, BelongsToMany } from 'sequelize-typescript';
-import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Users } from '../users/entity/users.entity';
 import { Adoption } from '../adoptions/adoptions.entity';
 import { AnimaleGender } from './dto/animals.dto';

@@ -28,6 +28,7 @@ export class AsociacionesController {
     private readonly fileService: FileService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll() {
     return this.asociacionesService.findAll();
@@ -38,6 +39,7 @@ export class AsociacionesController {
     return this.asociacionesService.generateData();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Param('id') idAsociacion: string) {
     return this.asociacionesService.findOne(idAsociacion);
