@@ -29,9 +29,9 @@ export class Animal extends Model {
 
   @BelongsTo(() => Asociaciones)
     asociacion: Asociaciones;
-  
-  @BelongsToMany(() => Users, () => Adoption)
-    usersAdopt: Users[];
+
+  @HasOne(() => Adoption)
+    adoption: Adoption;
 
   @ForeignKey(() => Users)
     userId: string;

@@ -18,7 +18,8 @@ export class UsersService {
   async findAll(): Promise<Users[]> {
     try {
       const api = this.configureService.get('DB_HOST');
-      return await this.serviceUsers.findAll(api);
+      const allUsers = await this.serviceUsers.findAll(api);
+      return allUsers;
     } catch (error) {
       throw new HttpException('Error al intentar buscar los usuarios', 404);
     }
@@ -26,7 +27,7 @@ export class UsersService {
 
   async createUser(
     body: CreateUserDto,
-  ): Promise<{ send: string; status: number }> {
+  ): Promise<{ send: string; status: number, user?:Users }> {
     // funcion para crear usuario
     const { email } = body;
     //verificamos que ese email no exista en la tabla asociaciones
@@ -50,6 +51,7 @@ export class UsersService {
     return {
       send: 'El usuario se creo exitosamente.',
       status: HttpStatus.CREATED,
+      user:users,
     };
   }
 
@@ -137,6 +139,24 @@ export class UsersService {
       }
     } catch (error) {
       throw new HttpException('Error al editar el usuario', 404);
+    }
+  }
+
+  async findByEmail(email:string):Promise<Users> {
+    try {
+      const user = await this.serviceUsers.findOne({ where:{ email } });
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findByToken(token:string | string[]):Promise<Users> {
+    try {
+      const user = await this.serviceUsers.findOne({ where:{ reset:token } });
+      return user;
+    } catch (error) {
+      console.log(error);
     }
   }
 }

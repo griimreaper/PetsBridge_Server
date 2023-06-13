@@ -19,13 +19,21 @@ export class Adoption extends Model {
   @ForeignKey(()=> Animal)
   @Column({
     type: DataType.UUID,
+    allowNull:false,
   })
     animalID: string;
 
   @ForeignKey(() => Users)
   @Column({
     type: DataType.UUID,
+    allowNull:false,
   })
     userID:string;
+
+  @BelongsTo(() => Animal)
+    animal:Animal;
+  
+  @BelongsTo(() => Users)
+    user: Users;
 
 }
