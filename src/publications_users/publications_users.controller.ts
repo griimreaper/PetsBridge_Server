@@ -18,40 +18,67 @@ import { CreatePublicationsDto } from './dto/publications_users.dto';
 import { multerConfig } from 'src/file/multer.config';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateCommentDto } from 'src/coments/comments.dto';
-import { GetUser } from 'src/auth/decorator/get-user.decorator';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Publications } from './entity/publications_users.entity';
+import { CreateCommentDto } from '../coments/comments.dto';
+import { GetUser } from '../auth/decorator/get-user.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Publications_user')
 @Controller('publications_user')
 export class PublicationsUsersController {
-  constructor(private readonly publicatiosService: PublicationsUsersService) {}
+  constructor(private readonly publicationsService: PublicationsUsersService) {}
 
   @Get(':id?')
   async getall(@Param('id') id: string) {
     
     if (id) {
-      return this.publicatiosService.findOne(id);
+      return this.publicationsService.findOne(id);
     }
-    return this.publicatiosService.findAll();
+    return this.publicationsService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/publication')
   @UseInterceptors(
     FilesInterceptor('file', undefined, multerConfig))
-  async createPub(@Body() newUser: CreatePublicationsDto, @UploadedFiles() file: Express.Multer.File[]) {
-    return this.publicatiosService.createPub(newUser, file);
+  async createPub(
+  @GetUser() user: any,
+    @Body() newUser: CreatePublicationsDto, 
+    @UploadedFiles() file: Express.Multer.File[],
+  ) {
+    return this.publicationsService.createPub({ ...newUser, userId: user.id }, file);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('/comment')
-  async userComment(@Body() newComment: CreateCommentDto) {
-    return this.publicatiosService.comment(newComment);
+  async userComment(
+  @GetUser() user: any,
+    @Body() newComment: CreateCommentDto) {
+    return this.publicationsService.comment({ ...newComment, userId: user.id });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Put('/comment/:idComment')
+  async updateComment(
+  @GetUser() user: any,
+    @Param('idComment') idComment: string,
+    @Body() body: CreateCommentDto,
+  ) {
+    return this.publicationsService.updateComment(user.id, idComment, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/comment/:idComment')
+  async deleteComment(
+  @GetUser() user: any,
+    @Param('idComment') idComment: string,
+  ) {
+    return this.publicationsService.deleteComment(user.id, idComment);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch()
   async updateLikes(@Body() like: CreatePublicationsDto) {
-    return this.publicatiosService.updateLike(like);
+    return this.publicationsService.updateLike(like);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -61,15 +88,23 @@ export class PublicationsUsersController {
     @Param('id') id: string,
     @Body() body: CreatePublicationsDto,
   ) {
-    const publication: any = await this.publicatiosService.findOne(id);
+    const publication: any = await this.publicationsService.findOne(id);
 
     if (user.id !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
 
-    return this.publicatiosService.update(id, body);
+    return this.publicationsService.update(id, body);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string) {
-    return this.publicatiosService.delete(id);
+  async deleteById(
+  @GetUser() user: any,
+    @Param('id') id: string,
+  ) {
+    const publication: any = await this.publicationsService.findOne(id);
+
+    if (user.id !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
+
+    return this.publicationsService.delete(id);
   }
 }

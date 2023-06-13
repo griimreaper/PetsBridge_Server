@@ -1,12 +1,13 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
 
 @Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue:DataType.UUIDV4,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
     id: string;
@@ -28,10 +29,10 @@ export class Asociaciones extends Model {
     nameOfFoundation: string;
 
   @Column
-    profilePic: string;
+    image: string;
 
   @Column
-    dateStart: Date;
+    dateStart: string;
 
   @Column
     description: string;
@@ -46,12 +47,14 @@ export class Asociaciones extends Model {
     address: string;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
-  @HasMany(()=> Animal)
+  @HasMany(() => Animal)
     pets: Animal[];
+
+  @HasMany(() => Donations)
+    donations: Donations[];
 
   @HasMany(() => RedSocial)
     reds: RedSocial;
-
 }

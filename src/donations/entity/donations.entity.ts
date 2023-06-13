@@ -2,11 +2,13 @@ import {
   AutoIncrement,
   BelongsTo,
   Column,
+  DataType,
   ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 import { Users } from 'src/users/entity/users.entity';
 
 @Table({ tableName: 'donations' })
@@ -16,18 +18,40 @@ export class Donations extends Model {
   @Column
     id: number;
 
-  @Column
+  @ForeignKey(() => Asociaciones)
+  // @Column({
+  //   type: DataType.UUID,
+  //   allowNull: false,
+  // })
     id_Asociations: string;
+  // @Column
+  // id_Asociations: string;
 
   @ForeignKey(() => Users)
+  // @Column({
+  //   type: DataType.UUID,
+  //   allowNull: false,
+  // })
     id_Users: string;
 
-  @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
+  // @Column
+  //   id_Users: string;
+
+  @Column
     mount: number;
 
   @Column
-    message: string;
+    message?: string;
+
+  @Column({
+    type: DataType.ENUM,
+    values: ['open', 'cancel', 'success'],
+  })
+    status: string;
 
   @Column
     paymentId: string; // Nueva propiedad para almacenar el ID de pago
+
+  @Column(DataType.STRING(2000))
+    urlDonation: string;
 }

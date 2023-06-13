@@ -14,7 +14,7 @@ import { Donations } from 'src/donations/entity/donations.entity';
 
 @Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
-  
+
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -35,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    profilePic: string;
+    image: string;
 
   @Column
     country: string;
@@ -48,19 +48,19 @@ export class Users extends Model {
 
   @Column
     status: boolean;
-  
+
   @HasMany(() => Publications)
     public: Publications[];
 
   @HasMany( () => Comments)
-    comments: Comments[];  
+    comments: Comments[];
 
   @HasMany( () => Donations)
     donations: Donations[];
 
   @BelongsToMany(() => Animal, () => Adoption)
-    animals: Animal;
+    animalsAdopt: Animal[];
 
   @HasMany(() => Animal)
-    animalUser: Animal[]; 
+    animalUser: Animal[];
 }

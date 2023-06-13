@@ -1,12 +1,19 @@
+export enum AnimaleGender {
+  MALE = 'male',
+  FEMALE = 'female',
+}
+
 export interface AnimalDto {
   userId?:string,
   name:string,
   specie:string,
-  gender:string,
-  breed?:string,
+  gender:AnimaleGender,
   as_id:string,
   description:string,
   country: string,
   state: string,
-  city: string
+  city: string,
+  weight?: string,
+  age_M?: string,
+  age_Y?: string,
 }
