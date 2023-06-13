@@ -6,7 +6,7 @@ import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { FileService } from '../file/file.service';
 import { SKP } from '../constants/jwt.constants';
-
+import { IValidateAsociaciones, IValidateUser } from './interface/IValidate.interface';
 
 @Injectable()
 export class AuthService {
@@ -38,8 +38,9 @@ export class AuthService {
     throw new HttpException('PASSWORD_INCORRECT', 403);
   }
 
-  async login(usuario: any ): Promise<{ token: string }> {
-    const payload = { email: usuario.email, sub: usuario.id, rol: usuario.rol };
+  async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string }> {
+    const { isActive, isGoogle, password, id, ...toPayload } = usuario;
+    const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
     return { ...usuario, token };
