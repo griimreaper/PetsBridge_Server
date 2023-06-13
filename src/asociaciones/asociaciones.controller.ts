@@ -34,6 +34,7 @@ export class AsociacionesController {
     return this.asociacionesService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/datafake')
   getFakeData() {
     return this.asociacionesService.generateData();

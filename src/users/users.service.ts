@@ -38,7 +38,7 @@ export class UsersService {
     //findOrCreate para que no se duplique el email
     const [users, created] = await this.serviceUsers.findOrCreate({
       where: { email },
-      defaults: { ...body },
+      defaults: { ...body, isActive: true },
     });
     //condicion por si se encontro un email en uso
     if (!created)
@@ -66,7 +66,6 @@ export class UsersService {
         ],
       });
 
-      console.log(user);
       if (!user) {
         throw new Error('No hay con ese id');
       }
@@ -78,14 +77,25 @@ export class UsersService {
   }
 
   async delete(id: string): Promise<string> {
-    try {
-      const user = await this.serviceUsers.findByPk(parseInt(id));
+    let resultado = '';
+    const caracteres =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-      if (!user) {
+    for (let i = 0; i < 10; i++) {
+      const indice = Math.floor(Math.random() * caracteres.length);
+      resultado += caracteres.charAt(indice); // se genera un string aleatorio
+    }
+    try {
+      const user = await this.serviceUsers.findByPk(id);
+
+      if (user) {
+        user.isActive = false;
+        user.email = `_${user.email}_${resultado}`;
+        await user.save();
+        return 'Usuario eliminado correctamente.';
+      } else {
         throw new Error(`El usuarios con el ID '${id}' no se encuentra`);
       }
-      await this.serviceUsers.destroy({ where: { id: parseInt(id) } });
-      return 'Eliminado';
     } catch (error) {
       throw new HttpException('Error al eliminar el usuario', 404);
     }
