@@ -1,6 +1,7 @@
 export interface DonationsPay {
   idUser?: string;
   email?: string;
-  idAsociations?: string
+  idAsociations?: string;
   donation: number;
+  message?: string;
 }

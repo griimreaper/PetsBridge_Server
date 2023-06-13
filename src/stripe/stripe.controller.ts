@@ -4,6 +4,8 @@ import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { Response } from 'express';
 import { DonationsPay } from './dto/donationsPay.dto';
 import { Donations } from 'src/donations/entity/donations.entity';
+import { Users } from 'src/users/entity/users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 interface DonationProperties {
   paymentId: string;
@@ -15,11 +17,11 @@ interface DonationProperties {
 
 @Controller('stripe')
 export class StripeController {
-  constructor(private stripeService: StripeService,
+  constructor(
+    private stripeService: StripeService,
     @Inject('DONATIONS_REPOSITORY')
     private readonly donationRepository: typeof Donations,
-  ) { }
-
+  ) {}
 
   @Post('checkout')
   async createCheckoutSession(@Res() response: Response) {
@@ -59,12 +61,15 @@ export class StripeController {
         paymentId: donationLink.id, // Asigna el id de donación
         id_Users: body.idUser, // Asigna el idUser
         id_Asociations: body.idAsociations,
+        message: body.message,
+        mount: donationLink.amount_total,
         status: donationLink.status,
-        mount: body.donation,
         urlDonation: donationLink.url,
       };
-      console.log('dasdasdadad', donations);
-      const donationsDb = await this.donationRepository.create({ ...donations });
+      // console.log('dasdasdadad', donations);
+      const donationsDb = await this.donationRepository.create({
+        ...donations,
+      });
 
       response.status(HttpStatus.CREATED).json({ link: donationsDb });
     } catch (error) {
@@ -72,17 +77,25 @@ export class StripeController {
     }
   }
 
-  @Get('/donations/:userId')
+  @Get('donations/:userId')
   async getDonationsByUser(
-  @Param('userId') userId: string,
-    @Res() response: Response,
-  ) {
-    try {
-      const donations = await this.stripeService.getDonationsByUser(userId);
-      response.status(HttpStatus.OK).json(donations);
-    } catch (error) {
-      response.status(HttpStatus.BAD_REQUEST).json(error);
-    }
+    @Param('userId') userId: string,
+  ): Promise<Donations[]> {
+    const donations = await this.stripeService.getDonationsByUserId(userId);
+    // Aquí puedes realizar cualquier lógica adicional necesaria antes de devolver la respuesta
+    return donations;
+  }
+
+  @Get('donations/:associationId')
+  async getDonationsByAssociation(
+    @Param('associationId') associationId: string,
+  ): Promise<Donations[]> {
+    const donations = await this.stripeService.getDonationsByAssociationId(
+      associationId,
+    );
+    // Aquí puedes realizar cualquier lógica adicional necesaria antes de devolver la respuesta
+
+    return donations;
   }
 }
 

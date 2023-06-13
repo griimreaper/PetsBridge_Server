@@ -3,6 +3,8 @@ import Stripe from 'stripe';
 import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { DonationsPay } from './dto/donationsPay.dto';
 import { Donations } from 'src/donations/entity/donations.entity';
+import { Users } from 'src/users/entity/users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Injectable()
 export class StripeService {
@@ -36,40 +38,37 @@ export class StripeService {
     return data;
   }
 
-  async getDonationsByUser(userId: string): Promise<Donations[]> {
+  async getDonationsByUserId(userId: string): Promise<Donations[]> {
+    const user = await Users.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new Error('El usuario no existe');
+    }
+
     const donations = await Donations.findAll({
       where: {
         id_Users: userId,
       },
     });
 
-    for (const donation of donations) {
-      if (donation.status === 'pending') {
-        const isDonationSuccessful = await this.verifyDonationWithStrapi(
-          donation.paymentId,
-        );
-
-        if (isDonationSuccessful) {
-          this.sendThankYouEmail(donation.id_Users);
-
-          // Cambiar el estado a success
-          donation.status = 'success';
-          await donation.save();
-        }
-      }
-    }
-
     return donations;
   }
 
-  private async verifyDonationWithStrapi(paymentId: string): Promise<boolean> {
-    const response = await fetch(`https://api.strapi.com/donations/${paymentId}`);
-    const data = await response.json();
-    const isDonationSuccessful = data.success_url;
-    return isDonationSuccessful;
-  }
+  async getDonationsByAssociationId(
+    associationId: string,
+  ): Promise<Donations[]> {
+    const association = await Asociaciones.findOne({
+      where: { id: associationId },
+    });
+    if (!association) {
+      throw new Error('La asociación no existe');
+    }
 
-  private sendThankYouEmail(userId: string): void {
-    //Logica email
+    const donations = await Donations.findAll({
+      where: {
+        id_Asociations: associationId,
+      },
+    });
+
+    return donations;
   }
 }
