@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from '../asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
@@ -61,7 +61,8 @@ export class AuthService {
   }
 
   async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string }> {
-    const { isActive, isGoogle, password, id, ...toPayload } = usuario;
+    const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
+    if (!verified) throw new ForbiddenException('Este usuario no está verificado');
     const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
