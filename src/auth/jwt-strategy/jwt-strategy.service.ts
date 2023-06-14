@@ -2,15 +2,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { jwtConstanst } from '../../constants/jwt.constants';
-import { UsersService } from '../../users/users.service';
-import { AsociacionesService } from '../../asociaciones/asociaciones.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly usersService:UsersService,
-    private readonly asociacionesService:AsociacionesService,
-  ) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -18,34 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload:any) {
-    let user;
-    let asociacion;
-    let admin;
-    switch (payload.rol) {
-      case 'user':
-        try {
-          user = await this.usersService.findById(payload.sub);
-        } catch (error) {
-          console.error(error.message);
-        }
-      case 'fundation':
-        try {
-          asociacion = await this.asociacionesService.findOne(payload.sub);
-        } catch (error) {
-          console.error(error.message);
-        }
-      case 'admin':
-        try {
-          admin = await this.usersService.findById(payload.sub);
-        } catch (error) {
-          console.error(error.message);
-        }
-    }
-    if (!user && !asociacion && !admin) throw new UnauthorizedException('You are not authorized to perform the operation');
-    return payload;
+  async validate(payload: any) {
+    return { sub: payload.sub, email: payload.email, rol: payload.rol };
   }
-  /* async validate(payload: any) {
-    return { id: payload.sub, email: payload.email, rol: payload.rol };
-  } */
 }
