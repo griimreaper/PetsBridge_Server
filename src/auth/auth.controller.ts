@@ -1,4 +1,4 @@
-import { 
+import {
   Controller,
   Post,
   Body,
@@ -6,9 +6,7 @@ import {
   Res,
   UseInterceptors,
   UploadedFile,
-  Put,
   Patch,
-  Headers,
   Req,
   UseGuards,
   Query,
@@ -19,9 +17,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
+<<<<<<< HEAD
 import { DoesUserExist } from './guards/doesUserExist.guard';
+=======
+>>>>>>> d5dae11aac987eadca5697a8b732c2a837a5eaf9
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -36,7 +36,6 @@ export class AuthController {
   //     "rol": "fundation" | "user"
   //  }
 
-  @UseGuards(DoesUserExist)
   @Post('register')
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async register(
@@ -58,8 +57,8 @@ export class AuthController {
       }
     } catch (error) {
       response
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .status(HttpStatus.OK)
+        .json({ error: 'El email ya esta en uso.' });
     }
   }
 
@@ -69,7 +68,7 @@ export class AuthController {
     const token = await this.authService.login(user);
     return { ...token, id: user.id };
   }
-  
+
   @Post('forgot-password')
   async forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email.email);
@@ -89,8 +88,8 @@ export class AuthController {
   @Patch('create-password')
   async createNewPassword(@Body() newPassword, @Req() request:Request) {
     return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
-  } 
-  
+  }
+
   @UseGuards(AuthGuard('admin'))
   @Patch('create-admin-password')
   async createAdminPassword(@Body() body, @Req() request:Request) {

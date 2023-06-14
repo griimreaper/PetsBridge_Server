@@ -17,10 +17,24 @@ export class UsersService {
     private readonly fileService: FileService,
   ) {}
 
-  async findAll(): Promise<Users[]> {
+  async findAllToLogin(): Promise<Users[]> {
     try {
       const api = this.configureService.get('DB_HOST');
       const allUsers = await this.serviceUsers.findAll(api);
+      return allUsers;
+    } catch (error) {
+      throw new HttpException('Error al intentar buscar los usuarios', 404);
+    }
+  }
+
+  async findAll(): Promise<Users[]> {
+    try {
+      const api = this.configureService.get('DB_HOST');
+      let allUsers = await this.serviceUsers.findAll(api);
+      allUsers = allUsers.map(u => {
+        const { password, ...attributes } = u.dataValues;
+        return attributes;
+      });
       return allUsers;
     } catch (error) {
       throw new HttpException('Error al intentar buscar los usuarios', 404);
@@ -41,7 +55,7 @@ export class UsersService {
     //findOrCreate para que no se duplique el email
     const [users, created] = await this.serviceUsers.findOrCreate({
       where: { email },
-      defaults: { ...body },
+      defaults: { ...body, isActive: true },
     });
     //condicion por si se encontro un email en uso
     if (!created)
@@ -68,28 +82,41 @@ export class UsersService {
             },
           },
         ],
+        attributes: {
+          exclude: ['password'],
+        },
       });
 
-      console.log(user);
       if (!user) {
         throw new Error('No hay con ese id');
       }
 
       return user;
     } catch (error) {
-      throw new HttpException('No se enontro el usuario', 404);
+      throw new HttpException('No se encontro el usuario.', 404);
     }
   }
 
   async delete(id: string): Promise<string> {
-    try {
-      const user = await this.serviceUsers.findByPk(parseInt(id));
+    let resultado = '';
+    const caracteres =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-      if (!user) {
+    for (let i = 0; i < 10; i++) {
+      const indice = Math.floor(Math.random() * caracteres.length);
+      resultado += caracteres.charAt(indice); // se genera un string aleatorio
+    }
+    try {
+      const user = await this.serviceUsers.findByPk(id);
+
+      if (user) {
+        user.isActive = false;
+        user.email = `_${user.email}_${resultado}`;
+        await user.save();
+        return 'Usuario eliminado correctamente.';
+      } else {
         throw new Error(`El usuarios con el ID '${id}' no se encuentra`);
       }
-      await this.serviceUsers.destroy({ where: { id: parseInt(id) } });
-      return 'Eliminado';
     } catch (error) {
       throw new HttpException('Error al eliminar el usuario', 404);
     }

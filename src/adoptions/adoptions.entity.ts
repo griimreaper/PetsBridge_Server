@@ -15,7 +15,10 @@ export class Adoption extends Model {
     primaryKey:true,
   })
     id: string;
-    
+
+  @Column
+    status: string;
+
   @ForeignKey(()=> Animal)
   @Column({
     type: DataType.UUID,
@@ -32,7 +35,7 @@ export class Adoption extends Model {
 
   @BelongsTo(() => Animal)
     animal:Animal;
-  
+
   @BelongsTo(() => Users)
     user: Users;
 

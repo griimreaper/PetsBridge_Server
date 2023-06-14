@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
@@ -34,6 +35,7 @@ export class AsociacionesController {
     return this.asociacionesService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/datafake')
   getFakeData() {
     return this.asociacionesService.generateData();
@@ -48,9 +50,7 @@ export class AsociacionesController {
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
   async deleteById(@GetUser() user: any, @Param('id') idAsociacion: string) {
-    if (user.id !== idAsociacion)
-      return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
-
+    if (user.sub !== idAsociacion) throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     return this.asociacionesService.delete(idAsociacion);
   }
 
@@ -63,8 +63,7 @@ export class AsociacionesController {
     @Body() body: CreateAsociacionDto,
     @UploadedFile() profilePic?: Express.Multer.File,
   ) {
-    if (user.id !== idAsociacion)
-      return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
+    if (user.sub !== idAsociacion) throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.asociacionesService.update(idAsociacion, body, url);

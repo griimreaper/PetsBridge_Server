@@ -45,7 +45,7 @@ export class PublicationsUsersController {
     @Body() newUser: CreatePublicationsDto,
     @UploadedFiles() file: Express.Multer.File[],
   ) {
-    return this.publicationsService.createPub({ ...newUser, userId: user.id }, file);
+    return this.publicationsService.createPub({ ...newUser, userId: user.sub }, file);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -53,7 +53,7 @@ export class PublicationsUsersController {
   async userComment(
   @GetUser() user: any,
     @Body() newComment: CreateCommentDto) {
-    return this.publicationsService.comment({ ...newComment, userId: user.id });
+    return this.publicationsService.comment({ ...newComment, userId: user.sub });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -63,7 +63,7 @@ export class PublicationsUsersController {
     @Param('idComment') idComment: string,
     @Body() body: CreateCommentDto,
   ) {
-    return this.publicationsService.updateComment(user.id, idComment, body);
+    return this.publicationsService.updateComment(user.sub, idComment, body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,7 +72,7 @@ export class PublicationsUsersController {
   @GetUser() user: any,
     @Param('idComment') idComment: string,
   ) {
-    return this.publicationsService.deleteComment(user.id, idComment);
+    return this.publicationsService.deleteComment(user.sub, idComment);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -90,7 +90,7 @@ export class PublicationsUsersController {
   ) {
     const publication: any = await this.publicationsService.findOne(id);
 
-    if (user.id !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
+    if (user.sub !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
 
     return this.publicationsService.update(id, body);
   }
@@ -103,7 +103,7 @@ export class PublicationsUsersController {
   ) {
     const publication: any = await this.publicationsService.findOne(id);
 
-    if (user.id !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
+    if (user.sub !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
 
     return this.publicationsService.delete(id);
   }
