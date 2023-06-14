@@ -6,13 +6,18 @@ import {
   Res,
   UseInterceptors,
   UploadedFile,
+  Patch,
+  Req,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/login.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from 'src/file/multer.config';
+import { multerConfig } from '../file/multer.config';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -48,8 +53,8 @@ export class AuthController {
       }
     } catch (error) {
       response
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .status(HttpStatus.OK)
+        .json({ error: 'El email ya esta en uso.' });
     }
   }
 
@@ -58,5 +63,40 @@ export class AuthController {
     const user = await this.authService.validate(loginDto);
     const token = await this.authService.login(user);
     return { ...token, id: user.id };
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() email) {
+    return this.authService.forgotPassword(email.email);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('verify-token')
+  async veriftToken(@Body() body, @Res() response: Response, @Req() request:Request) {
+    const { rol } = body;
+    const { code } = request.headers;
+    const newtoken = await this.authService.verifyToken( code, rol );
+
+    response.setHeader('Authorization', newtoken.token).json(newtoken);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('create-password')
+  async createNewPassword(@Body() newPassword, @Req() request:Request) {
+    return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
+  }
+
+  @UseGuards(AuthGuard('admin'))
+  @Patch('create-admin-password')
+  async createAdminPassword(@Body() body, @Req() request:Request) {
+    const { newPassword } = body;
+    const { reset } = request.headers;
+
+    return this.authService.createAdminPassword(newPassword, reset);
+  }
+
+  @Patch('verify')
+  async verify(@Query('id') id:string) {
+    return this.authService.verifyUser(id);
   }
 }

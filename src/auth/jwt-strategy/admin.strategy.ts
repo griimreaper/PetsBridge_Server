@@ -14,6 +14,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { sub: payload.sub, email: payload.email, rol: payload.rol };
+    const rol = payload.rol;
+    if (!rol || rol !== 'admin') {
+      throw new UnauthorizedException('You are not authorized to perform the operation');
+    }
+    return payload;
   }
 }

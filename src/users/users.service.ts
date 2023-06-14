@@ -2,10 +2,10 @@ import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { hash } from 'bcrypt';
-import { Publications } from 'src/publications_users/entity/publications_users.entity';
-import { Animal } from 'src/animals/animals.entity';
+import { Publications } from '../publications_users/entity/publications_users.entity';
+import { Animal } from '../animals/animals.entity';
 
 @Injectable()
 export class UsersService {
@@ -15,10 +15,25 @@ export class UsersService {
     private readonly configureService: ConfigService,
   ) {}
 
+  async findAllToLogin(): Promise<Users[]> {
+    try {
+      const api = this.configureService.get('DB_HOST');
+      const allUsers = await this.serviceUsers.findAll(api);
+      return allUsers;
+    } catch (error) {
+      throw new HttpException('Error al intentar buscar los usuarios', 404);
+    }
+  }
+
   async findAll(): Promise<Users[]> {
     try {
       const api = this.configureService.get('DB_HOST');
-      return await this.serviceUsers.findAll(api);
+      let allUsers = await this.serviceUsers.findAll(api);
+      allUsers = allUsers.map(u => {
+        const { password, ...attributes } = u.dataValues;
+        return attributes;
+      });
+      return allUsers;
     } catch (error) {
       throw new HttpException('Error al intentar buscar los usuarios', 404);
     }
@@ -26,7 +41,7 @@ export class UsersService {
 
   async createUser(
     body: CreateUserDto,
-  ): Promise<{ send: string; status: number }> {
+  ): Promise<{ send: string; status: number, user?:Users }> {
     // funcion para crear usuario
     const { email } = body;
     //verificamos que ese email no exista en la tabla asociaciones
@@ -38,7 +53,7 @@ export class UsersService {
     //findOrCreate para que no se duplique el email
     const [users, created] = await this.serviceUsers.findOrCreate({
       where: { email },
-      defaults: { ...body },
+      defaults: { ...body, isActive: true },
     });
     //condicion por si se encontro un email en uso
     if (!created)
@@ -50,6 +65,7 @@ export class UsersService {
     return {
       send: 'El usuario se creo exitosamente.',
       status: HttpStatus.CREATED,
+      user:users,
     };
   }
 
@@ -64,28 +80,41 @@ export class UsersService {
             },
           },
         ],
+        attributes: {
+          exclude: ['password'],
+        },
       });
 
-      console.log(user);
       if (!user) {
         throw new Error('No hay con ese id');
       }
 
       return user;
     } catch (error) {
-      throw new HttpException('No se enontro el usuario', 404);
+      throw new HttpException('No se encontro el usuario.', 404);
     }
   }
 
   async delete(id: string): Promise<string> {
-    try {
-      const user = await this.serviceUsers.findByPk(parseInt(id));
+    let resultado = '';
+    const caracteres =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-      if (!user) {
+    for (let i = 0; i < 10; i++) {
+      const indice = Math.floor(Math.random() * caracteres.length);
+      resultado += caracteres.charAt(indice); // se genera un string aleatorio
+    }
+    try {
+      const user = await this.serviceUsers.findByPk(id);
+
+      if (user) {
+        user.isActive = false;
+        user.email = `_${user.email}_${resultado}`;
+        await user.save();
+        return 'Usuario eliminado correctamente.';
+      } else {
         throw new Error(`El usuarios con el ID '${id}' no se encuentra`);
       }
-      await this.serviceUsers.destroy({ where: { id: parseInt(id) } });
-      return 'Eliminado';
     } catch (error) {
       throw new HttpException('Error al eliminar el usuario', 404);
     }
@@ -137,6 +166,24 @@ export class UsersService {
       }
     } catch (error) {
       throw new HttpException('Error al editar el usuario', 404);
+    }
+  }
+
+  async findByEmail(email:string):Promise<Users> {
+    try {
+      const user = await this.serviceUsers.findOne({ where:{ email } });
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findByToken(token:string | string[]):Promise<Users> {
+    try {
+      const user = await this.serviceUsers.findOne({ where:{ reset:token } });
+      return user;
+    } catch (error) {
+      console.log(error);
     }
   }
 }
