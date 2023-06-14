@@ -61,6 +61,7 @@ export class StripeController {
         paymentId: donationLink.id, // Asigna el id de donación
         id_Users: body.idUser, // Asigna el idUser
         id_Asociations: body.idAsociations,
+        email: body.email,
         message: body.message,
         mount: donationLink.amount_total,
         status: donationLink.status,

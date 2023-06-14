@@ -34,8 +34,8 @@ export class Donations extends Model {
   // })
     id_Users: string;
 
-  // @Column
-  //   id_Users: string;
+  @Column
+    email: string;
 
   @Column
     mount: number;

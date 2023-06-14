@@ -47,7 +47,7 @@ export class Users extends Model {
     isGoogle: boolean;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
   @HasMany(() => Publications)
     public: Publications[];
