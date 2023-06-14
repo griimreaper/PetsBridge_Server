@@ -18,6 +18,14 @@ export class AsociacionesService {
     private readonly sequelize: Sequelize,
   ) {}
 
+  async findAllToLogin(): Promise<Asociaciones[]> {
+    //funcion para retornar todas las asociaciones
+    const allAsociations = await this.asociacionesProviders.findAll();
+
+    return allAsociations;
+  }
+
+
   async findAll(): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
     let allAsociations = await this.asociacionesProviders.findAll();

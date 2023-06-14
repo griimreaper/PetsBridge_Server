@@ -15,6 +15,16 @@ export class UsersService {
     private readonly configureService: ConfigService,
   ) {}
 
+  async findAllToLogin(): Promise<Users[]> {
+    try {
+      const api = this.configureService.get('DB_HOST');
+      const allUsers = await this.serviceUsers.findAll(api);
+      return allUsers;
+    } catch (error) {
+      throw new HttpException('Error al intentar buscar los usuarios', 404);
+    }
+  }
+
   async findAll(): Promise<Users[]> {
     try {
       const api = this.configureService.get('DB_HOST');
