@@ -8,6 +8,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Users } from '../../users/entity/users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Table({ tableName: 'donations' })
 export class Donations extends Model {
@@ -21,6 +22,9 @@ export class Donations extends Model {
 
   @ForeignKey(() => Users)
     id_Users: string;
+
+  @ForeignKey(() => Asociaciones)
+    id_Asoc: string;
 
   @BelongsTo(() => Users)
     userDonation: string;  

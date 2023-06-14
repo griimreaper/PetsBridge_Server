@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from '../asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
@@ -25,15 +25,14 @@ export class AuthService {
   async validate(
     body: LoginDto,
   ): Promise<IValidateUser | IValidateAsociaciones> {
-    const asociaciones = await this.asociacionesService.findAll();
+    const asociaciones = await this.asociacionesService.findAllToLogin();
     const asociacion = asociaciones.find((a) => a.email === body.email);
 
-    const usuarios = await this.usersService.findAll();
+    const usuarios = await this.usersService.findAllToLogin();
     const usuario = usuarios.find((u) => u.email === body.email);
 
     if (!asociacion && !usuario)
       throw new HttpException('El email no existe', 404);
-
     if (asociacion && (await compare(body.password, asociacion.password))) {
       const result: IValidateAsociaciones = {
         ...asociacion.dataValues,
@@ -58,8 +57,10 @@ export class AuthService {
     throw new HttpException('PASSWORD INCORRECT', 403);
   }
 
-  async login(usuario: any): Promise<{ token: string }> {
-    const payload = { email: usuario.email, sub: usuario.id, rol: usuario.rol };
+  async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string }> {
+    const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
+    //if (!verified) throw new ForbiddenException('Este usuario no está verificado');
+    const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
     return { token };
@@ -97,12 +98,10 @@ export class AuthService {
       case 'user':
         const user = await this.usersService.createUser(body);
         this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'VERIFY_USER');
-        console.log(user.user.dataValues.id);
         return user;
       case 'fundation':
         const asociacion = await this.asociacionesService.create(body);
         this.mailsService.sendMails(asociacion.asociacion.dataValues, 'VERIFY_USER');
-        console.log(asociacion.asociacion.dataValues.id);
         return asociacion;
       default:
         return { send: 'No se ha recibido un rol', status: 400 };
@@ -119,7 +118,7 @@ export class AuthService {
       //Checking if email is registered
       const asociacion =  await this.asociacionesService.findByEmail(email);
       const user = await this.usersService.findByEmail(email);
-      
+
 
       if (!user && !asociacion) throw new NotFoundException('This user is not registered');
 
@@ -138,11 +137,10 @@ export class AuthService {
         asociacion.reset = token;
         await asociacion.save();
         await this.mailsService.sendMails(asociacion.dataValues, 'RESET_PASSWORD');
-      } 
-      
+      }
       return { message:'Check your email for a token' };
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   }
 
@@ -153,18 +151,17 @@ export class AuthService {
       try {
         user = await this.usersService.findByToken(token);
       } catch (error) {
-        console.log(user);
+        console.error(user);
       }
       try {
         asociacion = await this.asociacionesService.findByToken(token);
       } catch (error) {
-        console.log(asociacion);
+        console.error(asociacion);
       }
-      
       if (!user && !asociacion) throw new NotFoundException('Token erróneo');
 
       if (user) {
-  
+
         const payload = rol === 'admin'
           ? { email: user.email, sub: user.id, rol: 'admin' }
           : { email: user.email, sub: user.id, rol: 'user' };
@@ -182,7 +179,7 @@ export class AuthService {
         return {  token:newToken, expirationTime:'10min' };
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return error;
     }
   }
@@ -211,7 +208,7 @@ export class AuthService {
 
       return 'Changed password successfully';
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return error;
     }
   }
@@ -239,7 +236,7 @@ export class AuthService {
       }
 
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
       return error;
     }
   }
@@ -251,12 +248,12 @@ export class AuthService {
       try {
         user = await this.usersService.findById(id);
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        console.log(asociacion);
+        console.error(asociacion);
       }
       
 
@@ -273,7 +270,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return error;
     }
   }
