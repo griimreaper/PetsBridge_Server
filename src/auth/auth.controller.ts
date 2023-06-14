@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
-import { DoesUserExist } from './doesUserExist.guard';
+import { DoesUserExist } from './guards/doesUserExist.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
