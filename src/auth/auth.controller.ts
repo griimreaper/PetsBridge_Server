@@ -35,6 +35,7 @@ export class AuthController {
   //     "rol": "fundation" | "user"
   //  }
 
+
   @Post('register')
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async register(
@@ -57,7 +58,7 @@ export class AuthController {
     } catch (error) {
       response
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .json({ error: 'El email ya esta en uso' });
     }
   }
 

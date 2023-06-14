@@ -3,6 +3,8 @@ import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
 import { FileService } from '../file/file.service';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
+import { Users } from '../users/entity/users.entity';
+import { asociacionesProviders } from 'src/asociaciones/providers/asociaciones.provider';
 import { faker } from '@faker-js/faker';
 
 export const AnimalSpecie = {
@@ -26,7 +28,7 @@ export class AnimalsService {
   async getPets(): Promise<Animal[]> {
     try {
       const animals = await this.animalsRepository.findAll();
-      return animals;      
+      return animals;
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
