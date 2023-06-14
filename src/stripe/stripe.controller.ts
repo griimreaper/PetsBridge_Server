@@ -82,7 +82,6 @@ export class StripeController {
     @Param('userId') userId: string,
   ): Promise<Donations[]> {
     const donations = await this.stripeService.getDonationsByUserId(userId);
-    // Aquí puedes realizar cualquier lógica adicional necesaria antes de devolver la respuesta
     return donations;
   }
 
@@ -93,8 +92,6 @@ export class StripeController {
     const donations = await this.stripeService.getDonationsByAssociationId(
       associationId,
     );
-    // Aquí puedes realizar cualquier lógica adicional necesaria antes de devolver la respuesta
-
     return donations;
   }
 
