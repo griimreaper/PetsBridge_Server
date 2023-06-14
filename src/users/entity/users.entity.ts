@@ -35,13 +35,13 @@ export class Users extends Model {
     password: string;
 
   @Column
-    image: string;
+    image: string | string[];
 
   @Column
     country: string;
 
   @Column
-    phone: number;
+    phone: string;
 
   @Column
     isGoogle: boolean;
