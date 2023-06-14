@@ -27,7 +27,7 @@ export class Donations extends Model {
     id_Asoc: string;
 
   @BelongsTo(() => Users)
-    userDonation: string;  
+    userDonation: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
     mount: number;
