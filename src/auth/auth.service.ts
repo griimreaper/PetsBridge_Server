@@ -119,7 +119,7 @@ export class AuthService {
       //Checking if email is registered
       const asociacion =  await this.asociacionesService.findByEmail(email);
       const user = await this.usersService.findByEmail(email);
-      
+
 
       if (!user && !asociacion) throw new NotFoundException('This user is not registered');
 
@@ -138,8 +138,8 @@ export class AuthService {
         asociacion.reset = token;
         await asociacion.save();
         await this.mailsService.sendMails(asociacion.dataValues, 'RESET_PASSWORD');
-      } 
-      
+      }
+
       return { message:'Check your email for a token' };
     } catch (error) {
       console.log(error.message);
@@ -160,11 +160,11 @@ export class AuthService {
       } catch (error) {
         console.log(asociacion);
       }
-      
+
       if (!user && !asociacion) throw new NotFoundException('Token erróneo');
 
       if (user) {
-  
+
         const payload = rol === 'admin'
           ? { email: user.email, sub: user.id, rol: 'admin' }
           : { email: user.email, sub: user.id, rol: 'user' };
@@ -221,8 +221,8 @@ export class AuthService {
       if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
       let hashedPassword:string;
       if (
-        newPassword.includes(SKP.K) && 
-        newPassword[0] === SKP.F && 
+        newPassword.includes(SKP.K) &&
+        newPassword[0] === SKP.F &&
         newPassword[newPassword.length - 1] === SKP.F
       ) {
         hashedPassword = await hash(newPassword, 15);
@@ -258,7 +258,7 @@ export class AuthService {
       } catch (error) {
         console.log(asociacion);
       }
-      
+
 
       if (user) {
         if (user.verified) return 'Ya está verificado';
