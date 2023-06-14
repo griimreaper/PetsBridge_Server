@@ -19,6 +19,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { FileService } from '../file/file.service';
 import { GetUser } from '../auth/decorator/get-user.decorator';
+import { AcountAccess } from '../auth/guards/acountAccess.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -33,13 +35,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AcountAccess)
   @Delete(':id')
   async deleteById(
   @GetUser() user: any,
@@ -49,22 +52,12 @@ export class UsersController {
     return this.usersService.delete(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AcountAccess)
   @Patch('update/:id')
-  @UseInterceptors(
-    FileInterceptor('profilePic', multerConfig),
-  )
-  async updateUser(
-  @GetUser() user: any,
-    @Param('id') id: string,
-    @Body() body: CreateUserDto,
-    @UploadedFile() profilePic?: Express.Multer.File,
+  @UseInterceptors(FileInterceptor('profilePic', multerConfig))
+  async updateUser(@Param('id') id: string, @Body() body: CreateUserDto, @UploadedFile() profilePic?: Express.Multer.File,
   ) {
-    if (user.id !== id) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
-    if (profilePic) {
-      const url = await this.fileService.createFiles(profilePic);
-      return this.usersService.update(id, body, url);
-    }
-    return this.usersService.update(id, body);
+    return this.usersService.update(id, body, profilePic);
   }
 }
