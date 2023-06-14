@@ -174,7 +174,7 @@ export class UsersService {
       const user = await this.serviceUsers.findOne({ where:{ email } });
       return user;
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
@@ -183,7 +183,7 @@ export class UsersService {
       const user = await this.serviceUsers.findOne({ where:{ reset:token } });
       return user;
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
 }

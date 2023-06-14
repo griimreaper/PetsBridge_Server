@@ -33,9 +33,6 @@ export class AuthService {
 
     if (!asociacion && !usuario)
       throw new HttpException('El email no existe', 404);
-    console.log('hola');
-    console.log(body);
-    console.log(usuario);
     if (asociacion && (await compare(body.password, asociacion.password))) {
       const result: IValidateAsociaciones = {
         ...asociacion.dataValues,
