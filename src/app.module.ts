@@ -12,7 +12,8 @@ import { DatabaseModule } from './database/database.module';
 import { PublicationsUsersModule } from './publications_users/publications_users.module';
 import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
-import { AsPublicationsModule } from './as_publications/as_publications.module';
+import { AdoptionsModule } from './adoptions/adoptions.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -20,16 +21,17 @@ import { AsPublicationsModule } from './as_publications/as_publications.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    DatabaseModule,
+    UsersModule,
+    AsociacionesModule,
+    AnimalsModule,
     FileModule,
     MulterModule.register(multerConfig),
-    AsociacionesModule,
-    DatabaseModule,
-    AuthModule,
-    AnimalsModule,
-    UsersModule,
     PublicationsUsersModule,
     DonationsModule,
-    AsPublicationsModule,
+    AdoptionsModule,
+    AuthModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,14 +1,13 @@
-import { Table, Column, Model, DataType, HasMany, BelongsToMany, AllowNull } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from 'src/animals/animals.entity';
-import { Users } from 'src/users/entity/users.entity';
-import { UsersAssociated } from './usersAssociated.entity';
-import { SocialReds } from './socialreds.entity';
+import { RedSocial } from './redSocial.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
 
-@Table
+@Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue:DataType.UUIDV4,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
     id: string;
@@ -27,16 +26,19 @@ export class Asociaciones extends Model {
   @Column({
     allowNull: false,
   })
-    name: string;
+    nameOfFoundation: string;
 
   @Column
-    img_profile: string;
+    image: string;
 
   @Column
-    date_created: Date;
+    dateStart: string;
 
   @Column
     description: string;
+
+  @Column
+    phone: string;
 
   @Column
     country: string;
@@ -45,15 +47,14 @@ export class Asociaciones extends Model {
     address: string;
 
   @Column
-    status: boolean;
+    isActive: boolean;
 
-  @HasMany(()=> Animal)
+  @HasMany(() => Animal)
     pets: Animal[];
 
-  @BelongsToMany(()=> Users, ()=> UsersAssociated)
-    members: Users[];
+  @HasMany(() => Donations)
+    donations: Donations[];
 
-  @HasMany(() => SocialReds)
-    reds: SocialReds[];
-
+  @HasMany(() => RedSocial)
+    reds: RedSocial;
 }

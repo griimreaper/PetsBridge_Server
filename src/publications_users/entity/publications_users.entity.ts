@@ -5,10 +5,12 @@ import {
   BelongsTo,
   ForeignKey,
   DataType,
+  HasMany,
 } from 'sequelize-typescript';
+import { Comments } from 'src/coments/entity/comments.entity';
 import { Users } from 'src/users/entity/users.entity';
 
-@Table({ timestamps: false })
+@Table({ timestamps: false, tableName: 'publications' })
 export class Publications extends Model {
   @Column({
     type: DataType.UUID,
@@ -18,16 +20,13 @@ export class Publications extends Model {
     id: string;
     
   @ForeignKey(() => Users)
-  @Column({
-    type: DataType.UUID,
-  })
     userId: string;
 
   @BelongsTo(() => Users)
-    user: Users;  
+    user: Users[];  
 
   @Column
-    title: string;
+    likes: number;
 
   @Column
     description: string;
@@ -36,7 +35,7 @@ export class Publications extends Model {
     isActive: boolean;
 
   @Column
-    datePublication: Date;
+    datePublication: string;
 
   @Column(
     {
@@ -44,6 +43,8 @@ export class Publications extends Model {
     },
   )
     imagen: string[];  
-
+  
+  @HasMany(() => Comments)
+    comments: Comments[];
   
 }
