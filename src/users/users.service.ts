@@ -1,11 +1,12 @@
-import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { Publications } from '../publications_users/entity/publications_users.entity';
 import { Animal } from '../animals/animals.entity';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,7 @@ export class UsersService {
     @Inject('USERS_REPOSITORY')
     private serviceUsers: typeof Users,
     private readonly configureService: ConfigService,
+    private readonly fileService: FileService,
   ) {}
 
   async findAll(): Promise<Users[]> {
@@ -93,53 +95,40 @@ export class UsersService {
     }
   }
 
-  async update(
-    id: string,
-    {
-      first_Name,
-      last_Name,
-      email,
-      phone,
-      password,
-      country,
-      isGoogle,
-      isActive,
-    },
-    profilePic?: any,
-  ): Promise<string> {
+  async update(id: string, body, profilePic?: Express.Multer.File): Promise<string> {
     try {
-      if (
-        !first_Name &&
-        !last_Name &&
-        !email &&
-        !phone &&
-        !password &&
-        !profilePic &&
-        !country &&
-        !isGoogle
-      )
-        return 'Nada que actualizar';
-      const user = await this.serviceUsers.findByPk(id);
-      if (user) {
-        if (first_Name) user.firstName = first_Name;
-        if (last_Name) user.lastName = last_Name;
-        if (email) user.email = email;
-        if (phone) user.phone = phone;
-        if (password) {
-          const hashedPassword = await hash(password, 10);
-          user.password = hashedPassword;
-        }
-        if (profilePic) user.image = profilePic;
-        if (country) user.country = country;
-        if (isGoogle) user.isGoogle = isGoogle;
-        await user.save();
-        return 'Actualizado';
-      } else {
-        return 'No existe el Usuario';
-      }
+      if (!body && !profilePic) throw new BadRequestException('Nada que actualizar');
+
+      const urls = await this.fileService.createFiles(profilePic);
+
+      const user = await this.serviceUsers.update({ ...body, image:urls }, {
+        where:{ id },
+      });
+      if (user) throw new HttpException('Error al editar el usuario', 400);
+
+      return 'Updated successfully';
+
     } catch (error) {
-      throw new HttpException('Error al editar el usuario', 404);
+      return error;
     }
+  }
+
+  async changePassword(id:string, oldPassword:string, newPassword:string):Promise<{ affectedCounts:number[], message:string } | string> {
+    try {
+      if (oldPassword === newPassword) throw new BadRequestException('newPassword cannot be equal to oldPassword');
+      const user = await this.serviceUsers.findByPk(id);
+      const areEqual = await compare(oldPassword, user.password);
+
+      if (!areEqual) throw new ForbiddenException('Incorrect password');
+      const hashedPassword = await hash(newPassword, 10);
+      const counts = await this.serviceUsers.update({ password:hashedPassword }, {
+        where:{ id },
+      });
+      if (!counts) throw new HttpException('Something went wrong', 500);
+      return { affectedCounts: counts, message: 'Changed password successfully' };
+    } catch (error) {
+      return error;
+    }   
   }
 
   async findByEmail(email:string):Promise<Users> {
