@@ -18,10 +18,7 @@ import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { AuthGuard } from '@nestjs/passport';
-<<<<<<< HEAD
 import { DoesUserExist } from './guards/doesUserExist.guard';
-=======
->>>>>>> d5dae11aac987eadca5697a8b732c2a837a5eaf9
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -36,6 +33,7 @@ export class AuthController {
   //     "rol": "fundation" | "user"
   //  }
 
+  @UseGuards(DoesUserExist)
   @Post('register')
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async register(
