@@ -81,4 +81,12 @@ export class StripeService {
 
     return donations;
   }
+
+  async getDonationById(id:number):Promise<Donations> {
+    const donation = await Donations.findOne({
+      where: { id },
+      include:[Users, Asociaciones],
+    });
+    return donation;
+  }
 }
