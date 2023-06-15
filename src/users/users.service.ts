@@ -186,4 +186,20 @@ export class UsersService {
       console.log(error);
     }
   }
+
+  async filtName(name: string): Promise<Users | Users[]> {
+    try {
+      let usuarios = await this.serviceUsers.findAll();
+      usuarios = usuarios.filter(u => {
+        if (u.firstName && u.lastName) {
+          const Name = u.firstName + ' ' + u.lastName;
+          return Name.toLowerCase().includes(name.toLowerCase());
+        }
+        return false;
+      });
+      return usuarios;
+    } catch (error) {
+      throw new HttpException('Error to find a user.', 404);
+    }
+  }
 }

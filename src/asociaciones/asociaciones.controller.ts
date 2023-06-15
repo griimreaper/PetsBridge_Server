@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   HttpStatus,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
@@ -28,6 +29,12 @@ export class AsociacionesController {
     private readonly asociacionesService: AsociacionesService,
     private readonly fileService: FileService,
   ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/search')
+  searchByName(@Query('name') name: string) {
+    return this.asociacionesService.filtName(name);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get()

@@ -11,6 +11,7 @@ import {
   UploadedFile,
   HttpStatus,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-users.dto';
@@ -29,6 +30,12 @@ export class UsersController {
     private fileService: FileService) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get('/search')
+  searchByName(@Query('name') name: string) {
+    return this.usersService.filtName(name);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
   getAllUsers() {
     return this.usersService.findAll();
@@ -39,6 +46,7 @@ export class UsersController {
   async findById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
+
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')

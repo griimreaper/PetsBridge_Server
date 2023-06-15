@@ -233,4 +233,13 @@ export class AsociacionesService {
       console.log(error);
     }
   }
+
+  async filtName(name: string): Promise<Asociaciones | Asociaciones[]> {
+    try {
+      const fundation = await this.asociacionesProviders.findAll();
+      return fundation.filter(a => a.nameOfFoundation.toLowerCase().includes(name.toLowerCase()));
+    } catch (error) {
+      throw new HttpException('Error to find a fundation.', 404);
+    }
+  }
 }

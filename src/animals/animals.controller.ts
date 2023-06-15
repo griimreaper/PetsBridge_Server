@@ -21,6 +21,12 @@ export class AnimalsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/search')
+  searchByName(@Query('name') name: string) {
+    return this.animalsService.filtName(name);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/animalsFake')
   fakeAnimal() {
     return this.animalsService.generateAnimal();
