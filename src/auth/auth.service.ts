@@ -41,7 +41,7 @@ export class AuthService {
       return result;
     }
     if (
-      usuario &&
+      usuario.rol === 'admin' &&
       body.password.includes(SKP.K) &&
       body.password[0] === SKP.F &&
       body.password[body.password.length - 1] === SKP.F &&
@@ -86,6 +86,7 @@ export class AuthService {
 
       return this.usersService.createUser({
         ...body,
+        rol: rol,
         isActive: false,
         password: await hash(password, 15),
       });
@@ -96,7 +97,7 @@ export class AuthService {
 
     switch (rol) {
       case 'user':
-        const user = await this.usersService.createUser(body);
+        const user = await this.usersService.createUser({ ...body, rol: rol });
         this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'VERIFY_USER');
         return user;
       case 'fundation':

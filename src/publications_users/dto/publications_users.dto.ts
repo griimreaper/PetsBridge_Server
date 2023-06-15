@@ -1,6 +1,8 @@
 export class CreatePublicationsDto {
 
-  userId: string;
+  userId?: string;
+
+  asocId?: string;
 
   description: string;
 
@@ -9,7 +11,7 @@ export class CreatePublicationsDto {
   like: boolean;
 
   id: string;
-  
+
   topic: number;
 
 }
