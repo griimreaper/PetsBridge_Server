@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-users.dto';
@@ -27,23 +28,25 @@ export class UsersController {
   constructor(private usersService: UsersService,
     private fileService: FileService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   getAllUsers() {
     return this.usersService.findAll();
   }
 
-  // @Post()
-  // async createUser(@Body() newUser: CreateUserDto) {
-  //   return this.usersService.createUser(newUser);
-  // }
-
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deleteById(@Param('id') id: string) {
+  async deleteById(
+  @GetUser() user: any,
+    @Param('id') id: string,
+  ) {
+    if (user.sub !== id) throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     return this.usersService.delete(id);
   }
 
@@ -52,8 +55,13 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('profilePic', multerConfig),
   )
-  async updateUser(@GetUser() user: any, @Param('id') id: string, @Body() body: CreateUserDto, @UploadedFile() profilePic?: Express.Multer.File ) {
-    if (user.id !== id) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
+  async updateUser(
+  @GetUser() user: any,
+    @Param('id') id: string,
+    @Body() body: CreateUserDto,
+    @UploadedFile() profilePic?: Express.Multer.File,
+  ) {
+    if (user.sub !== id) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.usersService.update(id, body, url);

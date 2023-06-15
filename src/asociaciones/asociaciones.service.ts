@@ -2,8 +2,8 @@ import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { hash } from 'bcrypt';
-import { Users } from 'src/users/entity/users.entity';
-import { Animal } from 'src/animals/animals.entity';
+import { Users } from '../users/entity/users.entity';
+import { Animal } from '../animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { faker } from '@faker-js/faker';
@@ -18,9 +18,22 @@ export class AsociacionesService {
     private readonly sequelize: Sequelize,
   ) {}
 
+  async findAllToLogin(): Promise<Asociaciones[]> {
+    //funcion para retornar todas las asociaciones
+    const allAsociations = await this.asociacionesProviders.findAll();
+
+    return allAsociations;
+  }
+
+
   async findAll(): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
-    return this.asociacionesProviders.findAll({});
+    let allAsociations = await this.asociacionesProviders.findAll();
+    allAsociations = allAsociations.map(a =>{
+      const { password, ...attributes } = a.dataValues;
+      return attributes;
+    });
+    return allAsociations;
   }
 
   async findOne(id: string): Promise<Asociaciones> {
@@ -41,6 +54,9 @@ export class AsociacionesService {
             },
           },
         ],
+        attributes: {
+          exclude: ['password'],
+        },
       });
 
       return asociacion;
@@ -52,7 +68,7 @@ export class AsociacionesService {
 
   async create(
     body: CreateAsociacionDto,
-  ): Promise<{ send: string; status: number }> {
+  ): Promise<{ send: string; status: number, asociacion?:Asociaciones }> {
     // funcion para crear asociacion
     const { email } = body;
     let { reds } = body;
@@ -94,6 +110,7 @@ export class AsociacionesService {
       return {
         send: 'La asociacion se creo exitosamente.',
         status: HttpStatus.CREATED,
+        asociacion: asociacion,
       };
     } catch (error) {
       await transaction.rollback(); //transaccion erronea, no se crea el usuario
@@ -117,7 +134,7 @@ export class AsociacionesService {
         { where: { id } },
       );
 
-      if (asociacion) {
+      if (asociacion && asociacion.isActive) {
         asociacion.isActive = false; // BORRADO LOGICO
         asociacion.email = `_${asociacion.email}_${resultado}`; //cambio de valor de email para que no hayan colisiones
         await asociacion.save(); //al momento de volver a registrarse
@@ -197,5 +214,23 @@ export class AsociacionesService {
     }
     this.asociacionesProviders.bulkCreate(dataAso);
     return dataAso;
+  }
+
+  async findByEmail(email:string):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ email } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findByToken(token:string | string[]):Promise<Asociaciones> {
+    try {
+      const asociacion = await this.asociacionesProviders.findOne({ where:{ reset:token } });
+      return asociacion;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
