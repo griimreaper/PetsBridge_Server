@@ -35,7 +35,7 @@ export class Users extends Model {
     password: string;
 
   @Column
-    image: string | string[];
+    image: string;
 
   @Column
     country: string;
