@@ -43,6 +43,14 @@ export class AsociacionesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('adoptions')
+  async getAdoptions(
+  @GetUser() user: any,
+  ) {
+    return this.asociacionesService.getAdoptions(user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/datafake')
   getFakeData() {
     return this.asociacionesService.generateData();

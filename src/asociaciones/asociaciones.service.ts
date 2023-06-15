@@ -8,6 +8,8 @@ import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { faker } from '@faker-js/faker';
 import { IDataFake } from './interface/Iservice.interface';
+import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class AsociacionesService {
@@ -16,6 +18,10 @@ export class AsociacionesService {
     private asociacionesProviders: typeof Asociaciones,
     @Inject('SEQUELIZE')
     private readonly sequelize: Sequelize,
+    @Inject('ANIMALS_REPOSITORY')
+    private readonly animalsProviders: typeof Animal,
+    @Inject('ADOPTIONS_REPOSITORY')
+    private readonly adoptionsProviders: typeof Adoption,
   ) {}
 
   async findAllToLogin(): Promise<Asociaciones[]> {
@@ -240,6 +246,43 @@ export class AsociacionesService {
       return fundation.filter(a => a.nameOfFoundation.toLowerCase().includes(name.toLowerCase()));
     } catch (error) {
       throw new HttpException('Error to find a fundation.', 404);
+    }
+  }
+
+  async getAdoptions(id: string): Promise<Adoption | Adoption[]> {
+    try {
+      const animal = await this.animalsProviders.findAll({
+        where: {
+          as_id: id,
+          status: {
+            [Op.not]: 'homeless',
+          },
+        },
+      });
+      const animalId: string[] = animal.map(a=> a.id);
+      const adoptions = await this.adoptionsProviders.findAll({
+        where: {
+          animalID: {
+            [Op.in]: animalId,
+          },
+        },
+        include:[
+          {
+            model: Animal,
+            attributes: {
+              exclude: ['as_id', 'age_M', 'age_Y', 'registredAt'],
+            },
+          }, {
+            model: Users,
+            attributes: {
+              exclude: ['password'],
+            },
+          },
+        ],
+      });
+      return adoptions;
+    } catch (error) {
+      throw new HttpException('Error to show the adoptions.', 500);
     }
   }
 }
