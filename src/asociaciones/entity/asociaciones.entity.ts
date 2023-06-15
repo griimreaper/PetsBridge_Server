@@ -1,12 +1,13 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from '../../animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
+import { Donations } from 'src/donations/entity/donations.entity';
 
 @Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue:DataType.UUIDV4,
+    defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
     id: string;
@@ -63,7 +64,9 @@ export class Asociaciones extends Model {
   @HasMany(()=> Animal)
     pets: Animal[];
 
+  @HasMany(() => Donations)
+    donations: Donations[];
+
   @HasMany(() => RedSocial)
     reds: RedSocial;
-
 }

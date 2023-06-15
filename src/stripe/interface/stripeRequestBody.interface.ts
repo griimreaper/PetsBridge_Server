@@ -1,4 +1,4 @@
-import { DonationsPay } from './donations';
+import { DonationsPay } from '../dto/donationsPay.dto';
 
 
 export interface StripeRequestBody {

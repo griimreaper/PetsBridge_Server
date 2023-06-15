@@ -8,6 +8,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Users } from '../../users/entity/users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Table({ tableName: 'donations' })
 export class Donations extends Model {
@@ -16,14 +17,27 @@ export class Donations extends Model {
   @Column
     id: number;
 
-  @Column
+  @ForeignKey(() => Asociaciones)
+  // @Column({
+  //   type: DataType.UUID,
+  //   allowNull: false,
+  // })
     id_Asociations: string;
+  // @Column
+  // id_Asociations: string;
 
   @ForeignKey(() => Users)
+  // @Column({
+  //   type: DataType.UUID,
+  //   allowNull: false,
+  // })
     id_Users: string;
 
+  @Column
+    email: string;
+
   @BelongsTo(() => Users)
-    userDonation: string;  
+    userDonation: string;
 
   @Column({ type: 'float' }) // Agregar atributo floatAttribute de tipo float
     mount: number;
