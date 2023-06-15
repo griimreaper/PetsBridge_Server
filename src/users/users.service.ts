@@ -122,21 +122,52 @@ export class UsersService {
     }
   }
 
-  async update(id: string, body, profilePic?: Express.Multer.File): Promise<string> {
+  async update(
+    id: string,
+    {
+      first_Name,
+      last_Name,
+      email,
+      phone,
+      password,
+      country,
+      isGoogle,
+      isActive,
+    },
+    profilePic?: any,
+  ): Promise<string> {
     try {
-      if (!body && !profilePic) throw new BadRequestException('Nada que actualizar');
-
-      const urls = await this.fileService.createFiles(profilePic);
-
-      const user = await this.serviceUsers.update({ ...body, image:urls }, {
-        where:{ id },
-      });
-      if (user) throw new HttpException('Error al editar el usuario', 400);
-
-      return 'Updated successfully';
-
+      if (
+        !first_Name &&
+        !last_Name &&
+        !email &&
+        !phone &&
+        !password &&
+        !profilePic &&
+        !country &&
+        !isGoogle
+      )
+        return 'Nada que actualizar';
+      const user = await this.serviceUsers.findByPk(id);
+      if (user) {
+        if (first_Name) user.firstName = first_Name;
+        if (last_Name) user.lastName = last_Name;
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+        if (password) {
+          const hashedPassword = await hash(password, 10);
+          user.password = hashedPassword;
+        }
+        if (profilePic) user.image = profilePic;
+        if (country) user.country = country;
+        if (isGoogle) user.isGoogle = isGoogle;
+        await user.save();
+        return 'Actualizado';
+      } else {
+        return 'No existe el Usuario';
+      }
     } catch (error) {
-      return error;
+      throw new HttpException('Error al editar el usuario', 404);
     }
   }
 
