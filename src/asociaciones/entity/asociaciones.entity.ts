@@ -1,6 +1,8 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from '../../animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
+import { Publications } from 'src/publications_users/entity/publications_users.entity';
+import { Comments } from 'src/coments/entity/comments.entity';
 
 @Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
@@ -65,5 +67,11 @@ export class Asociaciones extends Model {
 
   @HasMany(() => RedSocial)
     reds: RedSocial;
+
+  @HasMany(() => Publications)
+    publications: Publications[];
+
+  @HasMany(() => Comments)
+    comments: Comments[];
 
 }

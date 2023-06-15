@@ -29,11 +29,14 @@ export class PublicationsUsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id?')
-  async getall(@Param('id') id: string) {
+  async getall(
+  @GetUser() user: any,
+    @Param('id') id: string,
+  ) {
     if (id) {
       return this.publicationsService.findOne(id);
     }
-    return this.publicationsService.findAll();
+    return this.publicationsService.findAll(user.rol);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -42,18 +45,25 @@ export class PublicationsUsersController {
     FilesInterceptor('file', undefined, multerConfig))
   async createPub(
   @GetUser() user: any,
-    @Body() newUser: CreatePublicationsDto,
+    @Body() newPub: CreatePublicationsDto,
     @UploadedFiles() file: Express.Multer.File[],
   ) {
-    return this.publicationsService.createPub({ ...newUser, userId: user.sub }, file);
+    const returned = user.rol === 'fundation' ?
+      this.publicationsService.createPub({ ...newPub, asocId: user.sub }, file)
+      : this.publicationsService.createPub({ ...newPub, userId: user.sub }, file);
+    return returned;
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/comment')
   async userComment(
   @GetUser() user: any,
-    @Body() newComment: CreateCommentDto) {
-    return this.publicationsService.comment({ ...newComment, userId: user.sub });
+    @Body() newComment: CreateCommentDto,
+  ) {
+    const returned = user.rol === 'fundation' ?
+      await this.publicationsService.comment({ ...newComment, asocId: user.sub })
+      : await this.publicationsService.comment({ ...newComment, userId: user.sub });
+    return returned;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -90,7 +100,8 @@ export class PublicationsUsersController {
   ) {
     const publication: any = await this.publicationsService.findOne(id);
 
-    if (user.sub !== publication[0].userId && user.rol !== 'admin') throw new HttpException('Forbidden resource', 403);
+    if (user.sub !== publication[0].userId && user.sub !== publication[0].asocId && user.rol !== 'admin')
+      throw new HttpException('Forbidden resource', 403);
 
     return this.publicationsService.update(id, body);
   }
@@ -103,7 +114,8 @@ export class PublicationsUsersController {
   ) {
     const publication: any = await this.publicationsService.findOne(id);
 
-    if (user.sub !== publication[0].userId && user.rol !== 'admin') throw new HttpException('Forbidden resource', 403);
+    if (user.sub !== publication[0].userId && user.sub !== publication[0].asocId && user.rol !== 'admin')
+      throw new HttpException('Forbidden resource', 403);
 
     return this.publicationsService.delete(id);
   }
