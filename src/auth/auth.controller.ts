@@ -6,9 +6,7 @@ import {
   Res,
   UseInterceptors,
   UploadedFile,
-  Put,
   Patch,
-  Headers,
   Req,
   UseGuards,
   Query,
@@ -19,7 +17,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Auth')
@@ -34,7 +31,6 @@ export class AuthController {
   //     "password":  "12345678",
   //     "rol": "fundation" | "user"
   //  }
-
 
   @Post('register')
   @UseInterceptors(FileInterceptor('image', multerConfig))

@@ -33,8 +33,8 @@ export class Donations extends Model {
   // })
     id_Users: string;
 
-  @ForeignKey(() => Asociaciones)
-    id_Asoc: string;
+  @Column
+    email: string;
 
   @BelongsTo(() => Users)
     userDonation: string;
