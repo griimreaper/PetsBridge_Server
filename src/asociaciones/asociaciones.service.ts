@@ -32,14 +32,19 @@ export class AsociacionesService {
   }
 
 
-  async findAll(): Promise<Asociaciones[]> {
+  async findAll(rol: string): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
-    let allAsociations = await this.asociacionesProviders.findAll();
-    allAsociations = allAsociations.map(a =>{
-      const { password, ...attributes } = a.dataValues;
-      return attributes;
-    });
-    return allAsociations;
+    try {
+      if (rol === 'admin') return await this.asociacionesProviders.findAll();
+      let allAsociations = await this.asociacionesProviders.findAll({ where: { isActive: true } });
+      allAsociations = allAsociations.map(a =>{
+        const { password, ...attributes } = a.dataValues;
+        return attributes;
+      });
+      return allAsociations;
+    } catch (error) {
+      throw new HttpException('Error al intentar buscar las asociaciones', 404);
+    }
   }
 
   async findOne(id: string): Promise<Asociaciones> {
@@ -240,9 +245,11 @@ export class AsociacionesService {
     }
   }
 
-  async filtName(name: string): Promise<Asociaciones | Asociaciones[]> {
+  async filtName(name: string, rol: string): Promise<Asociaciones | Asociaciones[]> {
     try {
-      const fundation = await this.asociacionesProviders.findAll();
+      const fundation = rol === 'admin' ?
+        await this.asociacionesProviders.findAll()
+        : await this.asociacionesProviders.findAll({ where: { isActive: true } });
       return fundation.filter(a => a.nameOfFoundation.toLowerCase().includes(name.toLowerCase()));
     } catch (error) {
       throw new HttpException('Error to find a fundation.', 404);

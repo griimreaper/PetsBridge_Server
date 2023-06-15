@@ -25,10 +25,10 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<Users[]> {
+  async findAll(rol: string): Promise<Users[]> {
     try {
-      const api = this.configureService.get('DB_HOST');
-      let allUsers = await this.serviceUsers.findAll(api);
+      if (rol === 'admin') return await this.serviceUsers.findAll();
+      let allUsers = await this.serviceUsers.findAll({ where: { isActive: true } });
       allUsers = allUsers.map(u => {
         const { password, ...attributes } = u.dataValues;
         return attributes;
@@ -53,7 +53,7 @@ export class UsersService {
     //findOrCreate para que no se duplique el email
     const [users, created] = await this.serviceUsers.findOrCreate({
       where: { email },
-      defaults: { ...body, isActive: true },
+      defaults: { ...body, isActive: true, rol: body.rol },
     });
     //condicion por si se encontro un email en uso
     if (!created)
@@ -187,9 +187,11 @@ export class UsersService {
     }
   }
 
-  async filtName(name: string): Promise<Users | Users[]> {
+  async filtName(name: string, rol:string): Promise<Users | Users[]> {
     try {
-      let usuarios = await this.serviceUsers.findAll();
+      let usuarios = rol === 'admin' ?
+        await this.serviceUsers.findAll()
+        : await this.serviceUsers.findAll({ where: { isActive: true } });
       usuarios = usuarios.filter(u => {
         if (u.firstName && u.lastName) {
           const Name = u.firstName + ' ' + u.lastName;

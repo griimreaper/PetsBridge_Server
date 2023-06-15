@@ -132,13 +132,13 @@ export class PublicationsUsersService {
     }
   }
 
-  async updateComment(idUser: string, id: string, { description }) {
+  async updateComment(user: any, id: string, { description }) {
     try {
       const comentario = await this.comments.findByPk(id);
 
       if (!comentario)
         throw new HttpException('Este comentario no existe', 400);
-      if (idUser !== comentario.userId)
+      if (user.sub !== comentario.userId && user.rol !== 'admin')
         throw new HttpException('Forbidden resource', 403);
       if (!description) throw new HttpException('Nada que actualizar', 400);
 
@@ -151,7 +151,7 @@ export class PublicationsUsersService {
     }
   }
 
-  async deleteComment(idUser: string, id: string) {
+  async deleteComment(user: any, id: string) {
     try {
       const comentario = await this.comments.findByPk(id);
       const publicacion = await this.servicePublications.findByPk(
@@ -163,7 +163,7 @@ export class PublicationsUsersService {
       if (!publicacion)
         throw new HttpException('Esta publicacion no existe', 400);
 
-      if (idUser === publicacion.userId || idUser === comentario.userId) {
+      if (user.sub === publicacion.userId || user.sub === comentario.userId || user.rol === 'admin') {
         await this.comments.destroy({ where: { id } });
         return 'Comentario eliminado';
       }
