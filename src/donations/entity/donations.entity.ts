@@ -49,5 +49,5 @@ export class Donations extends Model {
     paymentId: string; // Nueva propiedad para almacenar el ID de pago
 
   @BelongsTo(() => Asociaciones)
-    asociacion: string;
+    asociacion: Asociaciones;
 }
