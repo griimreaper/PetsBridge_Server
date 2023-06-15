@@ -63,7 +63,7 @@ export class PublicationsUsersController {
     @Param('idComment') idComment: string,
     @Body() body: CreateCommentDto,
   ) {
-    return this.publicationsService.updateComment(user.sub, idComment, body);
+    return this.publicationsService.updateComment(user, idComment, body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,7 +72,7 @@ export class PublicationsUsersController {
   @GetUser() user: any,
     @Param('idComment') idComment: string,
   ) {
-    return this.publicationsService.deleteComment(user.sub, idComment);
+    return this.publicationsService.deleteComment(user, idComment);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -90,7 +90,7 @@ export class PublicationsUsersController {
   ) {
     const publication: any = await this.publicationsService.findOne(id);
 
-    if (user.sub !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
+    if (user.sub !== publication[0].userId && user.rol !== 'admin') throw new HttpException('Forbidden resource', 403);
 
     return this.publicationsService.update(id, body);
   }
@@ -103,7 +103,7 @@ export class PublicationsUsersController {
   ) {
     const publication: any = await this.publicationsService.findOne(id);
 
-    if (user.sub !== publication[0].userId) throw new HttpException('Forbidden resource', 403);
+    if (user.sub !== publication[0].userId && user.rol !== 'admin') throw new HttpException('Forbidden resource', 403);
 
     return this.publicationsService.delete(id);
   }

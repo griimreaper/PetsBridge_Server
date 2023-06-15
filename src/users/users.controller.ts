@@ -11,6 +11,7 @@ import {
   UploadedFile,
   HttpStatus,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-users.dto';
@@ -31,25 +32,36 @@ export class UsersController {
     private fileService: FileService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  getAllUsers() {
-    return this.usersService.findAll();
+  @Get('/search')
+  searchByName(
+  @GetUser() user: any,
+    @Query('name') name: string,
+  ) {
+    return this.usersService.filtName(name, user.rol);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getAllUsers(
+  @GetUser() user: any,
+  ) {
+    return this.usersService.findAll(user.rol);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(@Param('id') id: string) {
     return this.usersService.findById(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @UseGuards(AcountAccess)
+
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteById(
   @GetUser() user: any,
     @Param('id') id: string,
   ) {
-    if (user.sub !== id) throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    if (user.sub !== id && user.rol !== 'admin') throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     return this.usersService.delete(id);
   }
 
