@@ -53,21 +53,22 @@ export class UsersController {
     return this.usersService.delete(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @UseGuards(AcountAccess)
+  @UseGuards(JwtAuthGuard)
   @Patch('update/:id')
-  @UseInterceptors(FileInterceptor('profilePic', multerConfig))
-  async updateUser(@Param('id') id: string, @Body() body: CreateUserDto, @UploadedFile() profilePic?: Express.Multer.File,
+  @UseInterceptors(
+    FileInterceptor('profilePic', multerConfig),
+  )
+  async updateUser(
+  @GetUser() user: any,
+    @Param('id') id: string,
+    @Body() body: CreateUserDto,
+    @UploadedFile() profilePic?: Express.Multer.File,
   ) {
-<<<<<<< HEAD
-    return this.usersService.update(id, body, profilePic);
-=======
-    if (user.sub !== id) return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
+    if (user.sub !== id && user.rol !== 'admin') return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.usersService.update(id, body, url);
     }
     return this.usersService.update(id, body);
->>>>>>> d5dae11aac987eadca5697a8b732c2a837a5eaf9
   }
 }
