@@ -4,8 +4,8 @@ import { Users } from '../users/entity/users.entity';
 
 @Table({
   timestamps:true,
-  updatedAt:false,
-  createdAt:'adoptedAt',
+  createdAt:'pendingAt',
+  updatedAt:'adoptedAt',
   tableName: 'adoptions',
 })
 export class Adoption extends Model {
