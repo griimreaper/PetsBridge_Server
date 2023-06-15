@@ -19,19 +19,9 @@ export class Donations extends Model {
     id: number;
 
   @ForeignKey(() => Asociaciones)
-  // @Column({
-  //   type: DataType.UUID,
-  //   allowNull: false,
-  // })
     id_Asociations: string;
-  // @Column
-  // id_Asociations: string;
 
   @ForeignKey(() => Users)
-  // @Column({
-  //   type: DataType.UUID,
-  //   allowNull: false,
-  // })
     id_Users: string;
 
   @Column

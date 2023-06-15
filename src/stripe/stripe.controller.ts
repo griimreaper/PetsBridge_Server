@@ -23,24 +23,6 @@ export class StripeController {
     private readonly donationRepository: typeof Donations,
   ) {}
 
-  @Post('checkout')
-  async createCheckoutSession(@Res() response: Response) {
-    try {
-      const res = await fetch('/checkout-sessions', {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer YOUR_STRIPE_SECRET_KEY',
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'payment_method_types[]=card&line_items[][price]=PRICE_ID&line_items[][quantity]=1&mode=payment&success_url=https://example.com/success&cancel_url=https://example.com/cancel',
-      });
-      const data = await res.json();
-      response.status(HttpStatus.CREATED).json(data);
-    } catch (error) {
-      response.status(HttpStatus.BAD_REQUEST).json(error);
-    }
-  }
-
   @Post('/create-donations')
   async createDontationsStripe(
   @Body() body: DonationsPay,
