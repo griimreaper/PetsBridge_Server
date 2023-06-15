@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
-import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { DonationsPay } from './dto/donationsPay.dto';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 
 @Injectable()
 export class StripeService {
@@ -72,4 +72,13 @@ export class StripeService {
     return donations;
   }
 
+  async getDonationsByEmail(email: string): Promise<Donations[]> {
+    const donations = await Donations.findAll({
+      where: {
+        email: email,
+      },
+    });
+
+    return donations;
+  }
 }

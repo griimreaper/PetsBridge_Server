@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpStatus, Inject, Param, Post, Render, Res } from '@nestjs/common';
 import { StripeService } from './stripe.service';
-import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { Response } from 'express';
 import { DonationsPay } from './dto/donationsPay.dto';
 import { Donations } from 'src/donations/entity/donations.entity';
+import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { Users } from 'src/users/entity/users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
@@ -67,7 +67,6 @@ export class StripeController {
         status: donationLink.status,
         urlDonation: donationLink.url,
       };
-      // console.log('dasdasdadad', donations);
       const donationsDb = await this.donationRepository.create({
         ...donations,
       });
@@ -93,6 +92,14 @@ export class StripeController {
     const donations = await this.stripeService.getDonationsByAssociationId(
       associationId,
     );
+    return donations;
+  }
+
+  @Get('donations/email/:email')
+  async getDonationsByEmail(
+    @Param('email') email: string,
+  ): Promise<Donations[]> {
+    const donations = await this.stripeService.getDonationsByEmail(email);
     return donations;
   }
 
