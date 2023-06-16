@@ -3,8 +3,6 @@ import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
 import { FileService } from '../file/file.service';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
-import { Users } from '../users/entity/users.entity';
-import { asociacionesProviders } from 'src/asociaciones/providers/asociaciones.provider';
 import { faker } from '@faker-js/faker';
 
 export const AnimalSpecie = {
@@ -118,7 +116,6 @@ export class AnimalsService {
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
-    
   }
 
   async paginate(currentPage:number, slicePage: number):Promise<Array < { object: Animal } >> {
@@ -136,11 +133,9 @@ export class AnimalsService {
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
-    
   }
 
   async filtSpecie(filtro: string) {
-   
     const filtAnimal = await this.animalsRepository.findAll({
       where:{
         specie: filtro,
@@ -182,4 +177,12 @@ export class AnimalsService {
     }
   }
 
+  async filtName(name: string): Promise<Animal | Animal[]> {
+    try {
+      const animales = await this.animalsRepository.findAll();
+      return animales.filter(a => a.name.toLowerCase().includes(name.toLowerCase()));
+    } catch (error) {
+      throw new HttpException('Error to find a animal.', 404);
+    }
+  }
 }

@@ -21,6 +21,12 @@ export class AnimalsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/search')
+  searchByName(@Query('name') name: string) {
+    return this.animalsService.filtName(name);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/animalsFake')
   fakeAnimal() {
     return this.animalsService.generateAnimal();
@@ -81,6 +87,8 @@ export class AnimalsController {
         case 'fundation':
           if (userDog.as_id !== user.sub) throw new HttpException('Forbidden resource', 403);
           return await this.animalsService.editAnimals(id, pet, file);
+        case 'admin':
+          return await this.animalsService.editAnimals(id, pet, file);
       }
     } catch (error) {
       throw new HttpException('Este animal no existe.', 400);
@@ -101,6 +109,8 @@ export class AnimalsController {
           return await this.animalsService.deletePet(id);
         case 'fundation':
           if (userDog.as_id !== user.sub) throw new HttpException('Forbidden resource', 403);
+          return await this.animalsService.deletePet(id);
+        case 'admin':
           return await this.animalsService.deletePet(id);
       }
     } catch (error) {

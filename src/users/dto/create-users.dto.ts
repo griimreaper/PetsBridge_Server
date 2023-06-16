@@ -20,5 +20,5 @@ export class CreateUserDto {
 
   isActive: boolean;
 
-  rol?: UserRole;
+  rol: UserRole;
 }
