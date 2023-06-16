@@ -8,7 +8,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Users } from '../../users/entity/users.entity';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { Asociaciones } from '../../asociaciones/entity/asociaciones.entity';
 
 @Table({ tableName: 'donations' })
 export class Donations extends Model {
@@ -47,4 +47,7 @@ export class Donations extends Model {
 
   @Column
     paymentId: string; // Nueva propiedad para almacenar el ID de pago
+
+  @BelongsTo(() => Asociaciones)
+    asociacion: Asociaciones;
 }
