@@ -20,6 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { FileService } from '../file/file.service';
 import { GetUser } from '../auth/decorator/get-user.decorator';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -67,5 +68,11 @@ export class UsersController {
       return this.usersService.update(id, body, url);
     }
     return this.usersService.update(id, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-password')
+  async changePassword(@Body() changePasswordto:ChangePasswordDto) {
+    return this.usersService.changePassword(changePasswordto);
   }
 }

@@ -1,11 +1,12 @@
-import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { Publications } from '../publications_users/entity/publications_users.entity';
 import { Animal } from '../animals/animals.entity';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -185,5 +186,26 @@ export class UsersService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async changePassword(changePasswordto:ChangePasswordDto):Promise<{ affectedCounts:number[], message:string } | string> {
+    try {
+      
+      if (changePasswordto.oldPassword === changePasswordto.newPassword) throw new BadRequestException('newPassword cannot be equal to oldPassword');
+      const user = await this.serviceUsers.findByPk(changePasswordto.id);
+      const areEqual = await compare(changePasswordto.oldPassword, user.password);
+
+      if (!areEqual) throw new ForbiddenException('Incorrect password');
+      const hashedPassword = await hash(changePasswordto.newPassword, 10);
+      const counts = await this.serviceUsers.update({ password:hashedPassword }, {
+        where:{ 
+          id: changePasswordto.id, 
+        },
+      });
+      if (!counts) throw new HttpException('Something went wrong', 500);
+      return { affectedCounts: counts, message: 'Changed password successfully' };
+    } catch (error) {
+      return error;
+    }   
   }
 }
