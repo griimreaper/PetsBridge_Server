@@ -73,7 +73,6 @@ export class StripeController {
         ...donations,
       });
       const conso = await this.stripeService.getDonationById(donationsDb.id);
-      console.log(conso);
       this.mailsService.sendMails({ donation:donationsDb, 
         asociacion: conso.dataValues.asociacion.nameOfFoundation }, 'DONATE');
 
