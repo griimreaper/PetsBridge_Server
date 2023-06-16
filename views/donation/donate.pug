@@ -11,20 +11,21 @@ html(lang='es')
             p(style='text-align: left; color:#1F120A;') De parte de #{asociacion} queremos darte las gracias y hacerte saber que haces de este mundo un lugar mejor.
             p(style='text-align: left; color:#1F120A;') Además, tu ayuda nos motiva a mejorar y nos recuerda el por qué iniciamos este proyecto<b><i>PetBridge</i></b>.
             p(style='text-align: left; color:#1F120A;') Nuestro más sincero agradecimiento.
-            table(align='center' border='1')
-                thead <b>Datos de la Donación.</b>
+            table(align='center' style='border-spacing: 0 1em;')
+                th(style="color:#DE8C11; background-color: #613900; padding:0;" colspan="4") 
+                    h4 <b>Datos de la Donación.</b>
                 tr
-                    th Usuario 
-                    th Asociación 
-                    th Fecha
-                    th Monto
-                    th Donación.
-                tr 
-                    td #{Usuario}
-                    td #{Asociacion}
-                    td #{Fecha}
-                    td #{Monto}
-                    td #{Donacion}
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Asociación 
+                    td(style="text-align: left; border:solid #613900; padding:1em;") <i>#{Asociacion}</i>
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Monto
+                    td(style="text-align: left; border:solid #613900;  padding:1em;") #{Monto}
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Fecha
+                    td(style="text-align: left; border:solid #613900;  padding:1em;") #{Fecha}
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Donación.
+                    td(style="text-align: left; border:solid #613900;  padding:1em;") #{Donacion}   
         footer
             p(style='text-align: left; color:#1F120A;') No responda a este remitente.
             p(style='text-align: left; color:#1F120A;') Atte: Equipo de <b><span style='color:#1F120A;'>Pet</span><span style='color:#F0A83E;'>Bridge</span></b>.
