@@ -9,6 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { Comments } from '../../coments/entity/comments.entity';
 import { Users } from '../../users/entity/users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Table({ timestamps: false, tableName: 'publications' })
 export class Publications extends Model {
@@ -18,12 +19,18 @@ export class Publications extends Model {
     primaryKey: true,
   })
     id: string;
-    
+
+  @ForeignKey(() => Asociaciones)
+    asocId?: string;
+
+  @BelongsTo(() => Asociaciones)
+    asociacion: Asociaciones;
+
   @ForeignKey(() => Users)
-    userId: string;
+    userId?: string;
 
   @BelongsTo(() => Users)
-    user: Users[];  
+    user: Users[];
 
   @Column
     likes: number;

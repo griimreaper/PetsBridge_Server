@@ -6,6 +6,7 @@ import { Donations } from 'src/donations/entity/donations.entity';
 import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 import { Users } from 'src/users/entity/users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
+import { MailsService } from '../mails/mails.service';
 
 interface DonationProperties {
   paymentId: string;
@@ -21,6 +22,7 @@ export class StripeController {
     private stripeService: StripeService,
     @Inject('DONATIONS_REPOSITORY')
     private readonly donationRepository: typeof Donations,
+    private readonly mailsService: MailsService,
   ) {}
 
   @Post('/create-donations')
@@ -52,6 +54,9 @@ export class StripeController {
       const donationsDb = await this.donationRepository.create({
         ...donations,
       });
+      const conso = await this.stripeService.getDonationById(donationsDb.id);
+      this.mailsService.sendMails({ donation:donationsDb, 
+        asociacion: conso.dataValues.asociacion.nameOfFoundation }, 'DONATE');
 
       response.status(HttpStatus.CREATED).json({ link: donationsDb });
     } catch (error) {
@@ -84,5 +89,6 @@ export class StripeController {
     const donations = await this.stripeService.getDonationsByEmail(email);
     return donations;
   }
+
 }
 

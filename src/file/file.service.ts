@@ -19,7 +19,6 @@ export class FileService {
     // return results;
     try {
       if (!Array.isArray(files)) {
-        
         const uploadPromise = await cloudinary.uploader.upload(files.path, { folder: 'Upload' }, (error, result) => {
           if (error) {
             console.error(error.message);

@@ -1,11 +1,12 @@
-import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { Publications } from '../publications_users/entity/publications_users.entity';
 import { Animal } from '../animals/animals.entity';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,10 +26,10 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<Users[]> {
+  async findAll(rol: string): Promise<Users[]> {
     try {
-      const api = this.configureService.get('DB_HOST');
-      let allUsers = await this.serviceUsers.findAll(api);
+      if (rol === 'admin') return await this.serviceUsers.findAll();
+      let allUsers = await this.serviceUsers.findAll({ where: { isActive: true } });
       allUsers = allUsers.map(u => {
         const { password, ...attributes } = u.dataValues;
         return attributes;
@@ -53,7 +54,7 @@ export class UsersService {
     //findOrCreate para que no se duplique el email
     const [users, created] = await this.serviceUsers.findOrCreate({
       where: { email },
-      defaults: { ...body, isActive: true },
+      defaults: { ...body, isActive: true, rol: body.rol },
     });
     //condicion por si se encontro un email en uso
     if (!created)
@@ -185,5 +186,44 @@ export class UsersService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async filtName(name: string, rol:string): Promise<Users | Users[]> {
+    try {
+      let usuarios = rol === 'admin' ?
+        await this.serviceUsers.findAll()
+        : await this.serviceUsers.findAll({ where: { isActive: true } });
+      usuarios = usuarios.filter(u => {
+        if (u.firstName && u.lastName) {
+          const Name = u.firstName + ' ' + u.lastName;
+          return Name.toLowerCase().includes(name.toLowerCase());
+        }
+        return false;
+      });
+      return usuarios;
+    } catch (error) {
+      throw new HttpException('Error to find a user.', 404);
+    }
+  }
+  
+  async changePassword(changePasswordto:ChangePasswordDto):Promise<{ affectedCounts:number[], message:string } | string> {
+    try {
+      
+      if (changePasswordto.oldPassword === changePasswordto.newPassword) throw new BadRequestException('newPassword cannot be equal to oldPassword');
+      const user = await this.serviceUsers.findByPk(changePasswordto.id);
+      const areEqual = await compare(changePasswordto.oldPassword, user.password);
+
+      if (!areEqual) throw new ForbiddenException('Incorrect password');
+      const hashedPassword = await hash(changePasswordto.newPassword, 10);
+      const counts = await this.serviceUsers.update({ password:hashedPassword }, {
+        where:{ 
+          id: changePasswordto.id, 
+        },
+      });
+      if (!counts) throw new HttpException('Something went wrong', 500);
+      return { affectedCounts: counts, message: 'Changed password successfully' };
+    } catch (error) {
+      return error;
+    }   
   }
 }

@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { Publications } from '../../publications_users/entity/publications_users.entity';
 import { Users } from '../../users/entity/users.entity';
+import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 @Table({ tableName: 'comments' })
 export class Comments extends Model {
@@ -11,18 +12,24 @@ export class Comments extends Model {
   })
     id: string;
 
-  @ForeignKey( () => Users) 
+  @ForeignKey(() => Users)
     userId: string;
-  
-  @ForeignKey( ()=> Publications)
+
+  @ForeignKey(() => Asociaciones)
+    asocId: string;
+
+  @ForeignKey(()=> Publications)
     pubId: string;
 
   @Column
     description: string;
 
   @BelongsTo(() => Publications)
-    publication: Publications[];
+    publication: Publications;
 
-  @BelongsTo( () => Users)
-    commentsUser: Users[];
+  @BelongsTo(() => Asociaciones)
+    commentsAsoc: Asociaciones;
+
+  @BelongsTo(() => Users)
+    commentsUser: Users;
 }

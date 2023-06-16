@@ -2,14 +2,30 @@ doctype html
 html(lang='es')
     head
         meta(charset='UTF-8')
-        title Adoption
+        title Donation
     header(style='background-color:#613900; padding-top:4vh; padding-bottom:4vh;')
-        h1(style='text-align:center') <span style='color:#1F120A;'>Pet</span><span style='color:#F0A83E;'>Bridge</span>
+        h1(style='text-align:center; font-family:latin; font-style:oblique;') <span style='color:#1F120A;'>Pet</span><span style='color:#F0A83E;'>Bridge</span>
     body
         section(style='padding-bottom:2vh; border-bottom:solid #AA6C0D;')
-            h1(style='color:#DE8C11;') #{username}, ¡Hisciste una adopción!
-            p(style='text-align: left; color:#1F120A;') Sabemos que eres una persona bondadosa y confiamos en que le darás un buen hogar a <b>#{petName}</b>.
-            p(style='text-align: left; color:#1F120A;') De parte de <b><i>PetBridge<i></b> te enviamos un enorme <span style='font-size:2em;'>Gracias</span>.
+            h1(style='color:#DE8C11;') ¡Hisciste una Donación!
+            p(style='text-align: left; color:#1F120A;') De parte de #{Asociacion} queremos darte las gracias y hacerte saber que haces de este mundo un lugar mejor.
+            p(style='text-align: left; color:#1F120A;') Además, tu ayuda nos motiva a mejorar y nos recuerda el por qué iniciamos este proyecto <b><i>PetBridge</i></b>.
+            p(style='text-align: left; color:#1F120A;') Nuestro más sincero agradecimiento.
+            table(align='center' style='border-spacing: 0 1em;')
+                th(style="color:#DE8C11; background-color: #613900; padding:0;" colspan="4") 
+                    h4 <b>Datos de la Donación.</b>
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Asociación 
+                    td(style="text-align: left; border:solid #613900; padding:1em;") <i>#{Asociacion}</i>
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Monto
+                    td(style="text-align: left; border:solid #613900;  padding:1em;") #{Monto}
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Fecha
+                    td(style="text-align: left; border:solid #613900;  padding:1em;") #{Fecha}
+                tr
+                    th(style="color:#DE8C11; background-color: #613900; padding:1em") Donación.
+                    td(style="text-align: left; border:solid #613900;  padding:1em;") #{Donacion}   
         footer
             p(style='text-align: left; color:#1F120A;') No responda a este remitente.
             p(style='text-align: left; color:#1F120A;') Atte: Equipo de <b><span style='color:#1F120A;'>Pet</span><span style='color:#F0A83E;'>Bridge</span></b>.

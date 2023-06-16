@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   HttpStatus,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
@@ -30,9 +31,28 @@ export class AsociacionesController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get('/search')
+  searchByName(
+  @GetUser() user: any,
+    @Query('name') name: string,
+  ) {
+    return this.asociacionesService.filtName(name, user.rol);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async getAll() {
-    return this.asociacionesService.findAll();
+  async getAll(
+  @GetUser() user: any,
+  ) {
+    return this.asociacionesService.findAll(user.rol);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('adoptions')
+  async getAdoptions(
+  @GetUser() user: any,
+  ) {
+    return this.asociacionesService.getAdoptions(user.sub);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -49,8 +69,10 @@ export class AsociacionesController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('delete/:id')
-  async deleteById(@GetUser() user: any, @Param('id') idAsociacion: string) {
-    if (user.sub !== idAsociacion) throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+  async deleteById(
+  @GetUser() user: any,
+    @Param('id') idAsociacion: string) {
+    if (user.sub !== idAsociacion && user.rol !== 'admin') throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     return this.asociacionesService.delete(idAsociacion);
   }
 
@@ -63,7 +85,7 @@ export class AsociacionesController {
     @Body() body: CreateAsociacionDto,
     @UploadedFile() profilePic?: Express.Multer.File,
   ) {
-    if (user.sub !== idAsociacion) throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
+    if (user.sub !== idAsociacion && user.rol !== 'admin') throw new HttpException('Forbidden resource', HttpStatus.FORBIDDEN);
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
       return this.asociacionesService.update(idAsociacion, body, url);
