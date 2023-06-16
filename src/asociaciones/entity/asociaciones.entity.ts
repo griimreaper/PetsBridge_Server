@@ -1,12 +1,9 @@
 import { Table, Column, Model, DataType, HasMany, BelongsToMany } from 'sequelize-typescript';
 import { Animal } from '../../animals/animals.entity';
 import { RedSocial } from './redSocial.entity';
-<<<<<<< HEAD
-import { Donations } from 'src/donations/entity/donations.entity';
-=======
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
->>>>>>> 91bbbbcb5e3a70f09acb20dd1fb5faed3a94c29a
+import { Donations } from 'src/donations/entity/donations.entity';
 
 @Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
@@ -74,8 +71,6 @@ export class Asociaciones extends Model {
 
   @HasMany(() => RedSocial)
     reds: RedSocial;
-<<<<<<< HEAD
-=======
 
   @HasMany(() => Publications)
     publications: Publications[];
@@ -83,5 +78,4 @@ export class Asociaciones extends Model {
   @HasMany(() => Comments)
     comments: Comments[];
 
->>>>>>> 91bbbbcb5e3a70f09acb20dd1fb5faed3a94c29a
 }
