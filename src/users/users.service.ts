@@ -62,7 +62,6 @@ export class UsersService {
         send: 'El email ya esta en uso.',
         status: HttpStatus.BAD_REQUEST,
       };
-    //status 201
     return {
       send: 'El usuario se creo exitosamente.',
       status: HttpStatus.CREATED,
@@ -175,7 +174,7 @@ export class UsersService {
       const user = await this.serviceUsers.findOne({ where:{ email } });
       return user;
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -184,7 +183,7 @@ export class UsersService {
       const user = await this.serviceUsers.findOne({ where:{ reset:token } });
       return user;
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -205,10 +204,9 @@ export class UsersService {
       throw new HttpException('Error to find a user.', 404);
     }
   }
-  
+
   async changePassword(changePasswordto:ChangePasswordDto):Promise<{ affectedCounts:number[], message:string } | string> {
     try {
-      
       if (changePasswordto.oldPassword === changePasswordto.newPassword) throw new BadRequestException('newPassword cannot be equal to oldPassword');
       const user = await this.serviceUsers.findByPk(changePasswordto.id);
       const areEqual = await compare(changePasswordto.oldPassword, user.password);
@@ -216,14 +214,14 @@ export class UsersService {
       if (!areEqual) throw new ForbiddenException('Incorrect password');
       const hashedPassword = await hash(changePasswordto.newPassword, 10);
       const counts = await this.serviceUsers.update({ password:hashedPassword }, {
-        where:{ 
-          id: changePasswordto.id, 
+        where:{
+          id: changePasswordto.id,
         },
       });
       if (!counts) throw new HttpException('Something went wrong', 500);
       return { affectedCounts: counts, message: 'Changed password successfully' };
     } catch (error) {
       return error;
-    }   
+    }
   }
 }

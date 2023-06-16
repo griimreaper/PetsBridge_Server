@@ -161,7 +161,6 @@ export class PublicationsUsersService {
       });
       return addComment;
     } catch (error) {
-      console.log(error);
       throw new HttpException('Error al añadir comentario', 404);
     }
   }

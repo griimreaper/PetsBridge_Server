@@ -1,5 +1,4 @@
 import { UserRole } from '../../auth/dto/login.dto';
-import { RedSocialDto } from './create-RedSocial.dto';
 
 export class CreateAsociacionDto {
   id?: string;

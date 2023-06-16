@@ -207,7 +207,6 @@ export class AsociacionesService {
 
   async generateData(): Promise<IDataFake[]> {
     const dataAso = [];
-    console.log(faker.internet.email());
     for (let i = 0; i < 20; i++) {
       const asociacion: IDataFake = {
         email: faker.internet.email(),
@@ -232,7 +231,7 @@ export class AsociacionesService {
       const asociacion = await this.asociacionesProviders.findOne({ where:{ email } });
       return asociacion;
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -241,7 +240,7 @@ export class AsociacionesService {
       const asociacion = await this.asociacionesProviders.findOne({ where:{ reset:token } });
       return asociacion;
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, 404);
     }
   }
 

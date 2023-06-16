@@ -10,12 +10,12 @@ export class Imagen extends Model<Imagen> {
     primaryKey: true,
   })
     id: string;
-  
+
   @Column({
     type: DataTypes.ARRAY(DataTypes.STRING),
     validate: {
       isUrl: true,
     },
   })
-    urls: Array<string>; 
+    urls: Array<string>;
 }

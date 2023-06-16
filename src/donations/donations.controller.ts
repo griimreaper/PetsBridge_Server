@@ -25,7 +25,7 @@ export class DonationsController {
   async createUser(@Body() newUser: CreateDonationsDto) {
     const donation = await this.donationsService.createUser(newUser);
 
-    // Guardar el ID de pago en la entidad Donations
+    // Guardo el ID de pago en Donations
     donation.paymentId = newUser.paymentId;
     await donation.save();
 

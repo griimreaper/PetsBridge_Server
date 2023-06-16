@@ -42,8 +42,8 @@ export class StripeController {
       };
 
       const donations = {
-        paymentId: donationLink.id, // Asigna el id de donación
-        id_Users: body.idUser, // Asigna el idUser
+        paymentId: donationLink.id,
+        id_Users: body.idUser,
         id_Asociations: body.idAsociations,
         email: body.email,
         message: body.message,
@@ -55,7 +55,7 @@ export class StripeController {
         ...donations,
       });
       const conso = await this.stripeService.getDonationById(donationsDb.id);
-      this.mailsService.sendMails({ donation:donationsDb, 
+      this.mailsService.sendMails({ donation:donationsDb,
         asociacion: conso.dataValues.asociacion.nameOfFoundation }, 'DONATE');
 
       response.status(HttpStatus.CREATED).json({ link: donationsDb });

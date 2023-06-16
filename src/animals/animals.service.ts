@@ -16,7 +16,7 @@ export const AnimalSpecie = {
 @Injectable()
 export class AnimalsService {
   constructor(
-    @Inject('ANIMALS_REPOSITORY') 
+    @Inject('ANIMALS_REPOSITORY')
     private readonly animalsRepository:typeof Animal,
     @Inject('ASOCIACIONES_REPOSITORY')
     private readonly asociationRepository: typeof Asociaciones,
@@ -38,7 +38,7 @@ export class AnimalsService {
       await this.animalsRepository.create({
         ...pet,
         status: 'homeless',
-        image: urls,  
+        image: urls,
       });
       return 'La mascota se ha registrado!';
     } catch (error) {

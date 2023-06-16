@@ -6,7 +6,7 @@ import { multerConfig } from '../file/multer.config';
 @Controller('file')
 export class FileController {
   constructor( private readonly fileService: FileService ) {}
-  
+
   @Post()
   @UseInterceptors(
     FilesInterceptor('file', undefined, multerConfig),

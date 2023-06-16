@@ -34,7 +34,7 @@ export const databaseProviders = [
         RedSocial,
       ]);
       try {
-        await sequelize.sync({ force: false });
+        await sequelize.sync({ force: true });
       } catch (error) {
         console.error('SEQUALIZE SYNC ERROR: ', error);
       }
@@ -42,4 +42,3 @@ export const databaseProviders = [
     },
   },
 ];
-//

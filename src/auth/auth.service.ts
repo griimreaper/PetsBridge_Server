@@ -59,7 +59,6 @@ export class AuthService {
 
   async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string }> {
     const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
-    //if (!verified) throw new ForbiddenException('Este usuario no está verificado');
     const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
     const token = this.jwtService.sign(payload);
 
@@ -141,7 +140,7 @@ export class AuthService {
       }
       return { message:'Check your email for a token' };
     } catch (error) {
-      console.error(error.message);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -152,12 +151,12 @@ export class AuthService {
       try {
         user = await this.usersService.findByToken(token);
       } catch (error) {
-        console.error(user);
+        throw new HttpException(error.message, 404);
       }
       try {
         asociacion = await this.asociacionesService.findByToken(token);
       } catch (error) {
-        console.error(asociacion);
+        throw new HttpException(error.message, 404);
       }
       if (!user && !asociacion) throw new NotFoundException('Token erróneo');
 
@@ -180,8 +179,7 @@ export class AuthService {
         return {  token:newToken, expirationTime:'10min' };
       }
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -209,8 +207,7 @@ export class AuthService {
 
       return 'Changed password successfully';
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -237,8 +234,7 @@ export class AuthService {
       }
 
     } catch (error) {
-      console.error(error.message);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -249,12 +245,12 @@ export class AuthService {
       try {
         user = await this.usersService.findById(id);
       } catch (error) {
-        console.error(error.message);
+        throw new HttpException(error.message, 404);
       }
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        console.error(asociacion);
+        throw new HttpException(error.message, 404);
       }
 
 
@@ -271,8 +267,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 }
