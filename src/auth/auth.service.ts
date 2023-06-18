@@ -141,7 +141,8 @@ export class AuthService {
       }
       return { message:'Check your email for a token' };
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
+      return new HttpException(error.message, error.response.statusCode);
     }
   }
 
