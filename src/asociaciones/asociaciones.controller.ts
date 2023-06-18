@@ -11,6 +11,7 @@ import {
   HttpStatus,
   HttpException,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { AsociacionesService } from './asociaciones.service';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
@@ -20,6 +21,7 @@ import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { GetUser } from '../auth/decorator/get-user.decorator';
+import { ChangePasswordDto } from './dto/changeLoginData.dto';
 
 @ApiBearerAuth()
 @ApiTags('Asociaciones')
@@ -91,5 +93,11 @@ export class AsociacionesController {
       return this.asociacionesService.update(idAsociacion, body, url);
     }
     return this.asociacionesService.update(idAsociacion, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-password')
+  async changePassword(@Body() changePasswordto:ChangePasswordDto) {
+    return this.asociacionesService.changePassword(changePasswordto);
   }
 }

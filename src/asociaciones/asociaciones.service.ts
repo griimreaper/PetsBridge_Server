@@ -1,7 +1,7 @@
-import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { Users } from '../users/entity/users.entity';
 import { Animal } from '../animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
@@ -10,6 +10,7 @@ import { faker } from '@faker-js/faker';
 import { IDataFake } from './interface/Iservice.interface';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Op } from 'sequelize';
+import { ChangePasswordDto } from './dto/changeLoginData.dto';
 
 @Injectable()
 export class AsociacionesService {
@@ -291,5 +292,26 @@ export class AsociacionesService {
     } catch (error) {
       throw new HttpException('Error to show the adoptions.', 500);
     }
+  }
+
+  async changePassword(changePasswordto:ChangePasswordDto):Promise<{ affectedCounts:number[], message:string } | string> {
+    try {
+      
+      if (changePasswordto.oldPassword === changePasswordto.newPassword) throw new BadRequestException('newPassword cannot be equal to oldPassword');
+      const user = await this.asociacionesProviders.findByPk(changePasswordto.id);
+      const areEqual = await compare(changePasswordto.oldPassword, user.password);
+
+      if (!areEqual) throw new ForbiddenException('Incorrect password');
+      const hashedPassword = await hash(changePasswordto.newPassword, 10);
+      const counts = await this.asociacionesProviders.update({ password:hashedPassword }, {
+        where:{ 
+          id: changePasswordto.id, 
+        },
+      });
+      if (!counts) throw new HttpException('Something went wrong', 500);
+      return { affectedCounts: counts, message: 'Changed password successfully' };
+    } catch (error) {
+      return error;
+    }   
   }
 }
