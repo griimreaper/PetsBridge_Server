@@ -1,4 +1,4 @@
-import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Users } from './entity/users.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/create-users.dto';
@@ -6,7 +6,8 @@ import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 import { hash, compare } from 'bcrypt';
 import { Publications } from '../publications_users/entity/publications_users.entity';
 import { Animal } from '../animals/animals.entity';
-import { ChangePasswordDto } from './dto/changePassword.dto';
+import { ChangeEmailDto, ChangePasswordDto } from './dto/changeLoginData';
+import { MailsService } from 'src/mails/mails.service';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +15,7 @@ export class UsersService {
     @Inject('USERS_REPOSITORY')
     private serviceUsers: typeof Users,
     private readonly configureService: ConfigService,
+    private readonly mailsService: MailsService,
   ) {}
 
   async findAllToLogin(): Promise<Users[]> {
@@ -225,5 +227,27 @@ export class UsersService {
     } catch (error) {
       return error;
     }   
+  }
+
+  async changeEmail(body:ChangeEmailDto):Promise<string | HttpException> {
+    try {
+      const { id, newEmail, password } = body;
+      const user = await this.serviceUsers.findByPk(id);
+      if (!user) throw new NotFoundException('No se encontró al usuario');
+      if (await !compare(password, user.password)) throw new BadRequestException('Contraseña incorrecta');
+      user.newEmail = newEmail;
+      user.save();
+
+      //Sending verification mail
+      const date = new Date();
+      const code = await hash(`${date.getTime()}`, 10);
+
+      this.mailsService.sendMails({ firstName:user.firstName, email:newEmail, id:user.id, code:code }, 'VERIFY_USER');
+
+      return 'changeEmailStep1 completly successfully';
+
+    } catch (error) {
+      return new HttpException(error.message, error.response.statusCode);
+    }
   }
 }
