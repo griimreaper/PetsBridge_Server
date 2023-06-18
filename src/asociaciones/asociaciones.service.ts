@@ -1,4 +1,4 @@
-import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
 import { hash, compare } from 'bcrypt';
@@ -10,7 +10,8 @@ import { faker } from '@faker-js/faker';
 import { IDataFake } from './interface/Iservice.interface';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Op } from 'sequelize';
-import { ChangePasswordDto } from './dto/changeLoginData.dto';
+import { ChangeEmailDto, ChangePasswordDto } from './dto/changeLoginData.dto';
+import { MailsService } from 'src/mails/mails.service';
 
 @Injectable()
 export class AsociacionesService {
@@ -23,6 +24,7 @@ export class AsociacionesService {
     private readonly animalsProviders: typeof Animal,
     @Inject('ADOPTIONS_REPOSITORY')
     private readonly adoptionsProviders: typeof Adoption,
+    private readonly mailsService: MailsService,
   ) {}
 
   async findAllToLogin(): Promise<Asociaciones[]> {
@@ -313,5 +315,27 @@ export class AsociacionesService {
     } catch (error) {
       return error;
     }   
+  }
+
+  async changeEmail(body:ChangeEmailDto):Promise<string | HttpException> {
+    try {
+      const { id, newEmail, password } = body;
+      const asociacion = await this.asociacionesProviders.findByPk(id);
+      if (!asociacion) throw new NotFoundException('No se encontró a la asociacion');
+      if (await !compare(password, asociacion.password)) throw new BadRequestException('Contraseña incorrecta');
+      asociacion.newEmail = newEmail;
+      asociacion.save();
+
+      //Sending verification mail
+      const date = new Date();
+      const code = await hash(`${date.getTime()}`, 10);
+
+      this.mailsService.sendMails({ firstName:asociacion.nameOfFoundation, email:newEmail, id:asociacion.id, code:code }, 'VERIFY_USER');
+
+      return 'changeEmailStep1 completly successfully';
+
+    } catch (error) {
+      return new HttpException(error.message, error.response.statusCode);
+    }
   }
 }

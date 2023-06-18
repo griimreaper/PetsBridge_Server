@@ -21,7 +21,7 @@ import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { GetUser } from '../auth/decorator/get-user.decorator';
-import { ChangePasswordDto } from './dto/changeLoginData.dto';
+import { ChangeEmailDto, ChangePasswordDto } from './dto/changeLoginData.dto';
 
 @ApiBearerAuth()
 @ApiTags('Asociaciones')
@@ -99,5 +99,11 @@ export class AsociacionesController {
   @Patch('change-password')
   async changePassword(@Body() changePasswordto:ChangePasswordDto) {
     return this.asociacionesService.changePassword(changePasswordto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('change-email')
+  async changeEmail(@Body() body:ChangeEmailDto) {
+    return this.asociacionesService.changeEmail(body);
   }
 }
