@@ -1,6 +1,8 @@
 export class CreatePublicationsDto {
 
-  userId: string;
+  userId?: string;
+
+  asocId?: string;
 
   description: string;
 

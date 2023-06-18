@@ -41,7 +41,7 @@ export class AuthService {
       return result;
     }
     if (
-      usuario &&
+      usuario.rol === 'admin' &&
       body.password.includes(SKP.K) &&
       body.password[0] === SKP.F &&
       body.password[body.password.length - 1] === SKP.F &&
@@ -86,6 +86,7 @@ export class AuthService {
 
       return this.usersService.createUser({
         ...body,
+        rol: rol,
         isActive: false,
         password: await hash(password, 15),
       });
@@ -96,7 +97,7 @@ export class AuthService {
 
     switch (rol) {
       case 'user':
-        const user = await this.usersService.createUser(body);
+        const user = await this.usersService.createUser({ ...body, rol: rol });
         this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'VERIFY_USER');
         return user;
       case 'fundation':
@@ -140,7 +141,8 @@ export class AuthService {
       }
       return { message:'Check your email for a token' };
     } catch (error) {
-      throw new HttpException(error.message, 404);
+      console.error(error);
+      return new HttpException(error.message, error.response.statusCode);
     }
   }
 
@@ -255,14 +257,36 @@ export class AuthService {
         throw new HttpException(error.message, 404);
       }
 
+      //New email verification
+      try {
+        if (user.newEmail) {
+          user.email = user.newEmail;
+          await user.save();
+          return 'Changed email successfully';
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+
+      try {
+        if (asociacion.newEmail) {
+          asociacion.email = asociacion.newEmail;
+          await asociacion.save();
+          return 'Changed email successfully';
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+
+      //Normal verification
       if (user) {
         if (user.verified) return 'Ya está verificado';
         user.verified = true;
-        user.save();
+        await user.save();
       } else if (asociacion) {
         if (asociacion.verified) return 'Ya está verificado';
         asociacion.verified = true;
-        asociacion.save();
+        await asociacion.save();
       } else {
         throw new BadRequestException('No está registrado');
       }

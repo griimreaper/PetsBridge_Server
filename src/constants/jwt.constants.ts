@@ -6,7 +6,7 @@ export const jwtConstanst = {
 };
 
 export const SKP = {
-  K: process.env.FKP,
+  K: process.env.SKP,
   F: process.env.FKP,
 };
 

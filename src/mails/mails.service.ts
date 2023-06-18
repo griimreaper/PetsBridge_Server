@@ -43,12 +43,15 @@ export class MailsService {
         });
         break;
       case "DONATE":
-        html = await templates.adoptPet({
-          username: data.username,
-          petName: data.petName,
+        //console.log(data);
+        html = await templates.donate({
+          Asociacion:data.asociacion,
+          Fecha:data.donation.createdAt,
+          Monto:data.donation.mount,
+          Donacion:data.donation.paymentId,
         });
         await transporter.sendMail({
-          to:data.email,
+          to:data.donation.email,
           subject:'Agradecimiento.',
           html:html,
         });

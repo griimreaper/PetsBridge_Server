@@ -18,6 +18,7 @@ import { Response, Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -45,8 +46,8 @@ export class AuthController {
       }
     } catch (error) {
       response
-        .status(HttpStatus.OK)
-        .json({ error: 'El email ya esta en uso.' });
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'El email ya esta en uso' });
     }
   }
 
@@ -62,7 +63,7 @@ export class AuthController {
     return this.authService.forgotPassword(email.email);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Post('verify-token')
   async veriftToken(@Body() body, @Res() response: Response, @Req() request:Request) {
     const { rol } = body;
@@ -72,13 +73,13 @@ export class AuthController {
     response.setHeader('Authorization', newtoken.token).json(newtoken);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   @Patch('create-password')
   async createNewPassword(@Body() newPassword, @Req() request:Request) {
     return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
   }
 
-  @UseGuards(AuthGuard('admin'))
+  @UseGuards(JwtAuthGuard)
   @Patch('create-admin-password')
   async createAdminPassword(@Body() body, @Req() request:Request) {
     const { newPassword } = body;
