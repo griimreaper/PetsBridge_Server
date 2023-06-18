@@ -4,7 +4,6 @@ import { DonationsPay } from './dto/donationsPay.dto';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Users } from 'src/users/entity/users.entity';
 import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
-import { StripeRequestBody } from './interface/stripeRequestBody.interface';
 
 @Injectable()
 export class StripeService {

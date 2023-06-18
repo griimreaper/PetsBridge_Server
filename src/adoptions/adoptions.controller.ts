@@ -1,6 +1,5 @@
 import { Controller, Post, Body, UseGuards, Get, HttpException, Param } from '@nestjs/common';
 import { AdoptionsService } from './adoptions.service';
-import { AdoptionDto } from './dto/adoptions.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';

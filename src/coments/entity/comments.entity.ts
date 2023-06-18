@@ -11,9 +11,9 @@ export class Comments extends Model {
   })
     id: string;
 
-  @ForeignKey( () => Users) 
+  @ForeignKey( () => Users)
     userId: string;
-  
+
   @ForeignKey( ()=> Publications)
     pubId: string;
 
