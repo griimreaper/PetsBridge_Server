@@ -258,15 +258,22 @@ export class AuthService {
         console.error(asociacion);
       }
 
+      //New email verification
+      if (user.newEmail) {
+        user.email = user.newEmail;
+        await user.save();
+        return 'Changed email successfully';
+      }
 
+      //Normal verification
       if (user) {
         if (user.verified) return 'Ya está verificado';
         user.verified = true;
-        user.save();
+        await user.save();
       } else if (asociacion) {
         if (asociacion.verified) return 'Ya está verificado';
         asociacion.verified = true;
-        asociacion.save();
+        await asociacion.save();
       } else {
         throw new BadRequestException('No está registrado');
       }
