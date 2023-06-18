@@ -3,8 +3,6 @@ import { Animal } from './animals.entity';
 import { AnimalDto } from './dto/animals.dto';
 import { FileService } from '../file/file.service';
 import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
-import { Users } from '../users/entity/users.entity';
-import { asociacionesProviders } from 'src/asociaciones/providers/asociaciones.provider';
 import { faker } from '@faker-js/faker';
 
 export const AnimalSpecie = {
@@ -18,7 +16,7 @@ export const AnimalSpecie = {
 @Injectable()
 export class AnimalsService {
   constructor(
-    @Inject('ANIMALS_REPOSITORY') 
+    @Inject('ANIMALS_REPOSITORY')
     private readonly animalsRepository:typeof Animal,
     @Inject('ASOCIACIONES_REPOSITORY')
     private readonly asociationRepository: typeof Asociaciones,
@@ -40,7 +38,7 @@ export class AnimalsService {
       await this.animalsRepository.create({
         ...pet,
         status: 'homeless',
-        image: urls,  
+        image: urls,
       });
       return 'La mascota se ha registrado!';
     } catch (error) {
@@ -118,7 +116,6 @@ export class AnimalsService {
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
-    
   }
 
   async paginate(currentPage:number, slicePage: number):Promise<Array < { object: Animal } >> {
@@ -136,11 +133,11 @@ export class AnimalsService {
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
-    
+
   }
 
   async filtSpecie(filtro: string) {
-   
+
     const filtAnimal = await this.animalsRepository.findAll({
       where:{
         specie: filtro,

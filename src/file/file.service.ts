@@ -1,5 +1,5 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 import { config as dotenvConfig } from 'dotenv';
 import { unlink } from 'fs';
 
@@ -13,16 +13,12 @@ cloudinary.config({
 export class FileService {
 
   async createFiles(files: any) {
-    // console.log(files);
-    // const uploadPromises = files.map((file) => cloudinary.uploader.upload(file.path));
-    // const results = await Promise.all(uploadPromises);
-    // return results;
     try {
       if (!Array.isArray(files)) {
-        
+
         const uploadPromise = await cloudinary.uploader.upload(files.path, { folder: 'Upload' }, (error, result) => {
           if (error) {
-            console.error(error.message);
+            throw new HttpException(error.message, 404);
           } else {
             return result;
           }
@@ -34,14 +30,12 @@ export class FileService {
           if (error) {
             throw new Error(error.message);
           } else {
-            // console.log(result);
           }
         }));
         const results = await Promise.all(uploadPromises);
         // Eliminar el archivo de la carpeta local
         this.deleteFiles(files);
         const URLS = results.map( (e) => e.secure_url);
-        // console.log(URLS);
         return URLS;
       }
     } catch (error) {

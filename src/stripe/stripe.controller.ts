@@ -3,9 +3,6 @@ import { StripeService } from './stripe.service';
 import { Response } from 'express';
 import { DonationsPay } from './dto/donationsPay.dto';
 import { Donations } from 'src/donations/entity/donations.entity';
-import { StripeRequestBody } from './interface/stripeRequestBody.interface';
-import { Users } from 'src/users/entity/users.entity';
-import { Asociaciones } from 'src/asociaciones/entity/asociaciones.entity';
 
 interface DonationProperties {
   paymentId: string;
@@ -31,13 +28,6 @@ export class StripeController {
     try {
       const donationLink = await this.stripeService.createPrueba(body);
 
-      const donationProperties: DonationProperties = {
-        paymentId: donationLink.id,
-        amount_total: donationLink.amount_total,
-        status: donationLink.status,
-        success_url: donationLink.success_url,
-        url: donationLink.url,
-      };
 
       const donations = {
         paymentId: donationLink.id, // Asigna el id de donación

@@ -12,7 +12,7 @@ export class MailsService {
     switch (topic) {
       case 'RESET_PASSWORD':
         html = await templates.resetPassword({
-          username: data.firstName ? data.firstName : data.nameOfFoundation, 
+          username: data.firstName ? data.firstName : data.nameOfFoundation,
           token:data.reset,
         });
         transporter.sendMail({

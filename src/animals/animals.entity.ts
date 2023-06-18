@@ -18,7 +18,7 @@ export class Animal extends Model {
     primaryKey:true,
     unique: true,
   })
-    id: string; 
+    id: string;
 
   @ForeignKey(() => Asociaciones)
   @Column({

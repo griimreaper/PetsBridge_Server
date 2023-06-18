@@ -9,7 +9,7 @@ export class CreatePublicationsDto {
   like: boolean;
 
   id: string;
-  
+
   topic: number;
 
 }

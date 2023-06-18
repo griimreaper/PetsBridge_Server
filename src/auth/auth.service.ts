@@ -122,8 +122,6 @@ export class AuthService {
 
       if (!user && !asociacion) throw new NotFoundException('This user is not registered');
 
-      /*       const date = new Date();
-      const token = await hash(`${date.getTime()}`, 10); */
       let token;
 
       if (user) {
@@ -140,7 +138,7 @@ export class AuthService {
       }
       return { message:'Check your email for a token' };
     } catch (error) {
-      console.error(error.message);
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -151,12 +149,12 @@ export class AuthService {
       try {
         user = await this.usersService.findByToken(token);
       } catch (error) {
-        console.error(user);
+        throw new HttpException(error.message, 404);
       }
       try {
         asociacion = await this.asociacionesService.findByToken(token);
       } catch (error) {
-        console.error(asociacion);
+        throw new HttpException(error.message, 404);
       }
       if (!user && !asociacion) throw new NotFoundException('Token erróneo');
 
@@ -179,8 +177,7 @@ export class AuthService {
         return {  token:newToken, expirationTime:'10min' };
       }
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -208,7 +205,7 @@ export class AuthService {
 
       return 'Changed password successfully';
     } catch (error) {
-      console.error(error);
+      throw new HttpException(error.message, 404);
       return error;
     }
   }
@@ -218,8 +215,8 @@ export class AuthService {
       if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
       let hashedPassword:string;
       if (
-        newPassword.includes(SKP.K) && 
-        newPassword[0] === SKP.F && 
+        newPassword.includes(SKP.K) &&
+        newPassword[0] === SKP.F &&
         newPassword[newPassword.length - 1] === SKP.F
       ) {
         hashedPassword = await hash(newPassword, 15);
@@ -236,8 +233,7 @@ export class AuthService {
       }
 
     } catch (error) {
-      console.error(error.message);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -248,14 +244,13 @@ export class AuthService {
       try {
         user = await this.usersService.findById(id);
       } catch (error) {
-        console.error(error.message);
+        throw new HttpException(error.message, 404);
       }
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        console.error(asociacion);
+        throw new HttpException(error.message, 404);
       }
-      
 
       if (user) {
         if (user.verified) return 'Ya está verificado';
@@ -270,7 +265,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
-      console.error(error);
+      throw new HttpException(error.message, 404);
       return error;
     }
   }

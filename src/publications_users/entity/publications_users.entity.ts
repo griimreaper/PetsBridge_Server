@@ -18,12 +18,12 @@ export class Publications extends Model {
     primaryKey: true,
   })
     id: string;
-    
+
   @ForeignKey(() => Users)
     userId: string;
 
   @BelongsTo(() => Users)
-    user: Users[];  
+    user: Users[];
 
   @Column
     likes: number;
@@ -42,9 +42,9 @@ export class Publications extends Model {
       type: DataType.ARRAY(DataType.STRING),
     },
   )
-    imagen: string[];  
-  
+    imagen: string[];
+
   @HasMany(() => Comments)
     comments: Comments[];
-  
+
 }

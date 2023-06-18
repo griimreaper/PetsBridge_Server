@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   UseGuards,
-  Post,
   UseInterceptors,
   UploadedFile,
   HttpStatus,
