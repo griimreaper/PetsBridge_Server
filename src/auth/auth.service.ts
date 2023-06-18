@@ -141,7 +141,8 @@ export class AuthService {
       }
       return { message:'Check your email for a token' };
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
+      return new HttpException(error.message, error.response.statusCode);
     }
   }
 
@@ -257,15 +258,37 @@ export class AuthService {
         console.error(asociacion);
       }
 
+      //New email verification
+      try {
+        if (user.newEmail) {
+          user.email = user.newEmail;
+          await user.save();
+          return 'Changed email successfully';
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+      
+      try {
+        if (asociacion.newEmail) {
+          asociacion.email = asociacion.newEmail;
+          await asociacion.save();
+          return 'Changed email successfully';
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+      
 
+      //Normal verification
       if (user) {
         if (user.verified) return 'Ya está verificado';
         user.verified = true;
-        user.save();
+        await user.save();
       } else if (asociacion) {
         if (asociacion.verified) return 'Ya está verificado';
         asociacion.verified = true;
-        asociacion.save();
+        await asociacion.save();
       } else {
         throw new BadRequestException('No está registrado');
       }

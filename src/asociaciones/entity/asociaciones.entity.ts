@@ -78,4 +78,9 @@ export class Asociaciones extends Model {
   @HasMany(() => Comments)
     comments: Comments[];
 
+  @Column({
+    type:DataType.STRING,
+  })
+    newEmail:string;
+
 }

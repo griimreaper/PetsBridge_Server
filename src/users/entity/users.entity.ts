@@ -83,4 +83,9 @@ export class Users extends Model {
     defaultValue:false,
   })
     verified:boolean;
+
+  @Column({
+    type:DataType.STRING,
+  })
+    newEmail:string;
 }
