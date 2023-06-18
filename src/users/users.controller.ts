@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from '../file/multer.config';
 import { FileService } from '../file/file.service';
 import { GetUser } from '../auth/decorator/get-user.decorator';
-import { ChangePasswordDto } from './dto/changePassword.dto';
+import { ChangePasswordDto } from './dto/changeLoginData';
 
 @ApiBearerAuth()
 @ApiTags('Users')
