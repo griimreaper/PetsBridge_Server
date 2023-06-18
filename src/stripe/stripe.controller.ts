@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Inject, Param, Post, Render, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Param, Post, Res } from '@nestjs/common';
 import { StripeService } from './stripe.service';
 import { Response } from 'express';
 import { DonationsPay } from './dto/donationsPay.dto';
@@ -27,7 +27,6 @@ export class StripeController {
   ) {
     try {
       const donationLink = await this.stripeService.createPrueba(body);
-
 
       const donations = {
         paymentId: donationLink.id, // Asigna el id de donación
