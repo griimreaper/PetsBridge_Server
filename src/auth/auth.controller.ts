@@ -53,8 +53,8 @@ export class AuthController {
       }
     } catch (error) {
       response
-        .status(HttpStatus.OK)
-        .json({ error: 'El email ya esta en uso.' });
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: 'El email ya esta en uso' });
     }
   }
 

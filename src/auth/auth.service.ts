@@ -219,8 +219,8 @@ export class AuthService {
       if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
       let hashedPassword:string;
       if (
-        newPassword.includes(SKP.K) && 
-        newPassword[0] === SKP.F && 
+        newPassword.includes(SKP.K) &&
+        newPassword[0] === SKP.F &&
         newPassword[newPassword.length - 1] === SKP.F
       ) {
         hashedPassword = await hash(newPassword, 15);
@@ -256,7 +256,7 @@ export class AuthService {
       } catch (error) {
         console.error(asociacion);
       }
-      
+
 
       if (user) {
         if (user.verified) return 'Ya está verificado';
