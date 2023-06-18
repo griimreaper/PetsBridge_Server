@@ -278,6 +278,7 @@ export class AuthService {
         console.log(error.message);
       }
 
+
       //Normal verification
       if (user) {
         if (user.verified) return 'Ya está verificado';
