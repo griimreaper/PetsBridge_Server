@@ -259,11 +259,26 @@ export class AuthService {
       }
 
       //New email verification
-      if (user.newEmail) {
-        user.email = user.newEmail;
-        await user.save();
-        return 'Changed email successfully';
+      try {
+        if (user.newEmail) {
+          user.email = user.newEmail;
+          await user.save();
+          return 'Changed email successfully';
+        }
+      } catch (error) {
+        console.log(error.message);
       }
+      
+      try {
+        if (asociacion.newEmail) {
+          asociacion.email = asociacion.newEmail;
+          await asociacion.save();
+          return 'Changed email successfully';
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+      
 
       //Normal verification
       if (user) {
