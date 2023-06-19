@@ -16,4 +16,6 @@ export interface AnimalDto {
   weight?: string,
   age_M?: string,
   age_Y?: string,
+  email: string,
+  phone: string,
 }
