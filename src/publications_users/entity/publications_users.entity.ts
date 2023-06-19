@@ -49,9 +49,9 @@ export class Publications extends Model {
       type: DataType.ARRAY(DataType.STRING),
     },
   )
-    imagen: string[];  
-  
+    imagen: string[];
+
   @HasMany(() => Comments)
     comments: Comments[];
-  
+
 }

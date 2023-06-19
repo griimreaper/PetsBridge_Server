@@ -1,5 +1,4 @@
 import {
-  BelongsToMany,
   Column,
   HasMany,
   Model,

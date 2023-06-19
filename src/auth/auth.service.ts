@@ -122,9 +122,7 @@ export class AuthService {
 
     if (!user && !asociacion) return { message:'Email no registrado', status:400 };
 
-    /*       const date = new Date();
-      const token = await hash(`${date.getTime()}`, 10); */
-    let token;
+      let token;
 
     if (user) {
       token = await this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
@@ -148,12 +146,12 @@ export class AuthService {
       try {
         user = await this.usersService.findByToken(token);
       } catch (error) {
-        console.error(user);
+        throw new HttpException(error.message, 404);
       }
       try {
         asociacion = await this.asociacionesService.findByToken(token);
       } catch (error) {
-        console.error(asociacion);
+        throw new HttpException(error.message, 404);
       }
       if (!user && !asociacion) return { message:'Token erróneo', status:404 };
 
@@ -176,8 +174,7 @@ export class AuthService {
         return {  token:newToken, expirationTime:'10min' };
       }
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -205,8 +202,7 @@ export class AuthService {
 
       return 'Changed password successfully';
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -233,8 +229,7 @@ export class AuthService {
       }
 
     } catch (error) {
-      console.error(error.message);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 
@@ -245,12 +240,12 @@ export class AuthService {
       try {
         user = await this.usersService.findById(id);
       } catch (error) {
-        console.error(error.message);
+        throw new HttpException(error.message, 404);
       }
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        console.error(asociacion);
+        throw new HttpException(error.message, 404);
       }
 
       //New email verification
@@ -261,9 +256,8 @@ export class AuthService {
           return 'Changed email successfully';
         }
       } catch (error) {
-        console.log(error.message);
+        throw new HttpException(error.message, 404);
       }
-      
       try {
         if (asociacion.newEmail) {
           asociacion.email = asociacion.newEmail;
@@ -271,9 +265,8 @@ export class AuthService {
           return 'Changed email successfully';
         }
       } catch (error) {
-        console.log(error.message);
+        throw new HttpException(error.message, 404);
       }
-      
 
       //Normal verification
       if (user) {
@@ -289,8 +282,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
-      console.error(error);
-      return error;
+      throw new HttpException(error.message, 404);
     }
   }
 }

@@ -9,10 +9,10 @@ export class RedSocial extends Model<RedSocial> {
     type:DataType.UUID,
   })
     as_id: string;
-  
+
   @BelongsTo(() => Asociaciones)
     redAsociacion: Asociaciones[];
-  
+
   @Column({
     type: DataType.STRING,
     allowNull: false,

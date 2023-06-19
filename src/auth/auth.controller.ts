@@ -25,14 +25,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // Registrar fundacion o usuario con authenticacion
-  // Se debe recibir por json:
-  //  {
-  //     "email": "ejemplo@gmail.com",
-  //     "password":  "12345678",
-  //     "rol": "fundation" | "user"
-  //  }
-
   @Post('register')
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async register(
