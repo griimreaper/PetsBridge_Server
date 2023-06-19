@@ -1,13 +1,17 @@
-import { Inject, Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Inject, Injectable, HttpStatus, HttpException, BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Asociaciones } from './entity/asociaciones.entity';
 import { CreateAsociacionDto } from './dto/create-asociacion.dto';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { Users } from '../users/entity/users.entity';
 import { Animal } from '../animals/animals.entity';
 import { RedSocial } from './entity/redSocial.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { faker } from '@faker-js/faker';
 import { IDataFake } from './interface/Iservice.interface';
+import { Adoption } from 'src/adoptions/adoptions.entity';
+import { Op } from 'sequelize';
+import { ChangeEmailDto, ChangePasswordDto } from './dto/changeLoginData.dto';
+import { MailsService } from 'src/mails/mails.service';
 
 @Injectable()
 export class AsociacionesService {
@@ -16,6 +20,11 @@ export class AsociacionesService {
     private asociacionesProviders: typeof Asociaciones,
     @Inject('SEQUELIZE')
     private readonly sequelize: Sequelize,
+    @Inject('ANIMALS_REPOSITORY')
+    private readonly animalsProviders: typeof Animal,
+    @Inject('ADOPTIONS_REPOSITORY')
+    private readonly adoptionsProviders: typeof Adoption,
+    private readonly mailsService: MailsService,
   ) {}
 
   async findAllToLogin(): Promise<Asociaciones[]> {
@@ -26,14 +35,19 @@ export class AsociacionesService {
   }
 
 
-  async findAll(): Promise<Asociaciones[]> {
+  async findAll(rol: string): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
-    let allAsociations = await this.asociacionesProviders.findAll();
-    allAsociations = allAsociations.map(a =>{
-      const { password, ...attributes } = a.dataValues;
-      return attributes;
-    });
-    return allAsociations;
+    try {
+      if (rol === 'admin') return await this.asociacionesProviders.findAll();
+      let allAsociations = await this.asociacionesProviders.findAll({ where: { isActive: true } });
+      allAsociations = allAsociations.map(a =>{
+        const { password, ...attributes } = a.dataValues;
+        return attributes;
+      });
+      return allAsociations;
+    } catch (error) {
+      throw new HttpException('Error al intentar buscar las asociaciones', 404);
+    }
   }
 
   async findOne(id: string): Promise<Asociaciones> {
@@ -229,6 +243,97 @@ export class AsociacionesService {
       return asociacion;
     } catch (error) {
       throw new HttpException(error.message, 404);
+    }
+  }
+
+  async filtName(name: string, rol: string): Promise<Asociaciones | Asociaciones[]> {
+    try {
+      const fundation = rol === 'admin' ?
+        await this.asociacionesProviders.findAll()
+        : await this.asociacionesProviders.findAll({ where: { isActive: true } });
+      return fundation.filter(a => a.nameOfFoundation.toLowerCase().includes(name.toLowerCase()));
+    } catch (error) {
+      throw new HttpException('Error to find a fundation.', 404);
+    }
+  }
+
+  async getAdoptions(id: string): Promise<Adoption | Adoption[]> {
+    try {
+      const animal = await this.animalsProviders.findAll({
+        where: {
+          as_id: id,
+          status: {
+            [Op.not]: 'homeless',
+          },
+        },
+      });
+      const animalId: string[] = animal.map(a=> a.id);
+      const adoptions = await this.adoptionsProviders.findAll({
+        where: {
+          animalID: {
+            [Op.in]: animalId,
+          },
+        },
+        include:[
+          {
+            model: Animal,
+            attributes: {
+              exclude: ['as_id', 'age_M', 'age_Y', 'registredAt'],
+            },
+          }, {
+            model: Users,
+            attributes: {
+              exclude: ['password'],
+            },
+          },
+        ],
+      });
+      return adoptions;
+    } catch (error) {
+      throw new HttpException('Error to show the adoptions.', 500);
+    }
+  }
+
+  async changePassword(changePasswordto:ChangePasswordDto):Promise<{ affectedCounts:number[], message:string } | string> {
+    try {
+      
+      if (changePasswordto.oldPassword === changePasswordto.newPassword) throw new BadRequestException('newPassword cannot be equal to oldPassword');
+      const user = await this.asociacionesProviders.findByPk(changePasswordto.id);
+      const areEqual = await compare(changePasswordto.oldPassword, user.password);
+
+      if (!areEqual) throw new ForbiddenException('Incorrect password');
+      const hashedPassword = await hash(changePasswordto.newPassword, 10);
+      const counts = await this.asociacionesProviders.update({ password:hashedPassword }, {
+        where:{ 
+          id: changePasswordto.id, 
+        },
+      });
+      if (!counts) throw new HttpException('Something went wrong', 500);
+      return { affectedCounts: counts, message: 'Changed password successfully' };
+    } catch (error) {
+      return error;
+    }   
+  }
+
+  async changeEmail(body:ChangeEmailDto):Promise<string | HttpException> {
+    try {
+      const { id, newEmail, password } = body;
+      const asociacion = await this.asociacionesProviders.findByPk(id);
+      if (!asociacion) throw new NotFoundException('No se encontró a la asociacion');
+      if (await !compare(password, asociacion.password)) throw new BadRequestException('Contraseña incorrecta');
+      asociacion.newEmail = newEmail;
+      asociacion.save();
+
+      //Sending verification mail
+      const date = new Date();
+      const code = await hash(`${date.getTime()}`, 10);
+
+      this.mailsService.sendMails({ firstName:asociacion.nameOfFoundation, email:newEmail, id:asociacion.id, code:code }, 'VERIFY_USER');
+
+      return 'changeEmailStep1 completly successfully';
+
+    } catch (error) {
+      return new HttpException(error.message, error.response.statusCode);
     }
   }
 }

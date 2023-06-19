@@ -1,5 +1,7 @@
 export class CreateCommentDto {
-  userId: string;
+  userId?: string;
+
+  asocId?: string;
 
   pubId?: string;
 

@@ -10,6 +10,7 @@ import { Animal } from '../../animals/animals.entity';
 import { Publications } from '../../publications_users/entity/publications_users.entity';
 import { Comments } from '../../coments/entity/comments.entity';
 import { Donations } from '../../donations/entity/donations.entity';
+import { UserRole } from 'src/auth/dto/login.dto';
 
 @Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
@@ -45,6 +46,13 @@ export class Users extends Model {
   @Column
     isGoogle: boolean;
 
+  @Column({
+    type:DataType.ENUM,
+    values: [ UserRole.USER, UserRole.ADMIN ],
+    allowNull:false,
+  })
+    rol: string;
+
   @Column
     isActive: boolean;
 
@@ -74,4 +82,9 @@ export class Users extends Model {
     defaultValue:false,
   })
     verified:boolean;
+
+  @Column({
+    type:DataType.STRING,
+  })
+    newEmail:string;
 }

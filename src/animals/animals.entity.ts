@@ -35,7 +35,7 @@ export class Animal extends Model {
 
   @ForeignKey(() => Users)
     userId: string;
-    
+
   @BelongsTo(() => Users)
     userAnimal: Users[];
 
@@ -69,7 +69,7 @@ export class Animal extends Model {
     allowNull:false,
   })
     description: string;
-  
+
   @Column({
     type: DataType.ARRAY(DataType.STRING),
   })
@@ -80,25 +80,25 @@ export class Animal extends Model {
     allowNull: false,
   })
     country: string;
-    
+
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
     state: string;
- 
+
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-    city: string;    
+    city: string;
 
   @Column
-    age_M: string;  
+    age_M: string;
 
   @Column
-    age_Y: string;  
+    age_Y: string;
 
   @Column
-    weight: string;  
+    weight: string;
 }

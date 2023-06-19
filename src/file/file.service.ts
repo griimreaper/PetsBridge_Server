@@ -15,7 +15,6 @@ export class FileService {
   async createFiles(files: any) {
     try {
       if (!Array.isArray(files)) {
-
         const uploadPromise = await cloudinary.uploader.upload(files.path, { folder: 'Upload' }, (error, result) => {
           if (error) {
             throw new HttpException(error.message, 404);

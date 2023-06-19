@@ -26,4 +26,5 @@ export const templates = {
   resetPassword: pug.compileFile('views/password/resetPassword.pug'),
   verifyUser: pug.compileFile('views/user/verifyUser.pug'),
   adoptPet: pug.compileFile('views/adoption/adopt.pug'),
+  donate: pug.compileFile('views/donation/donate.pug'),
 };
