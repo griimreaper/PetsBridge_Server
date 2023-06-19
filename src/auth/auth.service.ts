@@ -110,40 +110,36 @@ export class AuthService {
   }
 
   async forgotPassword(email:string) {
-    try {
 
-      if (!email) {
-        throw new BadRequestException('Must provide a valid email');
-      }
-
-      //Checking if email is registered
-      const asociacion =  await this.asociacionesService.findByEmail(email);
-      const user = await this.usersService.findByEmail(email);
-
-
-      if (!user && !asociacion) throw new NotFoundException('This user is not registered');
-
-      /*       const date = new Date();
-      const token = await hash(`${date.getTime()}`, 10); */
-      let token;
-
-      if (user) {
-        token = await this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
-        user.reset = token;
-        await user.save();
-        await this.mailsService.sendMails(user.dataValues, 'RESET_PASSWORD');
-      }
-      if (asociacion) {
-        token = await this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
-        asociacion.reset = token;
-        await asociacion.save();
-        await this.mailsService.sendMails(asociacion.dataValues, 'RESET_PASSWORD');
-      }
-      return { message:'Check your email for a token' };
-    } catch (error) {
-      console.error(error);
-      return new HttpException(error.message, error.response.statusCode);
+    if (!email) {
+      return { mesage:'Must provide a valid email', status:400 };
     }
+
+    //Checking if email is registered
+    const asociacion =  await this.asociacionesService.findByEmail(email);
+    const user = await this.usersService.findByEmail(email);
+
+
+    if (!user && !asociacion) return { message:'Email no registrado', status:400 };
+    console.log('lalalal');
+
+    /*       const date = new Date();
+      const token = await hash(`${date.getTime()}`, 10); */
+    let token;
+
+    if (user) {
+      token = await this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
+      user.reset = token;
+      await user.save();
+      await this.mailsService.sendMails(user.dataValues, 'RESET_PASSWORD');
+    }
+    if (asociacion) {
+      token = await this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
+      asociacion.reset = token;
+      await asociacion.save();
+      await this.mailsService.sendMails(asociacion.dataValues, 'RESET_PASSWORD');
+    }
+    return { message:'Check your email for a token', status:200 };
   }
 
   async verifyToken( token:string | string[], rol?:string):Promise<any> {
@@ -160,7 +156,7 @@ export class AuthService {
       } catch (error) {
         console.error(asociacion);
       }
-      if (!user && !asociacion) throw new NotFoundException('Token erróneo');
+      if (!user && !asociacion) return { message:'Token erróneo', status:404 };
 
       if (user) {
 
@@ -186,16 +182,16 @@ export class AuthService {
     }
   }
 
-  async createNewPassword(newPassword, reset:string | string[]):Promise<string> {
+  async createNewPassword(newPassword, reset:string | string[]):Promise<any> {
 
     try {
-      if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
+      if (!(reset && newPassword)) return { message:'All fields are required', status:400 };
 
       //Checking if it's a user or an asociation
       const user = await this.usersService.findByToken(reset);
       const asociacion = await this.asociacionesService.findByToken(reset);
 
-      if (!user && !asociacion) throw new NotFoundException('Something went wrong');
+      if (!user && !asociacion) return { message:'Something went wrong', status:500 };
 
       const hashedPassword = await hash(newPassword, 10);
       if (user) {
