@@ -69,8 +69,8 @@ export class AuthController {
   @Post('forgot-password')
   async forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email.email);
-  }
-
+  }   
+    
   @UseGuards(JwtAuthGuard)
   @Post('verify-token')
   async veriftToken(@Body() body, @Res() response: Response, @Req() request:Request) {
@@ -84,7 +84,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Patch('create-password')
   async createNewPassword(@Body() newPassword, @Req() request:Request) {
-    return this.authService.createNewPassword(newPassword.newPassword, request.headers.reset);
+    const { reset } = request.headers;
+    return this.authService.createNewPassword(newPassword.newPassword, reset);
   }
 
   @UseGuards(JwtAuthGuard)
