@@ -113,4 +113,11 @@ export class Animal extends Model {
     allowNull:false,
   })
     email:string;
+
+  @Column({
+    type:DataType.STRING,
+    allowNull:false,
+  })
+    urlContact:string;
+    
 }
