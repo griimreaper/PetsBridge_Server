@@ -121,7 +121,6 @@ export class AuthService {
 
 
     if (!user && !asociacion) return { message:'Email no registrado', status:400 };
-    console.log('lalalal');
 
     /*       const date = new Date();
       const token = await hash(`${date.getTime()}`, 10); */
