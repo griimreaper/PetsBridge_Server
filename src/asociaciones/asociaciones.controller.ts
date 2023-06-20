@@ -45,7 +45,7 @@ export class AsociacionesController {
   async getAll(
   @GetUser() user: any,
   ) {
-    return this.asociacionesService.findAll(user.rol);
+    return this.asociacionesService.findAll(user?.rol);
   }
 
   @UseGuards(JwtAuthGuard)
