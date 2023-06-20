@@ -19,11 +19,6 @@ async function bootstrap() {
 
   app.enableCors(CORS);
 
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-  });
-
   //app.use(morgan('dev'));
 
   const document = SwaggerModule.createDocument(app, options);
