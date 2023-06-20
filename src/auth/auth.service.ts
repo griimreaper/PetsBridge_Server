@@ -102,7 +102,7 @@ export class AuthService {
         return user;
       case 'fundation':
         const asociacion = await this.asociacionesService.create(body);
-        this.mailsService.sendMails(asociacion.asociacion.dataValues, 'VERIFY_USER');
+        this.mailsService.sendMails({ ...asociacion.asociacion.dataValues, code:code }, 'VERIFY_USER');
         return asociacion;
       default:
         return { send: 'No se ha recibido un rol', status: 400 };
@@ -122,7 +122,7 @@ export class AuthService {
 
     if (!user && !asociacion) return { message:'Email no registrado', status:400 };
 
-      let token;
+    let token;
 
     if (user) {
       token = await this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
@@ -240,33 +240,37 @@ export class AuthService {
       try {
         user = await this.usersService.findById(id);
       } catch (error) {
-        throw new HttpException(error.message, 404);
+        console.log(error.message);
       }
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        throw new HttpException(error.message, 404);
+        return { message:'Usuario no registrado', status:404 };
       }
 
       //New email verification
       try {
-        if (user.newEmail) {
-          user.email = user.newEmail;
-          await user.save();
-          return 'Changed email successfully';
+        if (user) {
+          if (user.verified) {
+            user.email = user.newEmail;
+            await user.save();
+            return 'Changed email successfully';
+          }
         }
       } catch (error) {
-        throw new HttpException(error.message, 404);
+        return { message:error.message, status:error.status };
       }
       try {
-        if (asociacion.newEmail) {
-          asociacion.email = asociacion.newEmail;
-          await asociacion.save();
-          return 'Changed email successfully';
+        if (asociacion ) {
+          if (asociacion.verified) {
+            asociacion.email = asociacion.newEmail;
+            await asociacion.save();
+            return 'Changed email successfully';
+          }
         }
       } catch (error) {
-        throw new HttpException(error.message, 404);
-      }
+        return { message:error.message, status:error.status };
+      } 
 
       //Normal verification
       if (user) {
@@ -282,7 +286,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
-      throw new HttpException(error.message, 404);
+      return { message:error.message, status:error.status };
     }
   }
 }
