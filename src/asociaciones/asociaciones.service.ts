@@ -11,7 +11,8 @@ import { IDataFake } from './interface/Iservice.interface';
 import { Adoption } from 'src/adoptions/adoptions.entity';
 import { Op } from 'sequelize';
 import { ChangeEmailDto, ChangePasswordDto } from './dto/changeLoginData.dto';
-import { MailsService } from 'src/mails/mails.service';
+import { MailsService } from '../mails/mails.service';
+import { ErrorsDto } from '../constants/dto/errors.dto';
 
 @Injectable()
 export class AsociacionesService {
@@ -315,7 +316,7 @@ export class AsociacionesService {
     }   
   }
 
-  async changeEmail(body:ChangeEmailDto):Promise<any> {
+  async changeEmail(body:ChangeEmailDto):Promise<string | ErrorsDto> {
     try {
       const { id, newEmail, password } = body;
       const asociacion = await this.asociacionesProviders.findByPk(id);
