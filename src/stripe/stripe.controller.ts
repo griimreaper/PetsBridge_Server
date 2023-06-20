@@ -43,11 +43,12 @@ export class StripeController {
       const donationsDb = await this.donationRepository.create({
         ...donations,
       });
+
       const conso = await this.stripeService.getDonationById(donationsDb.id);
-      this.mailsService.sendMails({ donation:donationsDb, 
+      this.mailsService.sendMails({ donation:donationsDb,
         asociacion: conso.dataValues.asociacion.nameOfFoundation }, 'DONATE');
 
-      response.status(HttpStatus.CREATED).json({ link: donationsDb });
+      response.status(HttpStatus.CREATED).json({ link: donations });
     } catch (error) {
       response.status(HttpStatus.BAD_REQUEST).json(error);
     }

@@ -36,7 +36,6 @@ export class AnimalsController {
     return this.animalsService.filtSpecie(filtro);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   detail(@Param('id') id: string) {
     return this.animalsService.getPet(id);
@@ -60,7 +59,6 @@ export class AnimalsController {
     return  this.animalsService.postPet(pet, file);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/animalAsoc/:id')
   animalByAssoc(@Param('id') id: string): Promise<Asociaciones> {
     return this.animalsService.animalAssoc(id);
@@ -113,12 +111,5 @@ export class AnimalsController {
     } catch (error) {
       throw new HttpException('Este animal no existe.', 400);
     }
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch('animals-update/:id')
-  @UseInterceptors(FilesInterceptor('file', 5, multerConfig))
-  async updateAnimal(@Param('id') id:string, @Body() pet: AnimalDto, @UploadedFiles() file:Express.Multer.File[] ) {
-    return this.animalsService.patchAnimals(id, pet, file);
   }
 }
