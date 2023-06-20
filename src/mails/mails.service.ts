@@ -24,7 +24,7 @@ export class MailsService {
       case 'VERIFY_USER':
         html = await templates.verifyUser({
           username:data.firstName ? data.firstName : data.nameOfFoundation,
-          //link: `https://localhost:3001/${data.code}/${data.id}`,
+          link: `http://localhost:3001/verification/${data.code}/${data.id}`, // para el deploy https://petbridge-8ia1vktc5-maxihorta.vercel.app/${data.code}/${data.id}
         });
         await transporter.sendMail({
           to:data.email,

@@ -19,4 +19,5 @@ export interface AnimalDto {
   email: string,
   phone: string,
   urlContac: string,
+  status: string,
 }

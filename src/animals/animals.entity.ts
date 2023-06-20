@@ -116,7 +116,6 @@ export class Animal extends Model {
 
   @Column({
     type:DataType.STRING,
-    allowNull:false,
   })
     urlContact:string;
     

@@ -102,7 +102,7 @@ export class AnimalsService {
         as_id: pet.as_id,
         userId: pet.userId,
         specie: pet.specie,
-        status: 'homeless',
+        status: pet.status,
         description: pet.description,
         image: urls,
         country: pet.country,
@@ -183,6 +183,25 @@ export class AnimalsService {
       return animales.filter(a => a.name.toLowerCase().includes(name.toLowerCase()));
     } catch (error) {
       throw new HttpException('Error to find a animal.', 404);
+    }
+  }
+
+  async patchAnimals(id:string, newValues:any, file?: Express.Multer.File[]):Promise<any> {
+    try {
+      const urls: any = Array.isArray(file) ? await this.fileService.createFiles(file) : null;
+      const counts = await this.animalsRepository.update({ ...newValues, image:urls }, {
+        where:{
+          id:id,
+        },
+      });
+      if ( counts ) {
+        const animal = await this.animalsRepository.findByPk(id);
+        return { animal:animal, message:'Actualización exitosa' };
+      } else {
+        throw new Error('Something went wrong');
+      }
+    } catch (error) {
+      return error.message;
     }
   }
 }
