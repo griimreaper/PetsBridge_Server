@@ -11,6 +11,7 @@ import {
   IValidateAsociaciones,
 } from './interface/IValidate.interface';
 import { MailsService } from '../mails/mails.service';
+import { ErrorsDto } from '../constants/dto/errors.dto';
 
 @Injectable()
 export class AuthService {
@@ -57,13 +58,17 @@ export class AuthService {
     throw new HttpException('PASSWORD INCORRECT', 403);
   }
 
-  async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string }> {
-    const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
-    //if (!verified) throw new ForbiddenException('Este usuario no está verificado');
-    const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
-    const token = this.jwtService.sign(payload);
+  async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string } | ErrorsDto> {
+    try {
+      const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
+      if (!verified) throw new ForbiddenException('Este usuario no está verificado');
+      const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
+      const token = this.jwtService.sign(payload);
 
-    return { token };
+      return { token };
+    } catch (error) {
+      return { message:error.message, status:error.status };
+    }
   }
 
   async register(register: any, image?: Express.Multer.File) {
@@ -233,7 +238,7 @@ export class AuthService {
     }
   }
 
-  async verifyUser(id:string) {
+  async verifyUser(id:string):Promise<string | ErrorsDto> {
     try {
       let user;
       let asociacion;
@@ -251,7 +256,7 @@ export class AuthService {
       //New email verification
       try {
         if (user) {
-          if (user.verified) {
+          if (user.newEmail) {
             user.email = user.newEmail;
             await user.save();
             return 'Changed email successfully';
@@ -262,7 +267,7 @@ export class AuthService {
       }
       try {
         if (asociacion ) {
-          if (asociacion.verified) {
+          if (asociacion.newEmail) {
             asociacion.email = asociacion.newEmail;
             await asociacion.save();
             return 'Changed email successfully';
