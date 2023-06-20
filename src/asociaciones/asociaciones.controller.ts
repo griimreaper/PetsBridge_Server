@@ -41,7 +41,6 @@ export class AsociacionesController {
     return this.asociacionesService.filtName(name, user.rol);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(
   @GetUser() user: any,
