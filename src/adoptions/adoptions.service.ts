@@ -64,7 +64,7 @@ export class AdoptionsService {
       const { animal, user } = adoptionData.dataValues;
       this.mailsService.sendMails({
         petName:animal.dataValues.name,
-        sername:user.dataValues.firstName,
+        username:user.dataValues.firstName,
         email:user.dataValues.email,
       },
       'ADOPT');
