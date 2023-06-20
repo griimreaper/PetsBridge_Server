@@ -251,7 +251,7 @@ export class AuthService {
       //New email verification
       try {
         if (user) {
-          if (user.verified) {
+          if (user.newEmail) {
             user.email = user.newEmail;
             await user.save();
             return 'Changed email successfully';
@@ -262,7 +262,7 @@ export class AuthService {
       }
       try {
         if (asociacion ) {
-          if (asociacion.verified) {
+          if (asociacion.newEmail) {
             asociacion.email = asociacion.newEmail;
             await asociacion.save();
             return 'Changed email successfully';
