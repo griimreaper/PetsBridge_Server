@@ -15,11 +15,11 @@ export const databaseProviders = [
       const sequelize = new Sequelize({
         dialect: 'postgres',
         dialectModule: require('pg'),
-        host: process.env.DP_HOST,
-        port: parseInt(process.env.DP_PORT),
-        username: process.env.DP_USERNAME,
-        password: process.env.DP_PASSWORD,
-        database: process.env.DP_DATABASE,
+        host: process.env.DB_HOST,
+        port: parseInt(process.env.DB_PORT),
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
         logging: false,
         native: false,
       });
