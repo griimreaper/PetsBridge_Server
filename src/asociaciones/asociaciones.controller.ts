@@ -41,7 +41,13 @@ export class AsociacionesController {
     return this.asociacionesService.filtName(name, user.rol);
   }
 
- 
+  @Get('get')
+  async getAll2(
+  ) {
+    return this.asociacionesService.findAll(null);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(
   @GetUser() user: any,
@@ -70,7 +76,7 @@ export class AsociacionesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('delete/:id')
+  @Delete(':id')
   async deleteById(
   @GetUser() user: any,
     @Param('id') idAsociacion: string) {

@@ -48,7 +48,10 @@ export class AnimalsService {
 
   async getAllPets():Promise<Animal[]> {
     try {
-      const animals = await this.animalsRepository.findAll();
+      const animals = await this.animalsRepository.findAll({ include: {
+        model: Asociaciones,
+        attributes: ['nameOfFoundation'],
+      } });
       return animals;
     } catch (error) {
       throw new HttpException(error.message, 404);
