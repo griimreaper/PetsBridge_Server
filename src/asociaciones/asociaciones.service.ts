@@ -315,12 +315,16 @@ export class AsociacionesService {
     }   
   }
 
-  async changeEmail(body:ChangeEmailDto):Promise<string | HttpException> {
+  async changeEmail(body:ChangeEmailDto):Promise<any> {
     try {
       const { id, newEmail, password } = body;
       const asociacion = await this.asociacionesProviders.findByPk(id);
       if (!asociacion) throw new NotFoundException('No se encontró a la asociacion');
-      if (await !compare(password, asociacion.password)) throw new BadRequestException('Contraseña incorrecta');
+
+      const rightPassword = await compare(password, asociacion.password);
+      if (!rightPassword) throw new BadRequestException('Contraseña incorrecta');
+
+      if (asociacion.email === newEmail) throw new BadRequestException('El nuevo email no puede ser igual al anterior');
       asociacion.newEmail = newEmail;
       asociacion.save();
 
@@ -333,7 +337,7 @@ export class AsociacionesService {
       return 'changeEmailStep1 completly successfully';
 
     } catch (error) {
-      return new HttpException(error.message, error.response.statusCode);
+      return { message:error.message, status:error.status };
     }
   }
 }
