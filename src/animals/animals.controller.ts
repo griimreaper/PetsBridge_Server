@@ -14,7 +14,6 @@ import { Animal } from './animals.entity';
 export class AnimalsController {
   constructor(private animalsService: AnimalsService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get('/paginate')
   animalPaginate(@Query('currentPage') currentPage: string, @Query('slicePage') slicePage: string) {
     return this.animalsService.paginate(Number(currentPage), Number(slicePage));
@@ -32,7 +31,6 @@ export class AnimalsController {
     return this.animalsService.generateAnimal();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/filtro')
   filtSpecie( @Query('filtro') filtro: string) {
     return this.animalsService.filtSpecie(filtro);
@@ -44,7 +42,6 @@ export class AnimalsController {
     return this.animalsService.getPet(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   allPets() {
     return this.animalsService.getAllPets();
