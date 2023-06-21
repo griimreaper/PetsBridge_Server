@@ -30,7 +30,7 @@ export class UsersService {
 
   async findAll(rol: string): Promise<Users[]> {
     try {
-      if (rol === 'admin') return await this.serviceUsers.findAll();
+      if (rol === 'admin') return await this.serviceUsers.findAll({ where: { rol: 'user' } });
       let allUsers = await this.serviceUsers.findAll({ where: { isActive: true } });
       allUsers = allUsers.map(u => {
         const { password, ...attributes } = u.dataValues;
