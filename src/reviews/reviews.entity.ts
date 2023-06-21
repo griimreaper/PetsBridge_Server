@@ -1,7 +1,8 @@
 import { Table, Model, Column, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { Users } from '../users/entity/users.entity';
+import { Asociaciones } from '../asociaciones/entity/asociaciones.entity';
 
-const values = [ '1', '1.5', '2', '2.5', '3', '3.5', '4', ' 4.5', '5' ];
+const values = [ '0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5' ];
 
 @Table({
   timestamps:true,
@@ -16,8 +17,17 @@ export class Review extends Model {
   })
     id: string;
 
+  @ForeignKey(() => Asociaciones)
+  @Column({
+    type:DataType.UUID,
+  })
+    idAsociacion: string;
+
   @ForeignKey(() => Users)
-    id_user: string;
+  @Column({
+    type:DataType.UUID,
+  })
+    idUser: string;
 
   @Column({
     type:DataType.STRING,
@@ -34,4 +44,7 @@ export class Review extends Model {
 
   @BelongsTo(() => Users)
     user: Users;
+
+  @BelongsTo(() => Asociaciones)
+    asociacion: Asociaciones;
 }
