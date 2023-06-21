@@ -61,7 +61,7 @@ export class AuthService {
   async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string } | ErrorsDto> {
     try {
       const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
-      if (!verified) throw new ForbiddenException('Este usuario no está verificado');
+      // if (!verified) throw new ForbiddenException('Este usuario no está verificado');
       const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
       const token = this.jwtService.sign(payload);
 
