@@ -30,7 +30,7 @@ export class UsersService {
 
   async findAll(rol: string): Promise<Users[]> {
     try {
-      if (rol === 'admin') return await this.serviceUsers.findAll();
+      if (rol === 'admin') return await this.serviceUsers.findAll({ where: { rol: 'user' } });
       let allUsers = await this.serviceUsers.findAll({ where: { isActive: true } });
       allUsers = allUsers.map(u => {
         const { password, ...attributes } = u.dataValues;
@@ -229,12 +229,16 @@ export class UsersService {
     }   
   }
 
-  async changeEmail(body:ChangeEmailDto):Promise<string | HttpException> {
+  async changeEmail(body:ChangeEmailDto):Promise<any> {
     try {
       const { id, newEmail, password } = body;
       const user = await this.serviceUsers.findByPk(id);
       if (!user) throw new NotFoundException('No se encontró al usuario');
-      if (await !compare(password, user.password)) throw new BadRequestException('Contraseña incorrecta');
+
+      const rightPassword = await compare(password, user.password);
+      if (!rightPassword) throw new BadRequestException('Contraseña incorrecta');
+
+      if (user.email === newEmail) throw new BadRequestException('El nuevo email no puede ser igual al anterior');
       user.newEmail = newEmail;
       user.save();
 
@@ -247,7 +251,7 @@ export class UsersService {
       return 'changeEmailStep1 completly successfully';
 
     } catch (error) {
-      return new HttpException(error.message, error.response.statusCode);
+      return { message:error.message, status:error.status };
     }
   }
 }
