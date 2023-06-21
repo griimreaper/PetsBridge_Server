@@ -7,6 +7,7 @@ import { Adoption } from '../adoptions/adoptions.entity';
 import { Donations } from '../donations/entity/donations.entity';
 import { Comments } from '../coments/entity/comments.entity';
 import { RedSocial } from '../asociaciones/entity/redSocial.entity';
+import { Review } from '../reviews/reviews.entity';
 
 export const databaseProviders = [
   {
@@ -32,6 +33,7 @@ export const databaseProviders = [
         Adoption,
         Comments,
         RedSocial,
+        Review,
       ]);
       try {
         await sequelize.sync({ force: true });

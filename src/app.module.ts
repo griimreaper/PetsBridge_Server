@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { AdoptionsModule } from './adoptions/adoptions.module';
 import { StripeModule } from './stripe/stripe.module';
 import { MailsModule } from './mails/mails.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MailsModule } from './mails/mails.module';
     AuthModule,
     StripeModule,
     MailsModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

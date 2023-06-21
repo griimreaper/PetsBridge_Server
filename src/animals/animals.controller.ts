@@ -112,4 +112,11 @@ export class AnimalsController {
       throw new HttpException('Este animal no existe.', 400);
     }
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('animals-update/:id')
+  @UseInterceptors(FilesInterceptor('file', 5, multerConfig))
+  async updateAnimal(@Param('id') id:string, @Body() pet: AnimalDto, @UploadedFiles() file:Express.Multer.File[] ) {
+    return this.animalsService.patchAnimals(id, pet, file);
+  }
 }
