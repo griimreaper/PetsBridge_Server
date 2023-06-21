@@ -1,5 +1,7 @@
 export interface ReviewsDto {
-  id_user : string;
+  idUser? : string;
+
+  idAsociacion?: string;
 
   review :  string;
 
@@ -7,7 +9,6 @@ export interface ReviewsDto {
 }
 
 export interface ConditionalReviewsDto {
-  id_user? : string;
 
   review? :  string;
 
