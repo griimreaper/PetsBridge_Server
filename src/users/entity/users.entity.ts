@@ -11,6 +11,7 @@ import { Publications } from '../../publications_users/entity/publications_users
 import { Comments } from '../../coments/entity/comments.entity';
 import { Donations } from '../../donations/entity/donations.entity';
 import { UserRole } from 'src/auth/dto/login.dto';
+import { Review } from '../../reviews/reviews.entity';
 
 @Table({ tableName: 'users', timestamps: false })
 export class Users extends Model {
@@ -87,4 +88,7 @@ export class Users extends Model {
     type:DataType.STRING,
   })
     newEmail:string;
+
+  @HasMany(() => Review)
+    review: Review;
 }

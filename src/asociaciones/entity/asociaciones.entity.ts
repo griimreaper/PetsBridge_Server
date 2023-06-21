@@ -4,6 +4,7 @@ import { RedSocial } from './redSocial.entity';
 import { Donations } from 'src/donations/entity/donations.entity';
 import { Publications } from 'src/publications_users/entity/publications_users.entity';
 import { Comments } from 'src/coments/entity/comments.entity';
+import { Review } from '../../reviews/reviews.entity';
 
 @Table({ tableName: 'asociaciones', timestamps: false })
 export class Asociaciones extends Model {
@@ -82,5 +83,8 @@ export class Asociaciones extends Model {
     type:DataType.STRING,
   })
     newEmail:string;
+
+  @HasMany(() => Review)
+    review: Review;
 
 }
