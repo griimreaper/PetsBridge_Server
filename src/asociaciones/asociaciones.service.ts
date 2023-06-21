@@ -38,7 +38,7 @@ export class AsociacionesService {
   async findAll(rol: string): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
     try {
-      if (rol === 'admin') return await this.asociacionesProviders.findAll();
+      if (rol === 'admin') return await this.asociacionesProviders.findAll({ include: Animal });
       let allAsociations = await this.asociacionesProviders.findAll({ where: { isActive: true } });
       allAsociations = allAsociations.map(a =>{
         const { password, ...attributes } = a.dataValues;
