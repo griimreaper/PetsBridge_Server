@@ -36,7 +36,7 @@ export const databaseProviders = [
         Review,
       ]);
       try {
-        await sequelize.sync({ force: true });
+        await sequelize.sync({ force: false });
       } catch (error) {
         console.error('SEQUALIZE SYNC ERROR: ', error);
       }
