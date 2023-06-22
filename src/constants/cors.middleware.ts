@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class CorsMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const allowedOrigins = ['https://petbridge.vercel.app', 'https://pet-bridge.vercel.app', 'http://localhost:3000'];
+    const allowedOrigins = ['https://petbridge.vercel.app', 'https://pet-bridge-client.vercel.app', 'http://localhost:3000'];
     const origin = req.headers.origin;
 
     if (allowedOrigins.includes(origin)) {
