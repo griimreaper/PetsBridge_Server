@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AsociacionesModule } from './asociaciones/asociaciones.module';
@@ -14,7 +14,6 @@ import { DonationsModule } from './donations/donations.module';
 import { AuthModule } from './auth/auth.module';
 import { AdoptionsModule } from './adoptions/adoptions.module';
 import { StripeModule } from './stripe/stripe.module';
-import { CorsMiddleware } from './constants/cors.middleware';
 import { MailsModule } from './mails/mails.module';
 import { ReviewsModule } from './reviews/reviews.module';
 
@@ -41,11 +40,7 @@ import { ReviewsModule } from './reviews/reviews.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CorsMiddleware).forRoutes('*');
-  }
-    
+export class AppModule {
   static port: number;
     
     

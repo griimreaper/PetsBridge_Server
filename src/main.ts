@@ -18,7 +18,12 @@ async function bootstrap() {
 
 
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['https://petbridge.vercel.app', 'https://pet-bridge.vercel.app', 'http://localhost:3000', 'http://localhost:3001', 'https://pet-bridge-client.vercel.app'],
+    allowedHeaders: 'Content-Type, Authorization',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
 
   // app.use(morgan('dev'));
 
@@ -27,7 +32,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document, {
     explorer: true,
     swaggerOptions: {
-      filter:true,
+      filter: true,
       showRequestDuration: true,
     },
   });
