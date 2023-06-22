@@ -30,7 +30,7 @@ export class UsersService {
 
   async findAll(rol: string): Promise<Users[]> {
     try {
-      if (rol === 'admin') return await this.serviceUsers.findAll({ where: { rol: 'user' } });
+      if (rol === 'admin') return await this.serviceUsers.findAll();
       let allUsers = await this.serviceUsers.findAll({ where: { isActive: true } });
       allUsers = allUsers.map(u => {
         const { password, ...attributes } = u.dataValues;
@@ -133,10 +133,13 @@ export class UsersService {
       password,
       country,
       isGoogle,
+      rol,
       isActive,
     },
+    admin: string,
     profilePic?: any,
   ): Promise<string> {
+
     try {
       if (
         !first_Name &&
@@ -162,6 +165,7 @@ export class UsersService {
         if (profilePic) user.image = profilePic;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
+        if (rol && admin === 'admin') user.rol = rol;
         await user.save();
         return 'Actualizado';
       } else {
