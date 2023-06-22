@@ -19,7 +19,6 @@ export class AnimalsController {
     return this.animalsService.paginate(Number(currentPage), Number(slicePage));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/search')
   searchByName(@Query('name') name: string) {
     return this.animalsService.filtName(name);
