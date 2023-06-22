@@ -7,7 +7,9 @@ export class CorsMiddleware implements NestMiddleware {
     res.header('Access-Control-Allow-Origin', 'https://petbridge.vercel.app');
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Credentials', 'true')
+    
+    ;
     
     if (req.method === 'OPTIONS') {
       // Respond to preflight requests
