@@ -194,15 +194,23 @@ export class AnimalsService {
       const animal = await this.animalsRepository.findByPk(id);
       if (!animal) throw new NotFoundException('Mascota no registrada');
 
-
       const urls: any = Array.isArray(file) ? await this.fileService.createFiles(file) : null;
 
-
-      const counts = await this.animalsRepository.update({ ...newValues, image:urls }, {
-        where:{
-          id:id,
-        },
-      });
+      let counts;
+      if (urls) {
+        counts = await this.animalsRepository.update({ ...newValues, image:urls }, {
+          where:{
+            id:id,
+          },
+        });
+      } else {
+        counts = await this.animalsRepository.update({ ...newValues }, {
+          where:{
+            id:id,
+          },
+        });
+      }
+      
       //const animal = await this.animalsRepository.findByPk(id);
       if ( counts.length ) {
         return { animal:animal, message:'Actualización exitosa' };

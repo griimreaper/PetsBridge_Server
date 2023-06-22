@@ -69,11 +69,11 @@ export class ReviewsService {
     try {
       const allReviews = await this.reviewsRepository.findAll({ include: [{
         model:Users,
-        attributes:['firstName', 'lastName'],
+        attributes:['firstName', 'lastName', 'image'],
       },
       {
         model:Asociaciones,
-        attributes:['nameOfFoundation'],
+        attributes:['nameOfFoundation', 'image'],
       },
       ],
       });
