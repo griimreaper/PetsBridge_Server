@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Review } from './reviews.entity';
 import { ReviewsDto } from './dto/reviews.dto';
 import { ConditionalReviewsDto } from './dto/reviews.dto';
@@ -21,19 +21,51 @@ export class ReviewsService {
       let user;
       let asociacion;
 
+      //Checking the user exists
       try {
         user = await this.usersService.findById(idUser);
       } catch (error) {
         console.log(error.message);
       }
       
+      //Checking the asociation exists
       try {
         asociacion = await this.asociacionesService.findOne(idAsociacion);
       } catch (error) {
         console.log(error.message);
       }
   
-      if (!user && !asociacion) throw new NotFoundException('No se encontró al usuari');
+      if (!user && !asociacion) throw new NotFoundException('No se encontró al usuario');
+
+      //Checking the user does not have a review
+      if (user) {
+        try {
+          const userMadeAReview = await this.reviewsRepository.findOne({
+            where:{
+              idUser:idUser,
+            },
+          });
+
+          if (userMadeAReview) throw new ForbiddenException('Este usuario ya hizo una reseña');
+        } catch (error) {
+          if (error.status === 403) return new HttpException(error.message, error.status);
+        }
+      }
+
+      //Checking the asociation does not have a review.
+      if (asociacion) {
+        try {
+          const asociacionMadeAReview = await this.reviewsRepository.findOne({
+            where:{
+              idAsociacion:idAsociacion,
+            },
+          });
+
+          if (asociacionMadeAReview) throw new ForbiddenException('Esta asociación ya hizo una reseña');
+        } catch (error) {
+          if (error.status === 403) return new HttpException(error.message, error.status);
+        }
+      }
 
       const newReview = await this.reviewsRepository.create({ ...review });
       if (!newReview) throw new BadRequestException('Algo salió mal');
@@ -79,6 +111,23 @@ export class ReviewsService {
       });
       return allReviews;
 
+    } catch (error) {
+      return new HttpException(error.message, error.status);
+    }
+  }
+
+  async deleteReview(id:string):Promise<string | HttpException> {
+    try {
+      const review = await this.reviewsRepository.findByPk(id);
+      if (!review) throw new BadRequestException('No existe esta reseña');
+
+      await this.reviewsRepository.destroy({
+        where:{
+          id:id,
+        },
+      });
+
+      return 'Reseña eliminada de manera exitosa';
     } catch (error) {
       return new HttpException(error.message, error.status);
     }
