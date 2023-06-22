@@ -4,7 +4,13 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class CorsMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    res.header('Access-Control-Allow-Origin', ['https://petbridge.vercel.app', 'https://pet-bridge.vercel.app', 'http://localhost:3001', 'http://localhost:3000']);
+    const allowedOrigins = ['https://petbridge.vercel.app', 'https://pet-bridge.vercel.app', 'http://localhost:3000'];
+    const origin = req.headers.origin;
+
+    if (allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+    }
+
     res.header(
       'Access-Control-Allow-Methods',
       'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
