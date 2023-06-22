@@ -35,5 +35,11 @@ export class RegisterDto {
 export class LoginDto {
   email: string;
 
-  password: string;
+  password?: string;
+
+  google: boolean;
+
+  firstName?: string;
+
+  image?: string;
 }

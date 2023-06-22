@@ -125,9 +125,13 @@ export class UsersService {
 
   async update(
     id: string,
-    {
-      first_Name,
-      last_Name,
+    body: CreateUserDto,
+    admin: string,
+    image?: any,
+  ): Promise<string> {
+    const {
+      firstName,
+      lastName,
       email,
       phone,
       password,
@@ -135,19 +139,15 @@ export class UsersService {
       isGoogle,
       rol,
       isActive,
-    },
-    admin: string,
-    profilePic?: any,
-  ): Promise<string> {
-
+    } = body;
     try {
       if (
-        !first_Name &&
-        !last_Name &&
+        !firstName &&
+        !lastName &&
         !email &&
         !phone &&
         !password &&
-        !profilePic &&
+        !image &&
         !country &&
         !isGoogle &&
         !rol
@@ -155,15 +155,15 @@ export class UsersService {
         return 'Nada que actualizar';
       const user = await this.serviceUsers.findByPk(id);
       if (user) {
-        if (first_Name) user.firstName = first_Name;
-        if (last_Name) user.lastName = last_Name;
+        if (firstName) user.firstName = firstName;
+        if (lastName) user.lastName = lastName;
         if (email) user.email = email;
         if (phone) user.phone = phone;
         if (password) {
           const hashedPassword = await hash(password, 10);
           user.password = hashedPassword;
         }
-        if (profilePic) user.image = profilePic;
+        if (image) user.image = image;
         if (country) user.country = country;
         if (isGoogle) user.isGoogle = isGoogle;
         if (rol && admin === 'admin') user.rol = rol;

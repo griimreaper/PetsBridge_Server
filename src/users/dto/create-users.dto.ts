@@ -1,20 +1,20 @@
 import { UserRole } from '../../auth/dto/login.dto';
 export class CreateUserDto {
-  id: number;
+  id?: number;
 
-  first_Name: string;
+  firstName?: string;
 
-  last_Name: string;
+  lastName?: string;
 
   email: string;
 
-  password: string;
+  password?: string;
 
-  profilePic: string;
+  image?: string;
 
-  country: string;
+  country?: string;
 
-  phone: number;
+  phone?: number;
 
   isGoogle: boolean;
 
