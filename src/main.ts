@@ -17,7 +17,7 @@ async function bootstrap() {
     .build();
 
 
-  app.enableCors();
+  app.enableCors(CORS);
 
   // app.use(morgan('dev'));
 
