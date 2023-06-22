@@ -149,7 +149,8 @@ export class UsersService {
         !password &&
         !profilePic &&
         !country &&
-        !isGoogle
+        !isGoogle &&
+        !rol
       )
         return 'Nada que actualizar';
       const user = await this.serviceUsers.findByPk(id);
