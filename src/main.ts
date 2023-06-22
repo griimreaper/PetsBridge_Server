@@ -20,11 +20,6 @@ async function bootstrap() {
 
   app.enableCors();
 
-  app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://petbridge.vercel.app');
-    next();
-  });
-
   // app.use(morgan('dev'));
 
   const document = SwaggerModule.createDocument(app, options);
