@@ -53,10 +53,11 @@ export class AuthController {
   }
 
   @Post('login')
-  async loginAc(@Body() loginDto: LoginDto) {
+  async loginAc(@Body() loginDto: LoginDto, @Res() res : Response) {
     const user = await this.authService.validate(loginDto);
-    const token = await this.authService.login(user);
-    return { ...token, id: user.id };
+    const token: any = await this.authService.login(user);
+
+    res.status(200).setHeader('Authorization', `${token?.token}`).json({ ...token, id: user.id });
   }
 
   @Post('forgot-password')
