@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ConditionalReviewsDto, ReviewsDto } from './dto/reviews.dto';
@@ -22,5 +22,10 @@ export class ReviewsController {
   @Get()
   getReviews() {
     return this.reviewsService.getAllReviews();
+  }
+
+  @Delete('/:id')
+  deleteReview(@Param('id') id:string) {
+    return this.reviewsService.deleteReview(id);
   }
 }
