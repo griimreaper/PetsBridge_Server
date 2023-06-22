@@ -2,11 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { CORS } from './constants';
-<<<<<<< HEAD
-import * as morgan from 'morgan';
-=======
 //import * as morgan from 'morgan';
->>>>>>> 034830657d7132540004b9ff6249005fb981be8f
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 const port = process.env.SERVER_PORT || 3001;
@@ -21,7 +17,7 @@ async function bootstrap() {
     .build();
 
 
-  app.enableCors(CORS);
+  //app.enableCors(CORS);
 
   //app.use(morgan('dev'));
 
