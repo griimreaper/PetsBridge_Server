@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CORS } from './constants';
+// import { CORS } from './constants';
 // import * as morgan from 'morgan';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
@@ -17,7 +17,7 @@ async function bootstrap() {
     .build();
 
 
-  app.enableCors(CORS);
+  app.enableCors();
 
   // app.use(morgan('dev'));
 
