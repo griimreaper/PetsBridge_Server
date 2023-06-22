@@ -74,12 +74,14 @@ export class UsersController {
     @Body() body: CreateUserDto,
     @UploadedFile() profilePic?: Express.Multer.File,
   ) {
+
     if (user.sub !== id && user.rol !== 'admin') return { resp: 'Forbidden resource', status: HttpStatus.FORBIDDEN };
+
     if (profilePic) {
       const url = await this.fileService.createFiles(profilePic);
-      return this.usersService.update(id, body, url);
+      return this.usersService.update(id, body, user.rol, url);
     }
-    return this.usersService.update(id, body);
+    return this.usersService.update(id, body, user.rol);
   }
 
   @UseGuards(JwtAuthGuard)

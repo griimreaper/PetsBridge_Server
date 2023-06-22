@@ -90,7 +90,14 @@ export class PublicationsUsersService {
         };
       }
     });
-    return newPub;
+    const sortedPublications = newPub.sort((a, b) => {
+      const dateA = new Date(a.datePublication);
+      const dateB = new Date(b.datePublication);
+      return dateB.getTime() - dateA.getTime();
+    });
+    
+    
+    return sortedPublications;
   }
 
   async findOne(id: string): Promise<Publications[]> {
