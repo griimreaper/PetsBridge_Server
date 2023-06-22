@@ -10,3 +10,7 @@ export const SKP = {
   F: process.env.FKP,
 };
 
+export const Google = {
+  Id: process.env.GOOGLE_ID,
+  Secret: process.env.GOOGLE_SECRET,
+};
