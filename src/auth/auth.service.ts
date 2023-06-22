@@ -1,9 +1,15 @@
-import { BadRequestException, ForbiddenException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AsociacionesService } from '../asociaciones/asociaciones.service';
 import { hash, compare } from 'bcrypt';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, UserRole } from './dto/login.dto';
 import { FileService } from '../file/file.service';
 import { SKP } from '../constants/jwt.constants';
 import {
@@ -20,7 +26,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
     private readonly fileService: FileService,
-    private readonly mailsService:MailsService,
+    private readonly mailsService: MailsService,
   ) {}
 
   async validate(
@@ -32,42 +38,70 @@ export class AuthService {
     const usuarios = await this.usersService.findAllToLogin();
     const usuario = usuarios.find((u) => u.email === body.email);
 
-    if (!asociacion && !usuario)
-      throw new HttpException('El email no existe', 404);
-    if (asociacion && (await compare(body.password, asociacion.password))) {
-      const result: IValidateAsociaciones = {
-        ...asociacion.dataValues,
-        rol: 'fundation',
-      };
-      return result;
-    }
-    if (
-      usuario.rol === 'admin' &&
-      body.password.includes(SKP.K) &&
-      body.password[0] === SKP.F &&
-      body.password[body.password.length - 1] === SKP.F &&
-      compare(body.password, usuario.password)
-    )
-      return { ...usuario.dataValues, rol: 'admin' };
+    if (body.google) {
+      if (!usuario) {
+        const user = await this.usersService.createUser({
+          ...body,
+          isGoogle: true,
+          isActive: true,
+          rol: UserRole.USER,
+        });
+        const usuarios2 = await this.usersService.findAllToLogin();
+        const usuario2 = usuarios2.find((u) => u.email === body.email);
+        const result: IValidateUser = { ...usuario2.dataValues, rol: 'user' };
+        return result;
+      } else {
+        const result: IValidateUser = { ...usuario.dataValues, rol: 'user' };
+        return result;
+      }
+    } else {
+      if (!asociacion && !usuario)
+        throw new HttpException('El email no existe', 404);
 
-    if (usuario && (await compare(body.password, usuario.password))) {
-      const result: IValidateUser = { ...usuario.dataValues, rol: 'user' };
-      return result;
-    }
+      if (asociacion && (await compare(body.password, asociacion.password))) {
+        const result: IValidateAsociaciones = {
+          ...asociacion.dataValues,
+          rol: 'fundation',
+        };
+        return result;
+      }
 
-    throw new HttpException('PASSWORD INCORRECT', 403);
+      if (
+        usuario.rol === 'admin' &&
+        body.password.includes(SKP.K) &&
+        body.password[0] === SKP.F &&
+        body.password[body.password.length - 1] === SKP.F &&
+        compare(body.password, usuario.password)
+      )
+        return { ...usuario.dataValues, rol: 'admin' };
+
+      if (usuario && (await compare(body.password, usuario.password))) {
+        const result: IValidateUser = { ...usuario.dataValues, rol: 'user' };
+        return result;
+      }
+
+      throw new HttpException('PASSWORD INCORRECT', 403);
+    }
   }
 
-  async login(usuario: IValidateUser | IValidateAsociaciones): Promise<{ token: string } | ErrorsDto> {
+  async login(
+    usuario: IValidateUser | IValidateAsociaciones,
+  ): Promise<{ token: string } | ErrorsDto> {
     try {
-      const { verified, isActive, isGoogle, password, id, ...toPayload } = usuario;
+      const { verified, isActive, isGoogle, password, id, ...toPayload } =
+        usuario;
       // if (!verified) throw new ForbiddenException('Este usuario no está verificado');
-      const payload = { ...toPayload, email: usuario.email, sub: id, rol: usuario.rol };
+      const payload = {
+        ...toPayload,
+        email: usuario.email,
+        sub: id,
+        rol: usuario.rol,
+      };
       const token = this.jwtService.sign(payload);
 
       return { token };
     } catch (error) {
-      return { message:error.message, status:error.status };
+      return { message: error.message, status: error.status };
     }
   }
 
@@ -103,48 +137,62 @@ export class AuthService {
     switch (rol) {
       case 'user':
         const user = await this.usersService.createUser({ ...body, rol: rol });
-        this.mailsService.sendMails({ ...user.user.dataValues, code:code }, 'VERIFY_USER');
+        this.mailsService.sendMails(
+          { ...user.user.dataValues, code: code },
+          'VERIFY_USER',
+        );
         return user;
       case 'fundation':
         const asociacion = await this.asociacionesService.create(body);
-        this.mailsService.sendMails({ ...asociacion.asociacion.dataValues, code:code }, 'VERIFY_USER');
+        this.mailsService.sendMails(
+          { ...asociacion.asociacion.dataValues, code: code },
+          'VERIFY_USER',
+        );
         return asociacion;
       default:
         return { send: 'No se ha recibido un rol', status: 400 };
     }
   }
 
-  async forgotPassword(email:string) {
-
+  async forgotPassword(email: string) {
     if (!email) {
-      return { mesage:'Must provide a valid email', status:400 };
+      return { mesage: 'Must provide a valid email', status: 400 };
     }
 
     //Checking if email is registered
-    const asociacion =  await this.asociacionesService.findByEmail(email);
+    const asociacion = await this.asociacionesService.findByEmail(email);
     const user = await this.usersService.findByEmail(email);
 
-
-    if (!user && !asociacion) return { message:'Email no registrado', status:400 };
+    if (!user && !asociacion)
+      return { message: 'Email no registrado', status: 400 };
 
     let token;
 
     if (user) {
-      token = await this.jwtService.sign({ email: user.email, sub: user.id, rol: 'user' }, { expiresIn:'10min' });
+      token = await this.jwtService.sign(
+        { email: user.email, sub: user.id, rol: 'user' },
+        { expiresIn: '10min' },
+      );
       user.reset = token;
       await user.save();
       await this.mailsService.sendMails(user.dataValues, 'RESET_PASSWORD');
     }
     if (asociacion) {
-      token = await this.jwtService.sign({ email: asociacion.email, sub: asociacion.id, rol: 'fundation' }, { expiresIn: '10min' });
+      token = await this.jwtService.sign(
+        { email: asociacion.email, sub: asociacion.id, rol: 'fundation' },
+        { expiresIn: '10min' },
+      );
       asociacion.reset = token;
       await asociacion.save();
-      await this.mailsService.sendMails(asociacion.dataValues, 'RESET_PASSWORD');
+      await this.mailsService.sendMails(
+        asociacion.dataValues,
+        'RESET_PASSWORD',
+      );
     }
-    return { message:'Check your email for a token', status:200 };
+    return { message: 'Check your email for a token', status: 200 };
   }
 
-  async verifyToken( token:string | string[], rol?:string):Promise<any> {
+  async verifyToken(token: string | string[], rol?: string): Promise<any> {
     try {
       let user;
       let asociacion;
@@ -158,41 +206,47 @@ export class AuthService {
       } catch (error) {
         throw new HttpException(error.message, 404);
       }
-      if (!user && !asociacion) return { message:'Token erróneo', status:404 };
+      if (!user && !asociacion)
+        return { message: 'Token erróneo', status: 404 };
 
       if (user) {
+        const payload =
+          rol === 'admin'
+            ? { email: user.email, sub: user.id, rol: 'admin' }
+            : { email: user.email, sub: user.id, rol: 'user' };
 
-        const payload = rol === 'admin'
-          ? { email: user.email, sub: user.id, rol: 'admin' }
-          : { email: user.email, sub: user.id, rol: 'user' };
-
-        const newToken = this.jwtService.sign(payload, { expiresIn:'10min' });
+        const newToken = this.jwtService.sign(payload, { expiresIn: '10min' });
         user.reset = newToken;
         user.save();
-        return { token:newToken, expirationTime:'10min' };
+        return { token: newToken, expirationTime: '10min' };
       }
       if (asociacion) {
-        const payload = { email: asociacion.email, sub: asociacion.id, rol: 'fundation' };
-        const newToken = this.jwtService.sign(payload, { expiresIn:'10min' });
+        const payload = {
+          email: asociacion.email,
+          sub: asociacion.id,
+          rol: 'fundation',
+        };
+        const newToken = this.jwtService.sign(payload, { expiresIn: '10min' });
         asociacion.reset = newToken;
         asociacion.save();
-        return {  token:newToken, expirationTime:'10min' };
+        return { token: newToken, expirationTime: '10min' };
       }
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
   }
 
-  async createNewPassword(newPassword, reset:string | string[]):Promise<any> {
-
+  async createNewPassword(newPassword, reset: string | string[]): Promise<any> {
     try {
-      if (!(reset && newPassword)) return { message:'All fields are required', status:400 };
+      if (!(reset && newPassword))
+        return { message: 'All fields are required', status: 400 };
 
       //Checking if it's a user or an asociation
       const user = await this.usersService.findByToken(reset);
       const asociacion = await this.asociacionesService.findByToken(reset);
 
-      if (!user && !asociacion) return { message:'Something went wrong', status:500 };
+      if (!user && !asociacion)
+        return { message: 'Something went wrong', status: 500 };
 
       const hashedPassword = await hash(newPassword, 10);
       if (user) {
@@ -211,10 +265,11 @@ export class AuthService {
     }
   }
 
-  async createAdminPassword(newPassword:string, reset:string | string[]) {
+  async createAdminPassword(newPassword: string, reset: string | string[]) {
     try {
-      if (!(reset && newPassword)) throw new BadRequestException('All fields are required');
-      let hashedPassword:string;
+      if (!(reset && newPassword))
+        throw new BadRequestException('All fields are required');
+      let hashedPassword: string;
       if (
         newPassword.includes(SKP.K) &&
         newPassword[0] === SKP.F &&
@@ -232,13 +287,12 @@ export class AuthService {
       } else {
         throw new BadRequestException('Incorrect token!');
       }
-
     } catch (error) {
       throw new HttpException(error.message, 404);
     }
   }
 
-  async verifyUser(id:string):Promise<string | ErrorsDto> {
+  async verifyUser(id: string): Promise<string | ErrorsDto> {
     try {
       let user;
       let asociacion;
@@ -250,7 +304,7 @@ export class AuthService {
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        return { message:'Usuario no registrado', status:404 };
+        return { message: 'Usuario no registrado', status: 404 };
       }
 
       //New email verification
@@ -263,10 +317,10 @@ export class AuthService {
           }
         }
       } catch (error) {
-        return { message:error.message, status:error.status };
+        return { message: error.message, status: error.status };
       }
       try {
-        if (asociacion ) {
+        if (asociacion) {
           if (asociacion.newEmail) {
             asociacion.email = asociacion.newEmail;
             await asociacion.save();
@@ -274,8 +328,8 @@ export class AuthService {
           }
         }
       } catch (error) {
-        return { message:error.message, status:error.status };
-      } 
+        return { message: error.message, status: error.status };
+      }
 
       //Normal verification
       if (user) {
@@ -291,7 +345,7 @@ export class AuthService {
       }
       return 'Verified User';
     } catch (error) {
-      return { message:error.message, status:error.status };
+      return { message: error.message, status: error.status };
     }
   }
 }

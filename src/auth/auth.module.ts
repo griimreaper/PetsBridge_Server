@@ -10,7 +10,6 @@ import { FileService } from '../file/file.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { MailsService } from '../mails/mails.service';
-import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [
@@ -22,7 +21,7 @@ import { GoogleStrategy } from './google.strategy';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, FileService, JwtAuthGuard, MailsService, GoogleStrategy],
+  providers: [AuthService, JwtStrategy, FileService, JwtAuthGuard, MailsService],
   controllers: [AuthController],
 })
 export class AuthModule {}
