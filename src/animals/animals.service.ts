@@ -191,14 +191,20 @@ export class AnimalsService {
 
   async patchAnimals(id:string, newValues:any, file?: Express.Multer.File[]):Promise<any> {
     try {
+      const animal = await this.animalsRepository.findByPk(id);
+      if (!animal) throw new NotFoundException('Mascota no registrada');
+
+
       const urls: any = Array.isArray(file) ? await this.fileService.createFiles(file) : null;
+
+
       const counts = await this.animalsRepository.update({ ...newValues, image:urls }, {
         where:{
           id:id,
         },
       });
-      if ( counts ) {
-        const animal = await this.animalsRepository.findByPk(id);
+      //const animal = await this.animalsRepository.findByPk(id);
+      if ( counts.length ) {
         return { animal:animal, message:'Actualización exitosa' };
       } else {
         throw new Error('Something went wrong');
