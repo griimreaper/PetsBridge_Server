@@ -1,17 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CORS } from './constants';
+// import * as morgan from 'morgan';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-
 const port = process.env.SERVER_PORT || 3001;
-
-const CORS: CorsOptions = {
-  origin: 'https://petbridge.vercel.app',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  credentials: true,
-};
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -22,14 +16,22 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
+
   app.enableCors(CORS);
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+  });
+
+  //app.use(morgan('dev'));
 
   const document = SwaggerModule.createDocument(app, options);
 
   SwaggerModule.setup('api/docs', app, document, {
     explorer: true,
     swaggerOptions: {
-      filter: true,
+      filter:true,
       showRequestDuration: true,
     },
   });
@@ -41,5 +43,4 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`Application running on: ${port}`);
 }
-
 bootstrap();
