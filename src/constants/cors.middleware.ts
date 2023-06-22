@@ -6,6 +6,7 @@ export class CorsMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     res.header('Access-Control-Allow-Origin', 'https://petbridge.vercel.app');
     res.header('Access-Control-Allow-Origin', 'https://pet-bridge.vercel.app');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.header(
       'Access-Control-Allow-Methods',
