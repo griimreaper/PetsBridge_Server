@@ -1,4 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AsociacionesModule } from './asociaciones/asociaciones.module';
@@ -17,6 +17,8 @@ import { StripeModule } from './stripe/stripe.module';
 import { CorsMiddleware } from './constants/cors.middleware';
 import { MailsModule } from './mails/mails.module';
 import { ReviewsModule } from './reviews/reviews.module';
+
+
 
 @Module({
   imports: [
@@ -41,12 +43,15 @@ import { ReviewsModule } from './reviews/reviews.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-    
-  static port: number;
-    
-    
-  constructor(private readonly configureService: ConfigService) {
-    AppModule.port = parseInt(configureService.get('SERVER_PORT'));
+
+export class AppModule implements NestModule {
+  constructor(private readonly configService: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    const allowedOrigins = ['https://petbridge.vercel.app', 'https://pet-bridge-client.vercel.app', 'http://localhost:3000'];
+
+    consumer
+      .apply(CorsMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

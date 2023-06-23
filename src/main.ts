@@ -3,16 +3,13 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { CORS } from './constants';
 // import * as morgan from 'morgan';
-import cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import { CorsMiddleware } from './constants/cors.middleware';
+
 const port = process.env.SERVER_PORT || 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-  app.use(CorsMiddleware);
 
   const options = new DocumentBuilder()
     .addBearerAuth()
