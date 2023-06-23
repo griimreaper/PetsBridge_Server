@@ -12,7 +12,7 @@ const port = process.env.SERVER_PORT || 3000;
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.use(new CorsMiddleware());
+  app.use(CorsMiddleware);
 
   const options = new DocumentBuilder()
     .addBearerAuth()
