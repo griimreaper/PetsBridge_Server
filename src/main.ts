@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { CORS } from './constants';
 // import * as morgan from 'morgan';
+import * as cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 
@@ -30,9 +31,11 @@ async function bootstrap() {
     },
   });
 
+
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('pug');
+  app.use(cors());
 
   await app.listen(port);
   console.log(`Application running on: ${port}`);
