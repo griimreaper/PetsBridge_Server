@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "https://pets-bridge-server.vercel.app$1",
+      "dest": "src/main.ts",
       "methods": [
         "GET",
         "POST",
@@ -17,12 +17,6 @@
         "DELETE",
         "PATCH"
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
     }
   ],
   "headers": [
