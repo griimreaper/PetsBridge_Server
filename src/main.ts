@@ -3,27 +3,22 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { CORS } from './constants';
 // import * as morgan from 'morgan';
+import cors from 'cors';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 const port = process.env.SERVER_PORT || 3001;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.use(cors());
+
   const options = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('PetsBridge')
     .setDescription('Peticiones')
     .setVersion('1.0')
     .build();
-
-
-
-  app.enableCors();
-
-  app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'https://petbridge.vercel.app');
-    next();
-  });
 
   //app.use(morgan('dev'));
 
