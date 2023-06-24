@@ -304,8 +304,10 @@ export class AuthService {
       try {
         asociacion = await this.asociacionesService.findOne(id);
       } catch (error) {
-        return { message: 'Usuario no registrado', status: 404 };
+        console.log(error.message);
       }
+
+      if (!user && !asociacion) return { message: 'Usuario no registrado', status: 404 };
 
       //New email verification
       try {
