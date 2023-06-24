@@ -1,14 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CORS } from './constants';
+// import { CORS } from './constants';
 // import * as morgan from 'morgan';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-const port = process.env.SERVER_PORT || 3001;
+
+const port = process.env.SERVER_PORT || 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
   const options = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('PetsBridge')
@@ -16,10 +18,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
-
-  app.enableCors(CORS);
-
-  // app.use(morgan('dev'));
+  //app.use(morgan('dev'));
 
   const document = SwaggerModule.createDocument(app, options);
 
@@ -30,6 +29,7 @@ async function bootstrap() {
       showRequestDuration: true,
     },
   });
+
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

@@ -13,6 +13,7 @@ import { Op } from 'sequelize';
 import { ChangeEmailDto, ChangePasswordDto } from './dto/changeLoginData.dto';
 import { MailsService } from '../mails/mails.service';
 import { ErrorsDto } from '../constants/dto/errors.dto';
+import { Donations } from 'src/donations/entity/donations.entity';
 
 @Injectable()
 export class AsociacionesService {
@@ -39,7 +40,7 @@ export class AsociacionesService {
   async findAll(rol: string): Promise<Asociaciones[]> {
     //funcion para retornar todas las asociaciones
     try {
-      if (rol === 'admin') return await this.asociacionesProviders.findAll({ include: Animal });
+      if (rol === 'admin') return await this.asociacionesProviders.findAll({ include: [Animal, Donations] });
       let allAsociations = await this.asociacionesProviders.findAll({ where: { isActive: true } });
       allAsociations = allAsociations.map(a =>{
         const { password, ...attributes } = a.dataValues;

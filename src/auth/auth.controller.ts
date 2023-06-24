@@ -3,6 +3,7 @@ import {
   Post,
   Body,
   HttpStatus,
+  Get,
   Res,
   UseInterceptors,
   UploadedFile,
@@ -52,10 +53,11 @@ export class AuthController {
   }
 
   @Post('login')
-  async loginAc(@Body() loginDto: LoginDto) {
+  async loginAc(@Body() loginDto: LoginDto, @Res() res : Response) {
     const user = await this.authService.validate(loginDto);
-    const token = await this.authService.login(user);
-    return { ...token, id: user.id };
+    const token: any = await this.authService.login(user);
+
+    res.status(200).setHeader('Authorization', `${token?.token}`).json({ ...token, id: user.id });
   }
 
   @Post('forgot-password')
@@ -92,5 +94,22 @@ export class AuthController {
   @Patch('verify')
   async verify(@Query('id') id:string) {
     return this.authService.verifyUser(id);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleLogin(): Promise<void> {
+    // Este método se ejecutará automáticamente al acceder a la ruta "/auth/google"
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleCallback(@Req() req: Request, @Res() res:Response): Promise<void> {
+    await console.log('hola'); // Aquí se encuentra el objeto con los datos del usuario autenticado
+    const user = req.user; // Accede al email del usuario
+  
+    console.log(user); // Muestra el email en la consola
+    // Este método se ejecutará automáticamente después de la autenticación exitosa en Google
+    res.redirect('/home'); // Redirige al usuario a la página deseada después de la autenticación exitosa
   }
 }

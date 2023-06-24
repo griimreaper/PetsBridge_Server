@@ -19,30 +19,31 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload:any) {
-    let user;
-    let asociacion;
-    let admin;
-    switch (payload.rol) {
-      case 'user':
-        try {
-          user = await this.usersService.findById(payload.sub);
-        } catch (error) {
-          console.log(error.message);
-        }
-      case 'fundation':
-        try {
-          asociacion = await this.asociacionesService.findOne(payload.sub);
-        } catch (error) {
-          console.log(error.message);
-        }
-      case 'admin':
-        try {
-          admin = await this.usersService.findById(payload.sub);
-        } catch (error) {
-          console.log(error.message);
-        }
-    }
-    if (!user && !asociacion && !admin) throw new UnauthorizedException('You are not authorized to perform the operation');
+    console.log(payload);
+    // let user;
+    // let asociacion;
+    // let admin;
+    // switch (payload.rol) {
+    //   case 'user':
+    //     try {
+    //       user = await this.usersService.findById(payload.sub);
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    //   case 'fundation':
+    //     try {
+    //       asociacion = await this.asociacionesService.findOne(payload.sub);
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    //   case 'admin':
+    //     try {
+    //       admin = await this.usersService.findById(payload.sub);
+    //     } catch (error) {
+    //       console.log(error.message);
+    //     }
+    // }
+    // if (!user && !asociacion && !admin) throw new UnauthorizedException('You are not authorized to perform the operation');
     return payload;
   }
   /* async validate(payload: any) {

@@ -7,11 +7,13 @@ import { AsociacionesModule } from '../asociaciones/asociaciones.module';
 import { jwtConstanst } from '../constants/jwt.constants';
 import { UsersModule } from '../users/users.module';
 import { FileService } from '../file/file.service';
+import { PassportModule } from '@nestjs/passport';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { MailsService } from '../mails/mails.service';
 
 @Module({
   imports: [
+    PassportModule.register({ defaultStrategy: 'google' }),
     AsociacionesModule,
     UsersModule,
     JwtModule.register({
