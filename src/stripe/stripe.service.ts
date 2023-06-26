@@ -31,8 +31,8 @@ export class StripeService {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:3001/success',
-      cancel_url: 'http://localhost:3001/cancel',
+      success_url: 'https://petbridge.vercel.app/success',
+      cancel_url: 'https://petbridge.vercel.app/cancel',
     });
     return data;
   }
